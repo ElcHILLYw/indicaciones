@@ -452,6 +452,44 @@
   .drog .dl.adv span{color:var(--sello);}
   @media(min-width:820px){ .drog .dc{grid-template-columns:1fr 1fr;gap:9px 22px;} }
 
+  /* ---------- hojas modelo en la ficha ---------- */
+  .modelos{border-top:1px solid var(--regla-fuerte);}
+  .modelos-cab{
+    padding:12px 18px;display:flex;gap:10px;align-items:baseline;
+    flex-wrap:wrap;justify-content:space-between;
+  }
+  .modelos-cab .eyebrow{color:var(--tinta);}
+  .modelos-cab p{margin:3px 0 0;font-size:12.6px;color:var(--gris);line-height:1.45;max-width:74ch;flex:1 1 100%;}
+  .modelo-nav{display:flex;gap:6px;flex-wrap:wrap;padding:0 18px 11px;}
+  .modelo-chip{
+    font-family:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+    font-size:12.5px;background:var(--hoja);color:var(--gris);
+    border:1px solid var(--regla-fuerte);border-radius:999px;
+    min-width:34px;padding:5px 11px;cursor:pointer;line-height:1.4;
+  }
+  .modelo-chip:hover{background:var(--tinta-bg);color:var(--tinta-fuerte);}
+  .modelo-chip.on{background:var(--tinta);color:#fff;border-color:var(--tinta);}
+  .modelo-esc{
+    margin:0 18px 12px;padding:11px 14px;background:var(--papel);
+    border:1px solid var(--regla);border-left:3px solid var(--tinta-suave);
+    border-radius:8px;font-size:12.9px;line-height:1.55;color:var(--impreso);
+  }
+  .modelo-esc .vit{
+    display:flex;gap:0 16px;flex-wrap:wrap;margin-top:7px;
+    font-family:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11.8px;color:var(--gris);
+  }
+  .modelo-esc .vit b{color:var(--tinta-fuerte);font-weight:600;margin-right:4px;}
+  .modelo-linea{
+    display:grid;grid-template-columns:26px 1fr;gap:0 8px;
+    padding:7px 18px;border-bottom:1px solid var(--regla);font-size:13.4px;line-height:1.5;
+  }
+  .modelo-linea:last-of-type{border-bottom:0;}
+  .modelo-linea .nn{
+    font-family:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+    font-size:11.5px;color:var(--tinta-suave);padding-top:2px;
+  }
+  .modelo-pie{padding:10px 18px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+
   /* ============================================================
      MÓVIL · barra inferior, cajón del índice, cabecera compacta
      ============================================================ */
@@ -546,9 +584,11 @@
     /* --- contenido más denso --- */
     .hoja-tit,.caso-cab,.secc-cab,.editor-cab{padding-left:14px;padding-right:14px;}
     .fila,.bloque-tit,.reloj,.nohacer,.fuente,.pie-hoja,.caso-cuerpo,.secc-cuerpo,
-    .lin,.faltan,.todo-ok,.puntaje,.drog summary,.drog .dc,.fila-fmt,.tabla td,.tabla th{
+    .lin,.faltan,.todo-ok,.puntaje,.drog summary,.drog .dc,.fila-fmt,.tabla td,.tabla th,
+    .modelos-cab,.modelo-nav,.modelo-linea,.modelo-pie{
       padding-left:14px;padding-right:14px;
     }
+    .modelo-esc{margin-left:14px;margin-right:14px;}
     textarea#lineas{padding-left:14px;padding-right:14px;min-height:44vh;}
     .hoja-tit h2{font-size:20px;}
     .secc-cab h3{font-size:17px;}
@@ -5479,10 +5519,24 @@ function renderFicha(){
     h += `<div class="nohacer"><div class="eyebrow">Lo que no se hace</div><ul>${d.no.map(x => `<li>${x}</li>`).join('')}</ul></div>`;
   }
   h += `<div class="fuente"><b>De dónde sale.</b> ${d.fuente}</div>`;
+  const lista = casosDe(d.id);
+  if(lista && lista.length){
+    h += `<div class="modelos" id="modelos">
+      <div class="modelos-cab">
+        <div class="eyebrow">Hojas modelo · ${lista.length} caso${lista.length > 1 ? 's' : ''}</div>
+        <button class="btn chico" id="ver-modelos">Ver las hojas modelo</button>
+        <p>Cada caso de esta urgencia tiene su hoja escrita completa, de la primera línea a la última.
+        Sirve para estudiar el orden y la redacción sin pasar por el desafío. No es la única forma correcta:
+        contrástala con el protocolo de tu servicio.</p>
+      </div>
+      <div id="modelos-cuerpo"></div>
+    </div>`;
+  }
+
   h += `<div class="pie-hoja">
     <button class="btn chico" id="copiar">Copiar ficha</button>
     <button class="btn chico" id="imprimir">Imprimir</button>
-    ${RUBRICAS[d.id] ? '<button class="btn chico primario" id="a-desafio">Practicar este caso</button>' : ''}
+    ${lista ? '<button class="btn chico primario" id="a-desafio">Practicar este caso</button>' : ''}
   </div>`;
 
   cont.innerHTML = h;
@@ -5490,6 +5544,59 @@ function renderFicha(){
   $('#imprimir').addEventListener('click', () => window.print());
   const bd = $('#a-desafio');
   if(bd) bd.addEventListener('click', () => setModo('desafio'));
+  const bm = $('#ver-modelos');
+  if(bm) bm.addEventListener('click', () => {
+    const c = $('#modelos-cuerpo');
+    if(c.innerHTML){ c.innerHTML = ''; bm.textContent = 'Ver las hojas modelo'; return; }
+    bm.textContent = 'Ocultar las hojas modelo';
+    renderModelo(0);
+  });
+}
+
+/* --- hojas modelo dentro de la ficha --- */
+let modeloIdx = 0;
+function renderModelo(i){
+  const d = DATA.find(x => x.id === actual);
+  const lista = casosDe(d.id);
+  if(!lista) return;
+  modeloIdx = Math.min(i, lista.length - 1);
+  const r = lista[modeloIdx];
+  let h = '';
+
+  if(lista.length > 1){
+    h += `<div class="modelo-nav">
+      ${lista.map((x, k) => `<button type="button" class="modelo-chip${k === modeloIdx ? ' on' : ''}" data-k="${k}">Caso ${k + 1}</button>`).join('')}
+    </div>`;
+  }
+
+  h += `<div class="modelo-esc">${esc(r.esc)}
+    <div class="vit">${r.vit.map(v => `<span><b>${esc(v[0])}</b>${esc(v[1])}</span>`).join('')}</div>
+  </div>`;
+
+  h += r.pauta.map((p, k) => `<div class="modelo-linea"><span class="nn">${String(k + 1).padStart(2, '0')}</span><span>${esc(p.replace(/^\d+\.\s*/, ''))}</span></div>`).join('');
+
+  h += `<div class="modelo-pie">
+    <button class="btn chico" id="copiar-modelo">Copiar esta hoja</button>
+    <button class="btn chico primario" id="probar-modelo">Escribirla yo primero</button>
+    <span class="calcref">Antes de mirarla, vale más intentarlo en el modo desafío.</span>
+  </div>`;
+
+  $('#modelos-cuerpo').innerHTML = h;
+  $$('#modelos-cuerpo .modelo-chip').forEach(b =>
+    b.addEventListener('click', () => renderModelo(parseInt(b.dataset.k, 10))));
+  $('#probar-modelo').addEventListener('click', () => {
+    casoIdx[d.id] = modeloIdx;
+    setModo('desafio');
+  });
+  $('#copiar-modelo').addEventListener('click', () => {
+    const btn = $('#copiar-modelo');
+    const txt = d.n.toUpperCase() + ' · hoja modelo ' + (modeloIdx + 1) + '\n\n' +
+      r.pauta.map(x => x.replace(/^(\d+)\.\s*/, '$1. ')).join('\n');
+    navigator.clipboard.writeText(txt)
+      .then(() => { btn.textContent = 'Copiada'; })
+      .catch(() => { btn.textContent = 'No se pudo copiar'; });
+    setTimeout(() => btn.textContent = 'Copiar esta hoja', 1800);
+  });
 }
 
 function copiarFicha(){

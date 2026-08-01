@@ -6,6 +6,7 @@ completa con su propio ícono y **funciona sin conexión** una vez instalada.
 ## Qué trae
 
 - **23 fichas de urgencia** con el reloj de tiempos, las indicaciones en orden y el bloque de lo que no se hace.
+- **Hojas modelo dentro de cada ficha**: las 4 hojas escritas completas de esa urgencia, con su escenario y signos vitales, para estudiar el orden y la redacción sin pasar por el desafío.
 - **Modo desafío con 92 casos** (4 por urgencia), corrector con 982 claves y 398 errores graves catalogados.
 - **Hoja base en blanco** con las 16 secciones del orden de indicaciones.
 - **Vademécum de 224 fármacos** en 18 grupos, con presentación, dosis, indicaciones, mecanismo, efectos adversos y contraindicaciones.
@@ -67,12 +68,17 @@ en la pantalla de inicio ni el guardado offline automático del service worker.
 Si cambias `index.html`, sube el número de versión en `sw.js`:
 
 ```js
-const VERSION = 'indicaciones-v2';   // era v1
+const VERSION = 'indicaciones-v3';   // era v2
 ```
 
 Sin eso, los teléfonos que ya la instalaron van a seguir mostrando la versión vieja.
 
 ---
+
+## Historial
+
+- **v2** — hojas modelo consultables desde la ficha, sin pasar por el modo desafío.
+- **v1** — versión inicial de la app.
 
 ## Archivos
 
