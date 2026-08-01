@@ -1,0 +1,54 @@
+{
+  "name": "Manual de Indicaciones en Urgencias",
+  "short_name": "Indicaciones",
+  "description": "Fichas de indicaciones por patología, modo desafío, vademécum, bombas de infusión, insulina y electrolitos. Medicina interna del adulto.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F4F7FB",
+  "theme_color": "#4A6FA5",
+  "lang": "es-CL",
+  "categories": [
+    "medical",
+    "education",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Modo desafío",
+      "short_name": "Desafío",
+      "url": "./index.html#desafio"
+    },
+    {
+      "name": "Vademécum",
+      "short_name": "Dosis",
+      "url": "./index.html#dosis"
+    },
+    {
+      "name": "Bombas de infusión",
+      "short_name": "Bombas",
+      "url": "./index.html#bombas"
+    }
+  ]
+}
