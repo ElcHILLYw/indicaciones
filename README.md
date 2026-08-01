@@ -8,6 +8,7 @@ completa con su propio ícono y **funciona sin conexión** una vez instalada.
 - **23 fichas de urgencia** con el reloj de tiempos, las indicaciones en orden y el bloque de lo que no se hace.
 - **Hojas modelo dentro de cada ficha**: las 4 hojas escritas completas de esa urgencia, con su escenario y signos vitales, para estudiar el orden y la redacción sin pasar por el desafío.
 - **Modo desafío con 92 casos** (4 por urgencia), corrector con 982 claves y 398 errores graves catalogados.
+- **Triage automatizado**: categoriza de C1 a C5, dice dónde ubicar al paciente ahora (REA, box con monitor, observación, fast track) y qué destino anticipar (alta, sala, UTI o UCI). Adaptable a 15 motivos de consulta.
 - **Hoja base en blanco** con las 16 secciones del orden de indicaciones.
 - **Vademécum de 224 fármacos** en 18 grupos, con presentación, dosis, indicaciones, mecanismo, efectos adversos y contraindicaciones.
 - **Bombas de infusión**: cómo se calculan, 23 preparaciones habituales y calculadora de mL/h.
@@ -58,7 +59,7 @@ en la pantalla de inicio ni el guardado offline automático del service worker.
 - **Guarda entre sesiones** el peso, la edad, el sexo y lo que escribas en la hoja base
   (en el navegador, con `localStorage`). El botón **Limpiar** de la cabecera borra todo.
   Si el navegador bloquea el almacenamiento, la app sigue funcionando sin guardar.
-- **Accesos directos**: `index.html#desafio`, `#dosis`, `#bombas`, `#insulina`, `#elp`.
+- **Accesos directos**: `index.html#triage`, `#desafio`, `#dosis`, `#bombas`, `#insulina`, `#elp`.
   En Android, al mantener presionado el ícono aparecen los tres primeros.
 - **Navegación móvil**: barra inferior con Urgencias, Fichas, Desafío y Herramientas.
   El índice es un cajón lateral. Los datos del paciente se pliegan para dejar pantalla.
@@ -68,7 +69,7 @@ en la pantalla de inicio ni el guardado offline automático del service worker.
 Si cambias `index.html`, sube el número de versión en `sw.js`:
 
 ```js
-const VERSION = 'indicaciones-v3';   // era v2
+const VERSION = 'indicaciones-v4';   // era v3
 ```
 
 Sin eso, los teléfonos que ya la instalaron van a seguir mostrando la versión vieja.
@@ -77,6 +78,7 @@ Sin eso, los teléfonos que ya la instalaron van a seguir mostrando la versión 
 
 ## Historial
 
+- **v3** — herramienta de triage: categorización C1–C5, destino físico y destino final.
 - **v2** — hojas modelo consultables desde la ficha, sin pasar por el modo desafío.
 - **v1** — versión inicial de la app.
 
@@ -109,6 +111,10 @@ ni la revisión con tu residente.**
   estimaciones que se distorsionan en obesidad, edema, embarazo y falla renal aguda.
 - El corrector del modo desafío reconoce patrones de texto: que **no** reconozca una línea
   no significa que esté mal, y que reconozca "insulina" no garantiza que la dosis esté bien escrita.
+- El **triage** es una herramienta de apoyo. La estructura C1–C5 corresponde al modelo chileno de
+  categorización, que **no está en los manuales del proyecto**; NEWS2 tampoco. La categorización final
+  es del profesional que evalúa al paciente y **siempre se puede subir**: la herramienta nunca debe
+  usarse para bajar una categoría asignada por criterio clínico. Verifica contra la norma de tu servicio.
 - Alcance: **paciente adulto, de 15 años en adelante.** No usar en pediatría.
 - Ventanas de trombólisis, metas de presión y resistencia antimicrobiana cambian:
   verifica contra la edición vigente.

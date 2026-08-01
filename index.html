@@ -452,6 +452,16 @@
   .drog .dl.adv span{color:var(--sello);}
   @media(min-width:820px){ .drog .dc{grid-template-columns:1fr 1fr;gap:9px 22px;} }
 
+  /* ---------- triage ---------- */
+  #sub-triage .sug{
+    display:inline-flex;align-items:center;
+    background:var(--hoja);border-color:var(--regla-fuerte);color:var(--impreso);
+    text-align:left;line-height:1.4;
+  }
+  #sub-triage .sug:hover{background:var(--tinta-bg);color:var(--tinta-fuerte);}
+  #sub-triage .sug input{accent-color:var(--tinta);width:15px;height:15px;}
+  #sub-triage select{width:100%;}
+
   /* ---------- hojas modelo en la ficha ---------- */
   .modelos{border-top:1px solid var(--regla-fuerte);}
   .modelos-cab{
@@ -711,12 +721,14 @@
 
     <div id="vista-base" class="oculto">
       <div class="subtabs" role="tablist">
+        <button class="subtab" data-sub="triage" role="tab" aria-selected="false">Triage</button>
         <button class="subtab" data-sub="formato" role="tab" aria-selected="true">Formato de indicaciones</button>
         <button class="subtab" data-sub="dosis" role="tab" aria-selected="false">Vademécum</button>
         <button class="subtab" data-sub="bombas" role="tab" aria-selected="false">Bombas de infusión</button>
         <button class="subtab" data-sub="insulina" role="tab" aria-selected="false">Insulina</button>
         <button class="subtab" data-sub="elp" role="tab" aria-selected="false">Electrolitos</button>
       </div>
+      <div id="sub-triage" class="oculto"></div>
       <div id="sub-formato"></div>
       <div id="sub-dosis" class="oculto"></div>
       <div id="sub-bombas" class="oculto"></div>
@@ -7460,6 +7472,8 @@ DOSIS.sort((a, b) => ORDEN_DOSIS.indexOf(a.id) - ORDEN_DOSIS.indexOf(b.id));
 /* ---------- render del vademécum ---------- */
 let filtroFar = '';
 let grupoFar = '';
+let triageMotivo = 'general';
+let triageDatos = {};
 
 function renderDosis(){
   const c = ctx();
@@ -7980,8 +7994,484 @@ function calcBomba(){
     ${U.peso ? 'Cálculo con ' + fmt(c.peso) + ' kg. ' : ''}Revisa la dilución contra el protocolo de tu servicio antes de indicarla.</span>`;
 }
 
+
 /* ============================================================
-   PÁGINA 4 · ELECTROLITOS
+   PÁGINA 5 · TRIAGE
+   Categorización C1–C5, destino físico en la urgencia y
+   destino final (alta, sala, UTI, UCI).
+   ============================================================ */
+
+const TRIAGE_MOTIVOS = [
+ {id:'general', n:'Sin motivo específico / otro'},
+
+ {id:'torax', n:'Dolor torácico',
+  c1:['Dolor torácico con supradesnivel del ST en el ECG de triage','Sospecha de disección aórtica: dolor desgarrador, asimetría de pulsos o de presión'],
+  c2:['Dolor torácico de características anginosas en curso','Dolor con síncope, disnea o sudoración','Antecedente de enfermedad coronaria, diabetes o edad sobre 40 años con dolor típico'],
+  hacer:['ECG de 12 derivaciones dentro de los primeros 10 minutos, sin excepción','Monitor, oximetría y dos vías venosas','Troponina y aspirina si no hay contraindicación'],
+  upc:['Supradesnivel del ST o infarto con inestabilidad','Arritmia ventricular o bloqueo avanzado','Killip III o IV, shock cardiogénico'],
+  hosp:['Todo síndrome coronario agudo','Troponina elevada o cambios dinámicos del ECG','Dolor recurrente en observación'],
+  alta:['Dolor atípico con dos troponinas negativas separadas, ECG seriado normal y puntaje de riesgo bajo'],
+  nota:'Todo dolor torácico es C2 hasta que el ECG diga lo contrario. El ECG de los 10 minutos es la regla que más vidas salva en el triage.'},
+
+ {id:'disnea', n:'Disnea',
+  c1:['Trabajo respiratorio extremo con agotamiento o silencio auscultatorio','Incapacidad de hablar, cianosis o compromiso de conciencia'],
+  c2:['Saturación bajo 92% que no sube con oxígeno','Uso de musculatura accesoria u ortopnea aguda','Sospecha de tromboembolismo pulmonar o de edema pulmonar'],
+  hacer:['Oxígeno con meta según retenedor o no','ECG, radiografía de tórax y gases si hay hipoxemia o hipercapnia','Evaluar necesidad de ventilación no invasiva precoz'],
+  upc:['Necesidad de ventilación mecánica invasiva o no invasiva','Hipercapnia con acidosis respiratoria','Tromboembolismo de alto riesgo'],
+  hosp:['Hipoxemia nueva que requiere oxígeno','Insuficiencia cardíaca descompensada','Neumonía con CURB-65 de 2 o más'],
+  alta:['Crisis obstructiva que responde a broncodilatadores y mantiene saturación en aire ambiental tras 1 hora de observación'],
+  nota:'En el retenedor de CO₂ la meta de saturación es 88–92%: una saturación de 94% puede ser exceso de oxígeno, no mejoría.'},
+
+ {id:'neuro', n:'Déficit neurológico o sospecha de ACV',
+  c1:['Compromiso de conciencia con Glasgow igual o menor a 8','Crisis convulsiva en curso o estado epiléptico'],
+  c2:['Déficit focal de inicio agudo dentro de la ventana de trombólisis','Cefalea en trueno o la peor de la vida','Confusión aguda de causa no aclarada'],
+  hacer:['HGT capilar de inmediato: la hipoglicemia imita cualquier déficit','Hora exacta de inicio o de última vez visto bien','Activar código ACV y TAC sin contraste'],
+  upc:['Necesidad de manejo de vía aérea','Hemorragia intracraneal con deterioro o indicación quirúrgica','Trombólisis o trombectomía realizadas'],
+  hosp:['Todo ACV isquémico o hemorrágico','Crisis isquémica transitoria de alto riesgo','Primera crisis convulsiva sin causa aclarada'],
+  alta:['Déficit funcional ya estudiado, con imagen y evaluación neurológica, y seguimiento agendado'],
+  nota:'La hora de inicio define la conducta más que cualquier otro dato: se pregunta y se anota en el triage.'},
+
+ {id:'sepsis', n:'Sospecha de infección o sepsis',
+  c1:['Hipotensión que no responde al volumen inicial','Signos de hipoperfusión con lactato marcadamente elevado'],
+  c2:['qSOFA de 2 o más','Fiebre con neutropenia, inmunosupresión o esplenectomía','Sospecha de meningitis o de infección de partes blandas rápidamente progresiva'],
+  hacer:['Hemocultivos antes del antibiótico, sin retrasarlo','Antibiótico dentro de la primera hora en shock séptico','Lactato, volumen 30 mL/kg y control del foco'],
+  upc:['Necesidad de vasoactivos para mantener la presión arterial media','Lactato que no aclara pese a la reanimación','Disfunción de dos o más órganos'],
+  hosp:['Sepsis con cualquier disfunción de órgano','Infección que requiere antibiótico endovenoso o control quirúrgico del foco','Fiebre en el inmunosuprimido'],
+  alta:['Infección localizada, sin criterios de sepsis, con vía oral tolerada y control asegurado'],
+  nota:'La hora del antibiótico se anota. En el shock séptico, cada hora de retraso cuenta en mortalidad.'},
+
+ {id:'abdomen', n:'Dolor abdominal',
+  c1:['Abdomen en tabla con inestabilidad hemodinámica','Sospecha de aneurisma aórtico roto o de embarazo ectópico complicado'],
+  c2:['Dolor abdominal severo con signos peritoneales','Dolor abdominal en el adulto mayor, que suele presentarse sin fiebre ni leucocitosis','Vómitos con distensión y ausencia de tránsito'],
+  hacer:['Test de embarazo en toda mujer en edad fértil','Analgesia adecuada: no enmascara el diagnóstico','Evaluación quirúrgica precoz si hay signos peritoneales'],
+  upc:['Shock de cualquier origen abdominal','Postoperatorio de cirugía de urgencia con inestabilidad'],
+  hosp:['Abdomen agudo quirúrgico','Pancreatitis con criterios de gravedad','Obstrucción intestinal'],
+  alta:['Dolor inespecífico con exámenes normales, buena tolerancia oral y control en 24 horas'],
+  nota:'En el adulto mayor y en el diabético, el abdomen agudo se presenta con menos dolor y menos fiebre de lo esperable: baja el umbral.'},
+
+ {id:'metabolico', n:'Descompensación metabólica o glicémica',
+  c1:['Compromiso de conciencia con hipoglicemia o hiperosmolaridad','Hiperkalemia con alteraciones del ECG'],
+  c2:['Glicemia sobre 300 mg/dL con cetonas o vómitos','Sospecha de cetoacidosis o de estado hiperosmolar','Alteración electrolítica severa'],
+  hacer:['HGT capilar y ECG en los primeros minutos','Gases venosos, electrolitos y cetonas','Reponer potasio antes de la insulina si está bajo 3,3'],
+  upc:['Cetoacidosis severa o estado hiperosmolar con compromiso de conciencia','Hiperkalemia con QRS ancho o que requiere diálisis','Necesidad de infusión de insulina con controles horarios'],
+  hosp:['Cetoacidosis y estado hiperosmolar','Hipoglicemia por sulfonilurea o insulina de acción prolongada','Alteración electrolítica que requiere corrección endovenosa'],
+  alta:['Hiperglicemia sin cetosis, asintomática, con ajuste de tratamiento y control precoz'],
+  nota:'Washington: la hipoglicemia se hospitaliza si fue por sulfonilurea, por sobredosis deliberada, o si produjo coma, convulsión, lesión o déficit neurológico persistente.'},
+
+ {id:'trauma', n:'Trauma',
+  c1:['Trauma con inestabilidad hemodinámica o vía aérea comprometida','Glasgow igual o menor a 8 tras traumatismo'],
+  c2:['Mecanismo de alta energía','Trauma penetrante de tronco o cuello','Fractura expuesta o compromiso vascular distal'],
+  hacer:['Evaluación primaria completa antes de cualquier imagen','Inmovilización cervical si el mecanismo lo justifica','Analgesia precoz y control de hemorragias externas'],
+  upc:['Trauma grave con necesidad de soporte','Trauma encefálico con Glasgow bajo o lesión en la imagen'],
+  hosp:['Trauma que requiere cirugía o vigilancia neurológica','Fracturas que requieren manejo hospitalario'],
+  alta:['Trauma menor, sin alteración en las imágenes, con analgesia y control indicados'],
+  nota:'En el trauma, el orden de la evaluación primaria manda sobre las ganas de pedir una imagen.'},
+
+ {id:'psiq', n:'Agitación o urgencia de salud mental',
+  c1:['Agitación con riesgo inminente para el paciente o para el equipo','Intento suicida en curso o con compromiso vital'],
+  c2:['Ideación suicida con plan estructurado','Psicosis aguda con desorganización','Agitación que no responde a la contención verbal'],
+  hacer:['Descartar causa orgánica: HGT, oximetría, temperatura y examen neurológico','Ambiente seguro y contención verbal antes que farmacológica','Retirar objetos de riesgo y acompañamiento permanente'],
+  upc:['Intoxicación grave con compromiso de conciencia o hemodinámico'],
+  hosp:['Riesgo suicida alto','Descompensación psiquiátrica que no permite manejo ambulatorio seguro','Causa orgánica que explica el cuadro'],
+  alta:['Crisis de ansiedad resuelta, sin riesgo suicida, con red de apoyo y control agendado'],
+  nota:'Toda agitación es orgánica hasta demostrar lo contrario: hipoglicemia, hipoxemia, sepsis, deprivación o intoxicación.'},
+
+ {id:'gine', n:'Urgencia ginecoobstétrica',
+  c1:['Hemorragia genital con inestabilidad hemodinámica','Convulsión en embarazada: eclampsia'],
+  c2:['Sospecha de embarazo ectópico','Presión arterial sobre 160/110 en embarazo mayor de 20 semanas','Dolor abdominal en embarazada'],
+  hacer:['Test de embarazo y ecografía precoz','Presión arterial repetida y proteinuria si hay sospecha de preeclampsia','Aviso a obstetricia sin esperar exámenes'],
+  upc:['Preeclampsia severa o eclampsia','Hemorragia obstétrica con shock'],
+  hosp:['Toda sospecha de embarazo ectópico','Preeclampsia','Amenaza de parto prematuro'],
+  alta:['Cuadro ginecológico leve con ecografía normal y control asegurado'],
+  nota:'En la embarazada: nada de quinolonas, IECA, ARA II ni AINE desde las 20 semanas. El anticonvulsivante de la eclampsia es el sulfato de magnesio.'},
+
+ {id:'intox', n:'Intoxicación o sobredosis',
+  c1:['Compromiso de conciencia con depresión respiratoria','Arritmia o QRS ancho por tóxico'],
+  c2:['Ingesta de dosis potencialmente letal','Intoxicación por paracetamol, alcoholes tóxicos, betabloqueo o calcioantagonistas','Sobredosis deliberada'],
+  hacer:['Vía aérea, hemodinamia, HGT y ECG antes que cualquier antídoto','Determinar el tóxico, la dosis y la hora de la ingesta','Contactar al centro de información toxicológica'],
+  upc:['Necesidad de antídoto en infusión o de soporte vital','QRS ancho, arritmia o shock por tóxico'],
+  hosp:['Toda sobredosis deliberada','Intoxicación con riesgo de deterioro tardío, como paracetamol o sulfonilureas'],
+  alta:['Ingesta no tóxica confirmada, asintomático tras el período de observación y con evaluación de salud mental hecha'],
+  nota:'El ancho del QRS predice convulsiones y arritmias mejor que el nivel plasmático. Y en las convulsiones tóxicas solo sirven los GABAérgicos.'},
+
+ {id:'urinario', n:'Síntomas urinarios',
+  c2:['Fiebre alta con dolor lumbar','Sospecha de pielonefritis en embarazada o en paciente con sonda','Retención urinaria aguda con globo vesical'],
+  hacer:['Orina completa y urocultivo antes del antibiótico','Descartar obstrucción: la pielonefritis obstructiva es una urgencia de drenaje','Evaluar globo vesical al examen'],
+  upc:['Sepsis urinaria con vasoactivos'],
+  hosp:['Pielonefritis con vómitos, embarazo, sepsis u obstrucción','Prostatitis aguda con retención urinaria'],
+  alta:['Cistitis no complicada con antibiótico oral y control si no mejora en 48 horas'],
+  nota:'Pielonefritis con hidronefrosis es drenaje urgente, no solo antibiótico.'},
+
+ {id:'digestivo', n:'Hemorragia digestiva',
+  c1:['Hematemesis activa con inestabilidad','Shock hipovolémico por sangrado'],
+  c2:['Melena o hematoquecia con taquicardia o hipotensión ortostática','Sangrado en paciente anticoagulado o cirrótico','Caída significativa de la hemoglobina'],
+  hacer:['Dos vías gruesas, grupo y pruebas cruzadas','Inhibidor de bomba en bolo e infusión','Suspender el anticoagulante y evaluar reversión'],
+  upc:['Sangrado activo con inestabilidad o necesidad de transfusión masiva','Hemorragia variceal'],
+  hosp:['Toda hemorragia digestiva con repercusión hemodinámica o anemización','Lesión endoscópica de alto riesgo'],
+  alta:['Puntaje de Glasgow-Blatchford bajo, sin sangrado activo y con lesión de bajo riesgo'],
+  nota:'Meta de transfusión restrictiva: hemoglobina 7 g/dL. Transfundir de más empeora los resultados.'},
+
+ {id:'alergia', n:'Reacción alérgica',
+  c1:['Anafilaxia: compromiso respiratorio, hipotensión o edema de vía aérea'],
+  c2:['Angioedema de cara, labios o lengua','Urticaria generalizada con síntomas sistémicos'],
+  hacer:['Adrenalina 0,3–0,5 mg INTRAMUSCULAR en el muslo, no endovenosa','Retirar el alérgeno y posición supina con piernas elevadas','Observar mínimo 4 a 6 horas por la reacción bifásica'],
+  upc:['Anafilaxia refractaria que requiere infusión de adrenalina o vía aérea'],
+  hosp:['Anafilaxia con compromiso respiratorio o que requirió más de una dosis de adrenalina'],
+  alta:['Urticaria aislada, sin compromiso sistémico, tras el período de observación y con adrenalina autoinyectable indicada'],
+  nota:'La adrenalina de la anafilaxia va intramuscular y sin demora. El antihistamínico y el corticoide no reemplazan a la adrenalina.'},
+
+ {id:'menor', n:'Cuadro menor / consulta ambulatoria'}
+];
+
+/* --- NEWS2 --- */
+function news2(v){
+  let p = 0; const detalle = [];
+  const suma = (n, t) => { p += n; if(n) detalle.push(`${t}: ${n}`); };
+  if(v.fr !== null){
+    const n = v.fr <= 8 ? 3 : v.fr <= 11 ? 1 : v.fr <= 20 ? 0 : v.fr <= 24 ? 2 : 3;
+    suma(n, 'frecuencia respiratoria');
+  }
+  if(v.sat !== null){
+    let n;
+    if(v.retenedor){
+      if(v.sat <= 83) n = 3; else if(v.sat <= 85) n = 2; else if(v.sat <= 87) n = 1;
+      else if(v.sat <= 92) n = 0;
+      else n = v.o2 ? (v.sat <= 94 ? 1 : v.sat <= 96 ? 2 : 3) : 0;
+    } else {
+      n = v.sat <= 91 ? 3 : v.sat <= 93 ? 2 : v.sat <= 95 ? 1 : 0;
+    }
+    suma(n, 'saturación');
+  }
+  if(v.o2) suma(2, 'oxígeno suplementario');
+  if(v.pas !== null){
+    const n = v.pas <= 90 ? 3 : v.pas <= 100 ? 2 : v.pas <= 110 ? 1 : v.pas <= 219 ? 0 : 3;
+    suma(n, 'presión sistólica');
+  }
+  if(v.fc !== null){
+    const n = v.fc <= 40 ? 3 : v.fc <= 50 ? 1 : v.fc <= 90 ? 0 : v.fc <= 110 ? 1 : v.fc <= 130 ? 2 : 3;
+    suma(n, 'frecuencia cardíaca');
+  }
+  if(v.conciencia !== 'alerta') suma(3, 'conciencia');
+  if(v.temp !== null){
+    const n = v.temp <= 35 ? 3 : v.temp <= 36 ? 1 : v.temp <= 38 ? 0 : v.temp <= 39 ? 1 : 2;
+    suma(n, 'temperatura');
+  }
+  return {p, detalle};
+}
+
+function qsofa(v){
+  let n = 0; const q = [];
+  if(v.fr !== null && v.fr >= 22){ n++; q.push('frecuencia respiratoria ≥ 22'); }
+  if(v.pas !== null && v.pas <= 100){ n++; q.push('presión sistólica ≤ 100'); }
+  if(v.conciencia !== 'alerta'){ n++; q.push('alteración de conciencia'); }
+  return {n, q};
+}
+
+const CAT = {
+  1:{n:'C1 · Resucitación', col:'#B4645F', bg:'#FBEFEE', t:'Atención inmediata, sin espera',
+     d:'Sala de reanimación (REA)',
+     x:'Riesgo vital inmediato. El equipo completo va al paciente, no el paciente al equipo.'},
+  2:{n:'C2 · Emergencia', col:'#A08148', bg:'#FBF4E8', t:'Atención dentro de 15 a 30 minutos',
+     d:'Box con monitor',
+     x:'Riesgo vital potencial o deterioro probable. Monitorización continua y reevaluación frecuente.'},
+  3:{n:'C3 · Urgencia', col:'#4A6FA5', bg:'#EBF1F9', t:'Atención dentro de 60 a 90 minutos',
+     d:'Box de atención general, con observación',
+     x:'Requiere varios recursos diagnósticos o terapéuticos. Estable, pero necesita estudio.'},
+  4:{n:'C4 · Urgencia menor', col:'#4E8C8C', bg:'#EAF5F5', t:'Atención dentro de 2 a 3 horas',
+     d:'Fast track / atención rápida',
+     x:'Un solo recurso previsto. Resolución habitualmente ambulatoria.'},
+  5:{n:'C5 · No urgente', col:'#5E8C74', bg:'#EDF6F1', t:'Atención dentro de 4 horas',
+     d:'Fast track o derivación a atención primaria',
+     x:'Sin recursos diagnósticos previstos. Consulta que podría resolverse fuera de la urgencia.'}
+};
+
+/* --- banderas generales --- */
+const BANDERAS_C1 = [
+ {id:'paro', t:'Paro cardiorrespiratorio o respiración agónica'},
+ {id:'via', t:'Vía aérea comprometida, estridor o incapacidad de mantenerla'},
+ {id:'shock', t:'Shock: hipotensión con hipoperfusión (frío, moteado, oligúrico)'},
+ {id:'gcs8', t:'Glasgow igual o menor a 8, o deterioro rápido de conciencia'},
+ {id:'convul', t:'Convulsión en curso o estado epiléptico'},
+ {id:'hemorragia', t:'Hemorragia exanguinante o no controlable'},
+ {id:'satcrit', t:'Hipoxemia severa que no responde al oxígeno'},
+ {id:'anafilaxia', t:'Anafilaxia con compromiso respiratorio o hemodinámico'}
+];
+
+const BANDERAS_C2 = [
+ {id:'dolor', t:'Dolor severo, de 8 a 10 en la escala'},
+ {id:'confusion', t:'Confusión o agitación de inicio agudo'},
+ {id:'inmuno', t:'Inmunosupresión, neutropenia, esplenectomía o quimioterapia reciente'},
+ {id:'anticoag', t:'Anticoagulado con sangrado o con traumatismo craneal'},
+ {id:'embarazo', t:'Embarazo con síntomas del cuadro actual'},
+ {id:'deterioro', t:'Deterioro visible o progresivo desde que llegó'},
+ {id:'riesgo', t:'Riesgo suicida, homicida o de fuga'},
+ {id:'aislamiento', t:'Requiere aislamiento respiratorio inmediato'}
+];
+
+const RECURSOS = [
+ {v:'0', t:'Ninguno: examen clínico y receta'},
+ {v:'1', t:'Uno: un examen simple, o una curación, o un fármaco'},
+ {v:'2', t:'Dos o más: laboratorio, imágenes, endovenoso, interconsulta'}
+];
+
+function renderTriage(){
+  const c = ctx();
+  const m = TRIAGE_MOTIVOS.find(x => x.id === triageMotivo) || TRIAGE_MOTIVOS[0];
+  let h = cajaContexto();
+
+  h += `<div class="secc">
+    <div class="secc-cab"><h3>Triage · categorización y destino</h3>
+      <p>Completa lo que tengas. La herramienta categoriza de C1 a C5, propone dónde ubicar al paciente
+      ahora y qué destino final anticipar. Siempre puedes subir de categoría por criterio clínico;
+      nunca conviene bajarla porque el puntaje salió bien.</p></div>
+    <div class="secc-cuerpo">
+      <h5>Motivo de consulta</h5>
+      <div class="calcfila">
+        <div class="campo" style="flex:1 1 100%">
+          <select id="tr-motivo" style="width:100%">
+            ${TRIAGE_MOTIVOS.map(x => `<option value="${x.id}"${x.id === triageMotivo ? ' selected' : ''}>${x.n}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+
+      <h5>Signos vitales</h5>
+      <div class="calcfila">
+        <div class="campo"><label for="tr-fc">FC</label><input type="number" id="tr-fc" min="0" max="300" placeholder="lpm"></div>
+        <div class="campo"><label for="tr-pas">PAS</label><input type="number" id="tr-pas" min="30" max="300" placeholder="mmHg"></div>
+        <div class="campo"><label for="tr-fr">FR</label><input type="number" id="tr-fr" min="0" max="80" placeholder="x min"></div>
+        <div class="campo"><label for="tr-sat">SatO₂</label><input type="number" id="tr-sat" min="30" max="100" placeholder="%"></div>
+        <div class="campo"><label for="tr-temp">T°</label><input type="number" id="tr-temp" step="0.1" min="28" max="43" placeholder="°C"></div>
+        <div class="campo"><label for="tr-hgt">HGT</label><input type="number" id="tr-hgt" min="10" max="900" placeholder="mg/dL"></div>
+      </div>
+      <div class="calcfila" style="margin-top:10px">
+        <div class="campo" style="flex:1 1 200px"><label for="tr-conc">Conciencia</label>
+          <select id="tr-conc" style="width:100%">
+            <option value="alerta">Alerta y orientado</option>
+            <option value="voz">Responde a la voz o está confuso</option>
+            <option value="dolor">Responde solo al dolor</option>
+            <option value="no">No responde</option>
+          </select></div>
+        <div class="campo" style="flex:1 1 190px"><label for="tr-recursos">Recursos que prevés usar</label>
+          <select id="tr-recursos" style="width:100%">
+            ${RECURSOS.map(r => `<option value="${r.v}">${r.t}</option>`).join('')}
+          </select></div>
+      </div>
+      <div class="sugs" style="margin-top:10px">
+        <label class="sug" style="cursor:pointer"><input type="checkbox" id="tr-o2" style="margin-right:6px;vertical-align:-1px">Con oxígeno suplementario</label>
+        <label class="sug" style="cursor:pointer"><input type="checkbox" id="tr-ret" style="margin-right:6px;vertical-align:-1px">Retenedor de CO₂ (meta 88–92%)</label>
+      </div>
+
+      <h5>Banderas de riesgo vital inmediato</h5>
+      <div class="sugs">
+        ${BANDERAS_C1.concat((m.c1 || []).map((t, i) => ({id:'m1_' + i, t}))).map(b =>
+          `<label class="sug" style="cursor:pointer"><input type="checkbox" class="tr-c1" data-t="${esc(b.t)}" style="margin-right:6px;vertical-align:-1px">${esc(b.t)}</label>`).join('')}
+      </div>
+
+      <h5>Banderas de riesgo alto</h5>
+      <div class="sugs">
+        ${BANDERAS_C2.concat((m.c2 || []).map((t, i) => ({id:'m2_' + i, t}))).map(b =>
+          `<label class="sug" style="cursor:pointer"><input type="checkbox" class="tr-c2" data-t="${esc(b.t)}" style="margin-right:6px;vertical-align:-1px">${esc(b.t)}</label>`).join('')}
+      </div>
+
+      <div class="pie-hoja" style="padding-left:0;padding-right:0;border-top:0;margin-top:14px">
+        <button class="btn primario" id="tr-calcular">Categorizar</button>
+        <button class="btn chico" id="tr-limpiar">Limpiar</button>
+      </div>
+    </div>
+    ${m.nota ? `<div class="fuente"><b>Para este motivo.</b> ${m.nota}</div>` : ''}
+  </div>
+
+  <div id="tr-salida"></div>
+
+  <div class="secc">
+    <div class="secc-cab"><h3>Las cinco categorías</h3><p>Referencia rápida de tiempos y ubicación.</p></div>
+    <table class="tabla">
+      <thead><tr><th>Categoría</th><th>Tiempo objetivo</th><th>Dónde se atiende</th></tr></thead>
+      <tbody>${[1,2,3,4,5].map(k => `<tr><td class="f" style="color:${CAT[k].col}">${CAT[k].n}</td><td class="d">${CAT[k].t}</td><td class="r">${CAT[k].d} — ${CAT[k].x}</td></tr>`).join('')}</tbody>
+    </table>
+    <div class="fuente"><b>De dónde sale.</b> Los manuales del proyecto <b>no incluyen</b> una tabla de categorización C1–C5:
+    esa estructura corresponde al modelo de categorización de la urgencia usado en Chile, de la familia del Emergency Severity Index.
+    Lo que sí proviene de los manuales son los criterios de gravedad y de destino que la herramienta aplica:
+    <b>Washington</b> aporta qSOFA y el manejo del shock séptico (cap. 8), CURB-65 y el índice de severidad de neumonía (cap. 14),
+    los criterios de hospitalización en hipoglicemia y las definiciones de cetoacidosis y estado hiperosmolar (cap. 23),
+    y los umbrales de transfusión en hemorragia digestiva. El puntaje <b>NEWS2</b> es una escala de deterioro validada de uso estándar,
+    tampoco tabulada en los manuales. <b>Verifica siempre contra la norma de categorización de tu servicio</b>, que es la que rige.</div>
+  </div>`;
+
+  $('#sub-triage').innerHTML = h;
+
+  // restaurar lo escrito
+  Object.entries(triageDatos).forEach(([k, v]) => {
+    const e = $('#' + k);
+    if(e){ if(e.type === 'checkbox') e.checked = v; else e.value = v; }
+  });
+
+  $('#tr-motivo').addEventListener('change', e => {
+    triageMotivo = e.target.value;
+    guardarTriage();
+    renderTriage();
+  });
+  $$('#sub-triage input, #sub-triage select').forEach(e => {
+    e.addEventListener(e.type === 'checkbox' ? 'change' : 'input', guardarTriage);
+  });
+  $('#tr-calcular').addEventListener('click', calcularTriage);
+  $('#tr-limpiar').addEventListener('click', () => {
+    triageDatos = {};
+    $('#tr-salida').innerHTML = '';
+    renderTriage();
+  });
+}
+
+function guardarTriage(){
+  $$('#sub-triage input, #sub-triage select').forEach(e => {
+    if(!e.id) return;
+    triageDatos[e.id] = e.type === 'checkbox' ? e.checked : e.value;
+  });
+}
+
+function calcularTriage(){
+  const c = ctx();
+  const m = TRIAGE_MOTIVOS.find(x => x.id === triageMotivo) || TRIAGE_MOTIVOS[0];
+  const num = id => { const v = parseFloat($('#' + id).value); return isNaN(v) ? null : v; };
+  const v = {
+    fc:num('tr-fc'), pas:num('tr-pas'), fr:num('tr-fr'), sat:num('tr-sat'),
+    temp:num('tr-temp'), hgt:num('tr-hgt'),
+    conciencia:$('#tr-conc').value, o2:$('#tr-o2').checked, retenedor:$('#tr-ret').checked
+  };
+  const c1 = $$('.tr-c1:checked').map(x => x.dataset.t);
+  const c2 = $$('.tr-c2:checked').map(x => x.dataset.t);
+  const recursos = parseInt($('#tr-recursos').value, 10);
+  const N = news2(v), Q = qsofa(v);
+
+  // ---- categoría ----
+  let cat = 5, porque = [];
+  if(c1.length){ cat = 1; c1.forEach(t => porque.push(t)); }
+  if(v.conciencia === 'no' || v.conciencia === 'dolor'){
+    cat = 1; porque.push('No responde o responde solo al dolor: Glasgow bajo');
+  }
+  if(v.hgt !== null && v.hgt < 50){ cat = Math.min(cat, 1); porque.push(`Hipoglicemia severa (HGT ${v.hgt})`); }
+  if(N.p >= 10 && cat > 1){ cat = 1; porque.push(`NEWS2 de ${N.p}: alteración fisiológica extrema`); }
+
+  if(cat > 2){
+    if(c2.length){ cat = 2; c2.forEach(t => porque.push(t)); }
+    if(N.p >= 7){ cat = 2; porque.push(`NEWS2 de ${N.p}: respuesta de emergencia — está en el borde de C1, súbelo si hay cualquier signo de hipoperfusión`); }
+    else if(N.p >= 5){ cat = 2; porque.push(`NEWS2 de ${N.p}: respuesta urgente`); }
+    if(N.detalle.some(x => x.endsWith(': 3'))){ cat = 2; porque.push('Un parámetro aislado en 3 puntos de NEWS2'); }
+    if(Q.n >= 2){ cat = 2; porque.push(`qSOFA de ${Q.n} (${Q.q.join(', ')})`); }
+    if(v.hgt !== null && (v.hgt < 70 || v.hgt >= 300)){ cat = 2; porque.push(`HGT de ${v.hgt}`); }
+    if(c.edad !== null && c.edad >= 75 && N.p >= 3){ cat = 2; porque.push('Adulto mayor de 75 años con alteración de signos vitales'); }
+    if(m.id !== 'general' && m.id !== 'menor' && cat > 2 && ['torax','neuro','sepsis','intox','gine','alergia','digestivo'].includes(m.id)){
+      cat = 2; porque.push('El motivo de consulta obliga a descartar una causa de riesgo vital antes de bajar la categoría');
+    }
+  }
+
+  if(cat > 3){
+    if(recursos >= 2){ cat = 3; porque.push('Se prevén dos o más recursos diagnósticos o terapéuticos'); }
+    else if(N.p >= 1 || (v.temp !== null && v.temp >= 38)){ cat = 3; porque.push('Signos vitales alterados aunque el puntaje sea bajo'); }
+    else if(recursos === 1){ cat = 4; porque.push('Se prevé un solo recurso'); }
+    else { cat = 5; porque.push('Sin recursos diagnósticos previstos'); }
+  }
+  if(m.id === 'menor' && cat > 3 && !c2.length) porque.push('Motivo declarado como consulta menor');
+
+  const K = CAT[cat];
+
+  // ---- destino final ----
+  const upc = [], hospit = [], amb = [];
+  if(cat === 1) upc.push('Categoría C1: por definición, riesgo vital inmediato');
+  if(N.p >= 7) upc.push(`NEWS2 de ${N.p}, que corresponde a riesgo alto de deterioro`);
+  if(Q.n >= 2) upc.push(`qSOFA de ${Q.n}: mortalidad aumentada, evaluar disfunción de órganos`);
+  if(v.pas !== null && v.pas < 90) upc.push('Hipotensión: evaluar necesidad de vasoactivos');
+  if(v.sat !== null && v.sat < 90 && v.o2) upc.push('Hipoxemia con oxígeno suplementario: evaluar soporte ventilatorio');
+  if(v.conciencia === 'no' || v.conciencia === 'dolor') upc.push('Compromiso de conciencia: evaluar protección de vía aérea');
+  if(cat === 2) hospit.push('Categoría C2: la mayoría requiere al menos observación prolongada');
+  if(v.temp !== null && v.temp >= 38 && c2.some(x => /nmunosupres/.test(x))) hospit.push('Fiebre en el inmunosuprimido');
+  if(v.hgt !== null && v.hgt < 70) hospit.push('Hipoglicemia: Washington la hospitaliza si fue por sulfonilurea, por sobredosis deliberada, o si hubo coma, convulsión, lesión o déficit persistente');
+  if(v.hgt !== null && v.hgt >= 300) hospit.push('Glicemia sobre 300: descartar cetoacidosis con electrolitos y cetonas');
+  if(c.edad !== null && c.edad >= 80) hospit.push('Sobre 80 años, el umbral para observar es más bajo: menos reserva y peor tolerancia al deterioro');
+  if(cat >= 4) amb.push('Categoría C4 o C5: la resolución habitual es ambulatoria, con indicaciones escritas y control');
+
+  let h = `<div class="secc" style="border-color:${K.col}">
+    <div class="secc-cab" style="background:${K.bg};border-bottom-color:${K.col}">
+      <div class="eyebrow" style="color:${K.col}">Resultado</div>
+      <h3 style="color:${K.col}">${K.n}</h3>
+      <p><b>${K.t}.</b> ${K.x}</p>
+    </div>
+    <div class="secc-cuerpo">
+      <h5>Dónde va ahora</h5>
+      <ul><li><b>${K.d}.</b> ${cat <= 2 ? 'Monitorización continua desde el ingreso y reevaluación al menos cada 15 minutos.' : cat === 3 ? 'Reevaluar signos vitales al menos cada hora mientras espera.' : 'Reevaluar si el tiempo de espera se prolonga o aparece cualquier síntoma nuevo.'}</li></ul>
+
+      <h5>Por qué quedó en esta categoría</h5>
+      <ul>${porque.slice(0, 8).map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+
+      <h5>Puntajes</h5>
+      <ul>
+        <li><b>NEWS2: ${N.p} punto${N.p === 1 ? '' : 's'}</b> ${N.detalle.length ? '<span class="calcref">(' + N.detalle.join(' · ') + ')</span>' : '<span class="calcref">(sin parámetros alterados con lo ingresado)</span>'}
+          — ${N.p >= 7 ? 'riesgo alto: respuesta de emergencia, con evaluación por el equipo de cuidados críticos' : N.p >= 5 ? 'riesgo medio: respuesta urgente' : N.p >= 1 ? 'riesgo bajo, con reevaluación programada' : 'sin alteración'}</li>
+        <li><b>qSOFA: ${Q.n} de 3</b> ${Q.q.length ? '<span class="calcref">(' + Q.q.join(' · ') + ')</span>' : ''}
+          — ${Q.n >= 2 ? 'sugiere mayor mortalidad si hay infección: busca disfunción de órganos' : 'no cumple el umbral'}</li>
+      </ul>`;
+
+  h += `<h5>Destino probable</h5><ul>`;
+  if(upc.length){
+    h += `<li class="ojo"><b>Evaluar unidad de paciente crítico.</b> ${upc.map(esc).join('. ')}.
+      <span class="calcref">UCI si requiere ventilación mecánica, vasoactivos, monitorización invasiva o soporte de órganos.
+      UTI si necesita vigilancia estrecha y monitorización continua sin soporte de órganos.</span></li>`;
+  }
+  if(hospit.length) h += `<li><b>Criterios de hospitalización presentes.</b> ${hospit.map(esc).join('. ')}.</li>`;
+  if(m.upc) h += `<li><b>Para ${m.n.toLowerCase()}, van a unidad crítica:</b> ${m.upc.map(esc).join('; ')}.</li>`;
+  if(m.hosp) h += `<li><b>Se hospitalizan:</b> ${m.hosp.map(esc).join('; ')}.</li>`;
+  if(m.alta) h += `<li><b>Pueden irse de alta:</b> ${m.alta.map(esc).join('; ')}.</li>`;
+  if(!upc.length && !hospit.length && amb.length) h += `<li>${amb.map(esc).join('. ')}.</li>`;
+  if(!upc.length && !hospit.length && !m.upc && !m.hosp && !amb.length) h += `<li>Sin criterios de gravedad con lo ingresado. La decisión de alta depende del diagnóstico y de la red de apoyo.</li>`;
+  h += `</ul>`;
+
+  if(m.hacer){
+    h += `<h5>Primeros minutos, para este motivo</h5><ul>${m.hacer.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  }
+
+  h += `<h5>Qué obliga a recategorizar</h5><ul>
+      <li class="ojo">Cualquier signo vital que empeore respecto del ingreso, aunque el paciente diga que está mejor.</li>
+      <li class="ojo">Dolor que no cede con la analgesia indicada.</li>
+      <li class="ojo">Espera que supera el tiempo objetivo de la categoría: se reevalúa, no se asume.</li>
+      <li>Un acompañante que insiste en que el paciente no está como siempre: es un dato clínico, no una molestia.</li>
+    </ul>
+    </div>
+    <div class="modelo-pie">
+      <button class="btn chico" id="tr-copiar">Copiar el resultado</button>
+      ${cat <= 3 ? `<button class="btn chico primario" id="tr-ficha">Ir a la ficha relacionada</button>` : ''}
+      <span class="calcref">Herramienta de apoyo. La categorización final es del profesional que evalúa al paciente, y siempre se puede subir.</span>
+    </div>
+  </div>`;
+
+  $('#tr-salida').innerHTML = h;
+
+  $('#tr-copiar').addEventListener('click', () => {
+    const b = $('#tr-copiar');
+    const txt = `TRIAGE · ${K.n}\n${K.t}\nUbicación: ${K.d}\nMotivo: ${m.n}\n\nMotivos de la categoría:\n` +
+      porque.map(x => '  - ' + x).join('\n') +
+      `\n\nNEWS2: ${N.p} · qSOFA: ${Q.n}/3\n` +
+      (upc.length ? '\nEvaluar unidad crítica:\n' + upc.map(x => '  - ' + x).join('\n') : '') +
+      (hospit.length ? '\nCriterios de hospitalización:\n' + hospit.map(x => '  - ' + x).join('\n') : '');
+    navigator.clipboard.writeText(txt)
+      .then(() => { b.textContent = 'Copiado'; })
+      .catch(() => { b.textContent = 'No se pudo copiar'; });
+    setTimeout(() => b.textContent = 'Copiar el resultado', 1800);
+  });
+  const bf = $('#tr-ficha');
+  if(bf) bf.addEventListener('click', () => {
+    const mapa = {torax:'sca', disnea:'epa', neuro:'acv-isq', sepsis:'sepsis', metabolico:'cad',
+                  urinario:'pielo', digestivo:'hda', intox:'toxicologia'};
+    const destino = mapa[m.id];
+    if(destino && DATA.some(x => x.id === destino)){ setModo('fichas'); seleccionar(destino); }
+    else setModo('fichas');
+  });
+
+  const sal = $('#tr-salida');
+  if(sal && sal.scrollIntoView) sal.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ============================================================
+   PÁGINA 6 · ELECTROLITOS
    ============================================================ */
 const ELP = [
  {t:`Potasio · reposición`,
@@ -8264,7 +8754,8 @@ let sub = 'formato';
 function setSub(s){
   sub = s;
   $$('.subtab').forEach(b => b.setAttribute('aria-selected', b.dataset.sub === s));
-  ['formato','dosis','bombas','insulina','elp'].forEach(k => $('#sub-' + k).classList.toggle('oculto', k !== s));
+  ['triage','formato','dosis','bombas','insulina','elp'].forEach(k => $('#sub-' + k).classList.toggle('oculto', k !== s));
+  if(s === 'triage') renderTriage();
   if(s === 'formato') renderFormato();
   if(s === 'dosis') renderDosis();
   if(s === 'bombas') renderBombas();
@@ -8284,7 +8775,7 @@ function setModo(m){
   $('#aviso-fichas').innerHTML =
     m === 'fichas' ? 'Material de estudio. No reemplaza el protocolo de tu hospital ni la revisión con tu residente. Cada ficha dice de qué manual sale; donde Washington y Sanford difieren, está señalado.'
   : m === 'desafio' ? 'Escribe la hoja completa como la dejarías en la ficha. El corrector busca las claves del caso y los errores graves; lo que no reconoce no está necesariamente mal, y lo que reconoce no garantiza que la dosis esté bien escrita. Eso lo revisas tú y tu residente.'
-  : 'Hoja base, vademécum, insulina y electrolitos. Las dosis por peso y las calculadoras usan el peso, la edad y el sexo de la cabecera. En el vademécum, cada fármaco se despliega con presentación, indicaciones, mecanismo, efectos adversos y contraindicaciones.';
+  : 'Triage, hoja base, vademécum, bombas, insulina y electrolitos. Las dosis por peso y las calculadoras usan el peso, la edad y el sexo de la cabecera. El triage es una herramienta de apoyo: la categorización final es del profesional que evalúa al paciente.';
   pintaContexto();
   if(typeof syncBarra === 'function') syncBarra();
   if(m === 'fichas') renderFicha();
@@ -8400,6 +8891,7 @@ $('#limpiar-datos').addEventListener('click', () => {
   filtroFar = '';
   grupoFar = '';
   mem.del('peso'); mem.del('edad'); mem.del('sexo'); mem.del('borrador');
+  triageDatos = {}; triageMotivo = 'general';
   const ed = $('#lineas');
   if(ed) ed.value = '';
   const res = $('#resultado');
@@ -8418,7 +8910,7 @@ function irADestino(){
   const h = (location.hash || '').replace('#', '');
   if(!h) return;
   if(h === 'desafio'){ setModo('desafio'); return; }
-  if(['formato','dosis','bombas','insulina','elp'].includes(h)){ sub = h; setModo('base'); }
+  if(['triage','formato','dosis','bombas','insulina','elp'].includes(h)){ sub = h; setModo('base'); }
 }
 window.addEventListener('hashchange', irADestino);
 
