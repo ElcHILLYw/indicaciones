@@ -5,13 +5,16 @@ completa con su propio ícono y **funciona sin conexión** una vez instalada.
 
 ## Qué trae
 
-- **23 fichas de urgencia** con el reloj de tiempos, las indicaciones en orden y el bloque de lo que no se hace.
+- **32 fichas de urgencia** con el reloj de tiempos, las indicaciones en orden y el bloque de lo que no se hace.
 - **Hojas modelo dentro de cada ficha**: las 4 hojas escritas completas de esa urgencia, con su escenario y signos vitales, para estudiar el orden y la redacción sin pasar por el desafío.
-- **Modo desafío con 92 casos** (4 por urgencia), corrector con 982 claves y 398 errores graves catalogados.
+- **Crisis convulsiva, epilepsia y estado epiléptico** como temas propios, con el umbral de los 5 minutos, la regla de cuándo sí y cuándo no iniciar antiepilépticos, y el estado no convulsivo.
+- **Modo desafío con 128 casos** (4 por urgencia), corrector con 1400 claves y 570 errores graves catalogados.
 - **Triage automatizado**: categoriza de C1 a C5, dice dónde ubicar al paciente ahora (REA, box con monitor, observación, fast track) y qué destino anticipar (alta, sala, UTI o UCI). Adaptable a 15 motivos de consulta.
 - **Hoja base en blanco** con las 16 secciones del orden de indicaciones.
 - **Vademécum de 224 fármacos** en 18 grupos, con presentación, dosis, indicaciones, mecanismo, efectos adversos y contraindicaciones.
-- **Bombas de infusión**: cómo se calculan, 23 preparaciones habituales y calculadora de mL/h.
+- **Bombas de infusión y nebulizaciones**: cómo se calculan, 23 preparaciones habituales, calculadora de mL/h, y las nebulizaciones con sus dosis, flujos y la regla del retenedor de CO₂.
+- **Ficha de antibióticos** en pestaña propia: microbiología, arsenal por familia, matriz fármaco por fármaco, esquemas empíricos por síndrome y tarjetas de repaso, con buscador y modo examen propios.
+- **Del caso a la hoja**: escribes un caso breve y la app sugiere las fichas que encajan, marca lo que cambia la conducta y deja el esqueleto de indicaciones. Con segunda opinión opcional de un modelo de lenguaje.
 - **Insulina**: metas, tipos, reglas de cálculo y tres calculadoras.
 - **Electrolitos**: potasio, sodio, magnesio, calcio y fósforo, con tres calculadoras.
 - Ajustes automáticos por **peso, edad y sexo**.
@@ -59,7 +62,7 @@ en la pantalla de inicio ni el guardado offline automático del service worker.
 - **Guarda entre sesiones** el peso, la edad, el sexo y lo que escribas en la hoja base
   (en el navegador, con `localStorage`). El botón **Limpiar** de la cabecera borra todo.
   Si el navegador bloquea el almacenamiento, la app sigue funcionando sin guardar.
-- **Accesos directos**: `index.html#triage`, `#desafio`, `#dosis`, `#bombas`, `#insulina`, `#elp`.
+- **Accesos directos**: `index.html#caso`, `#triage`, `#atb`, `#desafio`, `#dosis`, `#bombas`, `#insulina`, `#elp`.
   En Android, al mantener presionado el ícono aparecen los tres primeros.
 - **Navegación móvil**: barra inferior con Urgencias, Fichas, Desafío y Herramientas.
   El índice es un cajón lateral. Los datos del paciente se pliegan para dejar pantalla.
@@ -69,7 +72,7 @@ en la pantalla de inicio ni el guardado offline automático del service worker.
 Si cambias `index.html`, sube el número de versión en `sw.js`:
 
 ```js
-const VERSION = 'indicaciones-v4';   // era v3
+const VERSION = 'indicaciones-v6';   // era v5
 ```
 
 Sin eso, los teléfonos que ya la instalaron van a seguir mostrando la versión vieja.
@@ -78,6 +81,8 @@ Sin eso, los teléfonos que ya la instalaron van a seguir mostrando la versión 
 
 ## Historial
 
+- **v5** — pancreatitis, diarrea y gastroenteritis, meningitis, anemia, crisis asmática y exacerbación de EPOC (24 casos nuevos); nebulizaciones; ficha de antibióticos incorporada; asistente "del caso a la hoja".
+- **v4** — crisis convulsiva, epilepsia y estado epiléptico como fichas nuevas, con 12 casos y motivo propio en el triage.
 - **v3** — herramienta de triage: categorización C1–C5, destino físico y destino final.
 - **v2** — hojas modelo consultables desde la ficha, sin pasar por el modo desafío.
 - **v1** — versión inicial de la app.
@@ -85,7 +90,7 @@ Sin eso, los teléfonos que ya la instalaron van a seguir mostrando la versión 
 ## Archivos
 
 ```
-index.html                 la app completa
+index.html                 la app completa, con la ficha de antibióticos incluida
 manifest.webmanifest       nombre, ícono, colores, accesos directos
 sw.js                      service worker (caché offline)
 icon-192.png               ícono Android
@@ -105,6 +110,14 @@ ni la revisión con tu residente.**
   **Manual Washington** y la **Guía Sanford** difieren entre sí.
 - Las tablas del Sanford en la copia usada tienen el reconocimiento de texto degradado:
   **las dosis antibióticas deben confirmarse** contra la guía impresa o la aplicación vigente.
+- Las **dosis de primera y segunda línea del estado epiléptico** no son texto extraíble del Manual Washington,
+  que remite a su Figura 27-1 y al protocolo del MGH: corresponden al uso estándar y deben contrastarse con
+  el protocolo de tu servicio.
+- El asistente **"del caso a la hoja"** es un buscador de palabras clave sobre las fichas, no un diagnosticador:
+  puede acertar el cuadro y equivocarse en el paciente concreto, o no reconocer un caso bien escrito solo porque
+  usaste otras palabras. La **segunda opinión** la genera un modelo de lenguaje, **no está verificada contra los
+  manuales del proyecto** y puede contener errores de dosis o de criterio. La hoja la escribes tú y la revisa tu residente.
+- Los **flujos, volúmenes y equivalencias en gotas de las nebulizaciones** son práctica habitual y varían entre servicios.
 - Las **diluciones de las bombas** son práctica habitual y varían entre hospitales.
   La aritmética de la calculadora es correcta; la dilución que le des tiene que ser la de tu servicio.
 - Las calculadoras (Cockcroft-Gault, déficit de agua libre, insulina, bombas) entregan
