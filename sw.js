@@ -1,7 +1,7 @@
 /* Manual de Indicaciones en Urgencias — service worker
    Guarda la app completa para que funcione sin conexión.
    Sube el número de VERSION cada vez que cambies index.html. */
-const VERSION = 'indicaciones-v5';
+const VERSION = 'indicaciones-v6';
 const ARCHIVOS = [
   './',
   './index.html',

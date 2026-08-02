@@ -72,15 +72,43 @@ en la pantalla de inicio ni el guardado offline automático del service worker.
 Si cambias `index.html`, sube el número de versión en `sw.js`:
 
 ```js
-const VERSION = 'indicaciones-v6';   // era v5
+const VERSION = 'indicaciones-v7';   // era v6
 ```
 
 Sin eso, los teléfonos que ya la instalaron van a seguir mostrando la versión vieja.
 
 ---
 
+## Auditoría de contenidos (v6)
+
+Se hizo una revisión sistemática de las 32 fichas, los 128 casos y las herramientas, contrastando las
+cifras contra el **Manual Washington** y la **Guía Sanford** cargados en el proyecto. Se corrigieron:
+
+| # | Hallazgo | Corrección |
+|---|----------|------------|
+| 1 | Los casos de estado hiperosmolar usaban **insulina 0,05 U/kg/h** como dosis inicial, contradiciendo su propia ficha | Corregido a **0,10–0,15 U/kg/h** (Washington, Tabla 23-3); 0,05 queda como la dosis tras bajar de 300 mg/dL |
+| 2 | Meta de magnesio de **2,5 mEq/L**, cifra que no está en el manual | Reemplazada por la definición de Washington: **hipermagnesemia sobre 2,2 mEq/L**, síntomas sobre 4, hiporreflexia como primer signo |
+| 3 | La velocidad máxima de KCl de **10 mEq/h** aparecía como si fuera del manual | Explicitado que **el techo de Washington es 20 mEq/h** y que 10 mEq/h es práctica habitual para vía periférica sin monitorización |
+| 4 | La meta de TTPA de la heparina se daba como única | Separada por indicación: **1,5–2,0×** en síndrome coronario (Tabla 4-13) y **anti-Xa 0,3–0,7 / TTPA 2–2,5×** en tromboembolismo |
+| 5 | Un caso de TEP tenía el número **8 repetido** en la hoja | Renumerado |
+| 6 | La ficha de diarrea citaba Washington sin capítulo | Precisado a cap. 12 |
+
+Se añadieron además, verificados contra el manual: la **normalización del bicarbonato** como índice más
+confiable de recuperación en cetoacidosis (el cierre del anión gap lo es menos por la hipercloremia),
+la caída esperada de β-hidroxibutirato de ~1 mmol/L/h, que **la cetoacidosis no cursa con fiebre** (si la hay,
+buscar infección), el límite de **pH 7,55** en la alcalinización por tricíclicos, la dosis completa de emulsión
+lipídica, el uso permitido de **lidocaína** (clase Ib) en la intoxicación por tricíclicos, y el antídoto de la
+hipermagnesemia.
+
+**Lo que la auditoría no puede garantizar.** Que un contenido de este tamaño tenga cero errores no es una
+afirmación verificable. Lo que sí se verificó: cada ficha declara su fuente, ninguna cifra contradice a otra
+dentro de la app, las 128 hojas modelo pasan su propio corrector, y todo lo que **no** proviene de los manuales
+está marcado como tal (dosis del estado epiléptico, diluciones de bombas, flujos de nebulización, categorización
+de triage, NEWS2 y la segunda opinión del asistente).
+
 ## Historial
 
+- **v6** — auditoría de contenidos contra las fuentes: 6 correcciones y varias precisiones (ver tabla arriba).
 - **v5** — pancreatitis, diarrea y gastroenteritis, meningitis, anemia, crisis asmática y exacerbación de EPOC (24 casos nuevos); nebulizaciones; ficha de antibióticos incorporada; asistente "del caso a la hoja".
 - **v4** — crisis convulsiva, epilepsia y estado epiléptico como fichas nuevas, con 12 casos y motivo propio en el triage.
 - **v3** — herramienta de triage: categorización C1–C5, destino físico y destino final.

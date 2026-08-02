@@ -1684,7 +1684,7 @@ const DATA = [
   `No usar metronidazol como primera línea en C. difficile.`,
   `No omitir la rehidratación mientras se discute el antibiótico: la rehidratación es el tratamiento.`
  ],
- fuente:`<b>Sanford</b>, tabla de gastroenteritis: gradación de leve, moderada y severa, terapia empírica con ciprofloxacino o azitromicina, azitromicina como primera opción en Campylobacter, las indicaciones exactas para tratar Salmonella no tifoidea, fidaxomicina o vancomicina en C. difficile con el metronidazol desplazado, la conducta en E. coli productor de toxina Shiga con su 6–9% de síndrome hemolítico urémico, la fórmula de sales de rehidratación de la OMS y el uso de Ringer lactato endovenoso. <b>Washington</b> aporta el contexto de deshidratación y electrolitos.`
+ fuente:`<b>Sanford</b>, tabla de gastroenteritis: gradación de leve, moderada y severa, terapia empírica con ciprofloxacino o azitromicina, azitromicina como primera opción en Campylobacter, las indicaciones exactas para tratar Salmonella no tifoidea, fidaxomicina o vancomicina en C. difficile con el metronidazol desplazado, la conducta en E. coli productor de toxina Shiga con su 6–9% de síndrome hemolítico urémico, la fórmula de sales de rehidratación de la OMS y el uso de Ringer lactato endovenoso. <b>Washington</b>, cap. 12, aporta el contexto de deshidratación, la corrección de electrolitos y la diarrea como causa digestiva más frecuente de hipernatremia.`
 },
 
 {
@@ -1773,6 +1773,8 @@ const DATA = [
   ]},
   {t:`Insulina`, f:[
    {i:`Insulina cristalina: bolo 0,1 U/kg EV = {{0.1|U|}} y luego BIC 0,1 U/kg/h = {{0.1|U|}} por hora`, n:`Washington: alternativa sin bolo. En CAD leve a moderada (pH > 7,0, bicarbonato > 10, conciencia normal) puede usarse insulina rápida SC 0,1–0,2 U/kg c/1–2 h fuera de UCI.`, a:true},
+   {i:`La <b>normalización del bicarbonato</b> es el índice más confiable de recuperación; el cierre del anión gap lo es menos, porque la hipercloremia puede cerrarlo antes de que el bicarbonato se normalice`, n:`Washington lo señala expresamente. La caída esperada del β-hidroxibutirato es de alrededor de 1 mmol/L por hora.`, a:true},
+   {i:`La cetoacidosis <b>no cursa típicamente con fiebre</b>: si el paciente está febril, hay que buscar y tratar la infección`, n:`Washington. Antibiótico empírico de amplio espectro en el paciente séptico, mientras llegan los hemocultivos.`, a:true},
    {i:`Meta: bajar la glicemia 50–75 mg/dL/h; no más de 100 mg/dL/h`, n:`La caída rápida es factor de riesgo de edema cerebral.`},
    {i:`Glicemia < 250 mg/dL: agregar SG 5% (50–100 mL/h) y bajar la BIC a 0,05 U/kg/h = {{0.05|U|}} por hora`, a:true},
    {i:`Mantener la insulina hasta bicarbonato > 15, brecha aniónica cerrada y cetosis resuelta — no hasta que se normalice la glicemia`, a:true},
@@ -4450,11 +4452,11 @@ const MAS_3 = {
   `6. La trombosis venosa profunda está confirmada por ecografía doppler: con clínica compatible basta para tratar, evitando radiación fetal adicional.`,
   `7. Exámenes basales: hemograma con plaquetas, función renal, pruebas hepáticas, coagulación.`,
   `8. No usar warfarina ni anticoagulantes orales directos: contraindicados en el embarazo.`,
-  `8. Mantener la anticoagulación durante todo el embarazo y al menos 6 semanas de puerperio, con un mínimo total de 3 meses.`,
-  `9. Planificar el parto con el equipo obstétrico: suspender la heparina de bajo peso al menos 24 h antes de una anestesia neuroaxial.`,
-  `10. Educación sobre autoinyección, signos de sangrado y signos de alarma obstétricos.`,
-  `11. Medias de compresión graduada en la extremidad afectada.`,
-  `12. Avisar si: aumenta la disnea, hipotensión, sangrado, contracciones, o disminución de movimientos fetales.`
+  `9. Mantener la anticoagulación durante todo el embarazo y al menos 6 semanas de puerperio, con un mínimo total de 3 meses.`,
+  `10. Planificar el parto con el equipo obstétrico: suspender la heparina de bajo peso al menos 24 h antes de una anestesia neuroaxial.`,
+  `11. Educación sobre autoinyección, signos de sangrado y signos de alarma obstétricos.`,
+  `12. Medias de compresión graduada en la extremidad afectada.`,
+  `13. Avisar si: aumenta la disnea, hipotensión, sangrado, contracciones, o disminución de movimientos fetales.`
  ]},
 {esc:`Hombre de 70 años con cáncer gástrico avanzado, hospitalizado por hemorragia digestiva alta hace 48 horas que requirió transfusión de 3 unidades y endoscopia con hemostasia. Hoy presenta disnea brusca y dolor pleurítico. AngioTAC: tromboembolismo pulmonar segmentario bilateral. Hemoglobina 8,1 g/dL, estable en las últimas 12 horas. Sin sangrado activo visible.`,
  vit:[["PA","124/72"],["FC","104"],["FR","24"],["SatO₂","92%"],["Hb","8,1"],["Lactato","1,4"]],
@@ -4945,7 +4947,7 @@ const MAS_8 = {
   {n:`Volumen primero y agresivo`, re:`suero fisiologico|sf 0,9|cristaloide|volumen|hidratacion|1000 cc|litro`, c:true, tip:`El déficit de agua en el estado hiperosmolar es de 8 a 10 litros. El volumen por sí solo ya baja la glicemia.`},
   {n:`Calcular sodio corregido y osmolalidad`, re:`sodio corregido|corregir el sodio|osmolalidad|osmolaridad|calcular`, c:true, tip:`Con glicemia 890, el sodio real es mucho más alto que 152: define qué suero sigue.`},
   {n:`Potasio antes de la insulina`, re:`potasio|kcl|k\\+`, c:true, tip:`La misma regla de la cetoacidosis: sin potasio sobre 3,3 no se parte con insulina.`},
-  {n:`Insulina en infusión a dosis baja`, re:`insulina|bic de insulina|0,05|cristalina`, c:true, tip:`En el estado hiperosmolar basta 0,05 U/kg/h, y solo después de haber repuesto volumen.`},
+  {n:`Insulina en infusión, después del volumen`, re:`insulina|bic de insulina|0,1|0,15|cristalina`, c:true, tip:`Washington, Tabla 23-3: 0,10–0,15 U/kg/h, y solo después de haber repuesto volumen. Se baja a 0,05 U/kg/h cuando la glicemia cae bajo 300.`},
   {n:`Glucosa al bajar de 300`, re:`glucosado|glucosa|sg 5|300 mg|250 mg`, c:true, tip:`Para poder mantener la insulina y bajar la osmolalidad de forma lenta.`},
   {n:`Corrección lenta de la osmolalidad`, re:`lenta|3 mosm|no mas de|gradual|osmolalidad por hora`, c:true, tip:`Bajarla rápido produce edema cerebral.`},
   {n:`Identificar el corticoide como gatillante`, re:`dexametasona|corticoide|esteroide|ajustar el corticoide`, c:true, tip:`Es la causa más probable y hay que decidir qué se hace con él.`},
@@ -4967,8 +4969,8 @@ const MAS_8 = {
   `3. Suero fisiológico 0,9% 1000 cc EV en la primera hora; continuar 500 cc/h y reevaluar la volemia. El déficit estimado es de 8 a 10 litros.`,
   `4. Calcular el sodio corregido por la glicemia y la osmolalidad efectiva; con el sodio corregido alto, pasar a fisiológico 0,45%.`,
   `5. Reponer potasio con KCl según nivel; no iniciar insulina si el potasio está bajo 3,3 mEq/L.`,
-  `6. Insulina cristalina en infusión a 0,05 U/kg/h, recién después de la reposición inicial de volumen.`,
-  `7. Agregar suero glucosado 5% cuando la glicemia baje de 300 mg/dL, manteniendo la insulina.`,
+  `6. Insulina cristalina en infusión a 0,10–0,15 U/kg/h (Washington, Tabla 23-3), recién después de la reposición inicial de volumen. Bajar a 0,05 U/kg/h cuando la glicemia caiga bajo 300 mg/dL, agregando suero glucosado.`,
+  `7. Agregar suero glucosado 5% cuando la glicemia baje de 300 mg/dL y reducir la infusión a 0,05 U/kg/h, sin suspender la insulina.`,
   `8. Bajar la osmolalidad de forma lenta y gradual, no más de 3 mOsm/kg por hora, por el riesgo de edema cerebral.`,
   `9. Revisar la dexametasona con el equipo tratante: es el gatillante más probable y hay que ajustarla.`,
   `10. Buscar infección: hemocultivos x2, orina completa y urocultivo, radiografía de tórax, PCR.`,
@@ -4984,7 +4986,7 @@ const MAS_8 = {
   {n:`Reanimación con volumen`, re:`suero fisiologico|sf 0,9|cristaloide|volumen|bolo|1000 cc|reanimacion`, c:true, tip:`Está hipotenso y taquicárdico: la prioridad absoluta es la volemia, antes que la glicemia.`},
   {n:`Sonda vesical y diuresis horaria`, re:`sonda|foley|diuresis horaria|balance`, c:true, tip:`Con creatinina que triplicó, la diuresis es tu guía.`},
   {n:`Potasio: cuidado, está alto pero el corporal está bajo`, re:`potasio|kcl|k\\+`, c:true, tip:`En el estado hiperosmolar el potasio total está depletado aunque el sérico esté alto: al hidratar e insulinizar se desploma.`},
-  {n:`Insulina en infusión a dosis baja tras el volumen`, re:`insulina|0,05|cristalina|bic`, c:true, tip:`Nunca antes de reponer.`},
+  {n:`Insulina en infusión, después del volumen`, re:`insulina|0,1|0,15|cristalina|bic`, c:true, tip:`Washington, Tabla 23-3: 0,10–0,15 U/kg/h, nunca antes de reponer volumen.`},
   {n:`Suspender la metformina`, re:`suspender|metformina`, c:true, tip:`Con creatinina 3,1 hay riesgo de acidosis láctica.`},
   {n:`Buscar el gatillante infeccioso`, re:`hemocultivo|urocultivo|orina completa|rx de torax|infeccion|foco|antibiotic`, c:true, tip:`Febril y de casa de reposo: neumonía aspirativa e infección urinaria son lo primero.`},
   {n:`Evaluar deglución y riesgo de aspiración`, re:`deglucion|fonoaudi|aspiracion|regimen cero|sonda nasogastrica`, c:true, tip:`Demencia con baja ingesta: hay que saber si puede tragar antes de darle nada por boca.`},
@@ -5006,7 +5008,7 @@ const MAS_8 = {
   `3. Reanimación con suero fisiológico 0,9%: bolo de 1000 cc EV rápido y reevaluar; continuar según respuesta hemodinámica.`,
   `4. Instalar sonda Foley: diuresis horaria y balance hídrico estricto.`,
   `5. Control de potasio ahora y cada 2 h: el potasio corporal total está depletado y va a caer al hidratar e insulinizar; reponer con KCl cuando baje.`,
-  `6. Insulina cristalina en infusión a 0,05 U/kg/h una vez restaurada la perfusión.`,
+  `6. Insulina cristalina en infusión a 0,10–0,15 U/kg/h (Washington, Tabla 23-3) una vez restaurada la perfusión. Bajar a 0,05 U/kg/h cuando la glicemia caiga bajo 300 mg/dL.`,
   `7. Suspender metformina.`,
   `8. Corrección lenta y gradual del sodio y de la osmolalidad: no más de 10 mEq/L al día.`,
   `9. Buscar foco infeccioso: hemocultivos x2, orina completa y urocultivo, radiografía de tórax. Antibiótico empírico según el foco más probable.`,
@@ -8548,7 +8550,7 @@ DOSIS.push(
   i:`Tromboembolismo, síndrome coronario agudo, paciente que va a procedimiento o con riesgo alto de sangrado.`,
   m:`Ídem.`,
   e:`Sangrado.`,
-  c:`Washington: la meta es anti-Xa de 0,3 a 0,7 U/mL, que corresponde a un TTPA aproximadamente 2 a 2,5 veces el control según el laboratorio.`, ojo:true},
+  c:`La meta depende de la indicación. En <b>tromboembolismo venoso</b>, Washington usa anti-Xa de 0,3 a 0,7 U/mL, equivalente a un TTPA de alrededor de 2 a 2,5 veces el control según el laboratorio. En <b>síndrome coronario agudo</b>, la Tabla 4-13 ajusta el TTPA a 1,5 a 2,0 veces el control, con bolo de 60 U/kg (máximo 4000 U) y 12–14 U/kg/h.`, ojo:true},
  {f:`Fondaparinux`, p:`Jeringa de 2,5, 5, 7,5 y 10 mg`,
   d:`Profilaxis 2,5 mg SC al día · tratamiento: menos de 50 kg 5 mg, 50–100 kg 7,5 mg, más de 100 kg 10 mg SC al día`,
   i:`Alternativa cuando hay antecedente de trombocitopenia por heparina.`,
@@ -9130,7 +9132,7 @@ DOSIS.push(
   e:`Hipoglicemia e hipokalemia: hay que monitorizar ambas de forma intensiva.`,
   c:`Washington la respalda en betabloqueo y calcioantagonistas. Requiere unidad crítica y controles horarios.`, ojo:true},
  {f:`Emulsión lipídica`, p:`Frasco al 20%`,
-  d:`Bolo de 1,5 mL/kg y luego infusión`,
+  d:`Bolo de 1,5 mL/kg (máximo 100 mL), seguido de infusión de 0,25 mL/kg/min por 20 min`,
   i:`Toxicidad sistémica por anestésicos locales; rescate en intoxicación por fármacos muy lipofílicos con paro refractario.`,
   m:`Actúa como reservorio lipídico que secuestra el tóxico.`,
   e:`Hipertrigliceridemia, pancreatitis, interferencia con los exámenes de laboratorio.`,
@@ -9140,7 +9142,13 @@ DOSIS.push(
   i:`Intoxicación por antidepresivos tricíclicos u otros bloqueadores de canales de sodio con QRS ancho.`,
   m:`El sodio desplaza al fármaco del canal y la alcalinización reduce su fracción libre.`,
   e:`Alcalosis, hipokalemia, hipernatremia, sobrecarga de volumen.`,
-  c:`Washington: el ancho del QRS predice convulsiones y arritmias mejor que el nivel plasmático. También se usa en QRS ancho por antipsicóticos.`, ojo:true},
+  c:`Washington, cap. 28: bolo o serie de bolos de 1–2 mEq/kg titulados al efecto, seguidos de infusión al doble de la tasa de mantención, con la meta de estrechar el QRS bajo 100 ms o al basal. <b>Evitar la alcalemia severa con pH sobre 7,55</b>; si eso limita el tratamiento, se puede usar salino hipertónico. Un QRS bajo 100 ms indica que el paciente no está en riesgo de convulsiones ni arritmias, y el patrón RSR' en aVR predice toxicidad significativa.`, ojo:true},
+ {f:`Vasoactivos y lidocaína en la intoxicación por tricíclicos`, p:`—`,
+  d:`Noradrenalina o vasopresina si la hipotensión no responde al bicarbonato · lidocaína a dosis cardíacas habituales`,
+  i:`Shock o arritmias que no mejoran de inmediato con bicarbonato.`,
+  m:`Se piensa que la lidocaína desplaza al tricíclico del canal de sodio cardíaco.`,
+  e:`—`,
+  c:`Washington, cap. 28. Ojo con la confusión frecuente: la <b>lidocaína es clase Ib y sí se puede usar</b>; lo que se evita son los antiarrítmicos de clase Ia y Ic, que agravan el bloqueo de canales de sodio. La ECMO venoarterial queda como último recurso en el colapso cardiovascular refractario.`, ojo:true},
  {f:`Sulfato de magnesio`, p:`Ampolla`,
   d:`1–2 g EV`,
   i:`Torsades de pointes por QT largo de causa tóxica.`,
@@ -9851,7 +9859,7 @@ const BOMBAS = [
   n:`Se protege de la luz con funda opaca. Partir en 0,25 µg/kg/min en eclampsia y falla renal. Vigila tiocianato en falla renal y cianuro en falla hepática.`},
  {f:`Heparina no fraccionada`, amp:`Frasco de 5000 U/mL`, prep:`25.000 U en 250 mL de SF`, mg:25000, vol:250, u:`U/h`, unidades:true,
   rango:`12–14 U/kg/h tras bolo de 60 U/kg`, via:`Periférica`,
-  n:`El bolo máximo es 4000 U. La meta es anti-Xa de 0,3 a 0,7 U/mL, o TTPA 2 a 2,5 veces el control. Con esta preparación la concentración es 100 U/mL, que es la más usada.`},
+  n:`El bolo máximo es 4000 U. La meta cambia según la indicación: anti-Xa de 0,3 a 0,7 U/mL o TTPA de 2 a 2,5 veces el control en tromboembolismo venoso; TTPA de 1,5 a 2,0 veces el control en síndrome coronario agudo. Con esta preparación la concentración es 100 U/mL, que es la más usada.`},
  {f:`Insulina cristalina`, amp:`Frasco de 100 U/mL`, prep:`100 U en 100 mL de SF`, mg:100, vol:100, u:`U/h`, unidades:true,
   rango:`0,1 U/kg/h en cetoacidosis`, via:`Periférica`,
   n:`Purga 20 mL del sistema antes de conectar: la insulina se adhiere al plástico y las primeras dosis se pierden. Concentración 1 U/mL, de modo que las U/h son directamente los mL/h.`},
@@ -10874,7 +10882,7 @@ const ELP = [
    {h:`Cuándo endovenoso`, li:[
     {x:`Potasio bajo 3,0, arritmia, parálisis, cambios en el ECG, usuario de digitálicos, íleo o vómitos.`, ojo:true},
     {x:`<b>Concentración máxima: 40 mEq/L por vía periférica</b> (sobre eso, flebitis) y hasta <b>100 mEq/L por vía central</b>.`, ojo:true},
-    {x:`<b>Velocidad máxima 10 mEq/h.</b> Hasta 20 mEq/h solo con arritmia maligna o parálisis, con monitorización continua y vía central.`, ojo:true},
+    {x:`<b>Washington fija el techo en 20 mEq/h</b>, y solo permite superarlo ante parálisis o arritmia ventricular maligna, con observación estrecha. En la práctica habitual se usa <b>10 mEq/h como límite por vía periférica sin monitorización</b>, reservando 10 a 20 mEq/h para el paciente monitorizado con vía central.`, ojo:true},
     {x:`Diluir en <b>suero fisiológico, nunca en glucosado</b>: la glucosa estimula la insulina y el potasio baja todavía más.`, ojo:true},
     {x:`Nunca en bolo. El potasio en bolo es letal.`, ojo:true}
    ]},
@@ -10980,11 +10988,12 @@ const ELP = [
     {x:`Sintomático (arritmia, tetania, convulsión): <b>1–2 g de sulfato de magnesio EV en 15 min</b>. 1 g de sulfato = 96 mg de magnesio elemental.`, ojo:true},
     {x:`Mantener la reposición <b>3 a 7 días</b>: el nivel sérico sube rápido y se elimina por orina, pero los depósitos intracelulares tardan en llenarse.`},
     {x:`Asintomático: vía oral. Cerca de 240 mg de magnesio elemental al día en el déficit leve, hasta 720 mg/día si es más severo. La diarrea es el efecto que limita la dosis.`},
-    {x:`Control diario del magnesio; ajustar para mantenerlo bajo 2,5 mEq/L.`}
+    {x:`Control diario del magnesio. Washington define <b>hipermagnesemia sobre 2,2 mEq/L</b>; los síntomas aparecen habitualmente sobre 4 mEq/L y el primero suele ser la <b>hiporreflexia</b>.`}
    ]},
    {h:`Precauciones`, li:[
     {x:`<b>En falla renal, aunque sea leve: dosis reducidas y controles más frecuentes.</b> El exceso no se elimina.`, ojo:true},
-    {x:`Vigilar los reflejos osteotendíneos: la hiporreflexia anuncia hipermagnesemia.`, ojo:true},
+    {x:`Vigilar los reflejos osteotendíneos: la hiporreflexia es habitualmente el <b>primer signo</b> de toxicidad por magnesio.`, ojo:true},
+    {x:`Si aparece toxicidad: <b>gluconato de calcio 10%, 10 a 20 mL (1 a 2 g) EV en 10 min</b>, más suero para favorecer la excreción renal. Con falla renal significativa, hemodiálisis.`, ojo:true},
     {x:`Un magnesio sérico normal <b>no descarta</b> déficit corporal total: solo el 1% está en el líquido extracelular.`},
     {x:`En torsades de pointes se da sulfato de magnesio aunque el nivel sea normal.`},
     {x:`Causas frecuentes: alcoholismo, diarrea prolongada, sonda nasogástrica, inhibidores de bomba de protones, diuréticos de asa, aminoglucósidos, anfotericina, cisplatino y ciclosporina.`}
@@ -11130,8 +11139,8 @@ function calcK(){
   const avisos = [];
   if(conc > 100) avisos.push('La concentración pasa de 100 mEq/L: no es administrable ni por vía central.');
   else if(conc > 40) avisos.push('Sobre 40 mEq/L: solo por vía central. Por vía periférica hace flebitis.');
-  if(vel > 20) avisos.push('Sobre 20 mEq/h: no corresponde ni siquiera con monitorización.');
-  else if(vel > 10) avisos.push('Sobre 10 mEq/h: solo con arritmia maligna o parálisis, monitor continuo y vía central.');
+  if(vel > 20) avisos.push('Sobre 20 mEq/h: supera el techo que fija Washington, que solo se excede ante parálisis o arritmia ventricular maligna y con observación estrecha.');
+  else if(vel > 10) avisos.push('Entre 10 y 20 mEq/h: dentro del techo del manual, pero exige monitorización continua y vía central.');
   out.innerHTML = `Concentración: <b>${fmt(conc)} mEq/L</b> · Velocidad: <b>${fmt(vel)} mEq/h</b> · Bomba a <b>${Math.round(mlh)} mL/h</b><br>
     ${avisos.length ? avisos.map(a => `<span class="mal">${a}</span>`).join('<br>') : 'Dentro de los límites para vía periférica sin monitorización.'}<br>
     <span class="calcref">Diluido en suero fisiológico, nunca en glucosado. Nunca en bolo. Y mide el magnesio: si está bajo, el potasio no va a subir.</span>`;
