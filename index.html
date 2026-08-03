@@ -453,8 +453,6 @@
   @media(min-width:820px){ .drog .dc{grid-template-columns:1fr 1fr;gap:9px 22px;} }
 
   /* ---------- ficha de antibióticos embebida ---------- */
-  #atb-marco{height:calc(100vh - 300px);min-height:520px;display:block;}
-  @media(max-width:820px){ #atb-marco{height:calc(100vh - 250px);min-height:420px;} }
 
   /* ---------- triage ---------- */
   #sub-triage .sug{
@@ -753,11 +751,29 @@
           Trae buscador propio, modo examen que tapa las respuestas y filtro de esenciales.</p>
         </div>
         <div class="modelo-pie">
-          <button class="btn chico" id="atb-nueva">Abrir en pestaña aparte</button>
-          <span class="calcref">Se carga completa y funciona sin conexión, igual que el resto de la app.</span>
+          <button class="btn primario" id="atb-nueva">Abrir la ficha de antibióticos</button>
+          <span class="calcref">Se abre en una pestaña aparte, a pantalla completa. Va incluida en la app: funciona sin conexión.</span>
         </div>
       </div>
-      <iframe id="atb-marco" title="Ficha de antibióticos" style="width:100%;border:1px solid var(--regla-fuerte);border-radius:var(--radio);background:var(--hoja);box-shadow:var(--sombra);"></iframe>
+      <div class="secc">
+        <div class="secc-cuerpo">
+          <h5>Qué trae</h5>
+          <ul>
+            <li><b>El enemigo.</b> Mapa de microbiología ordenado por Gram, forma, agrupación y oxígeno, con la clínica de cada germen y su tratamiento de referencia.</li>
+            <li><b>El arsenal.</b> Familia por familia, con la barra de cobertura de cinco casillas.</li>
+            <li><b>Matriz fármaco por fármaco</b> y tabla de dosis con duración y ajuste renal.</li>
+            <li><b>Empírico por síndrome</b> y la vuelta al revés: tengo este germen, qué le doy.</li>
+            <li><b>Alergia, riñón, embarazo y paso a vía oral</b>, reglas de memorización, efectos adversos y un mazo de tarjetas de repaso.</li>
+            <li>Buscador propio, <b>modo examen</b> que tapa las respuestas, y filtro de esenciales.</li>
+          </ul>
+          <h5>Si el navegador bloquea la ventana</h5>
+          <ul>
+            <li>Permite las ventanas emergentes para este sitio, o mantén presionado el botón y elige abrir en pestaña nueva.</li>
+          </ul>
+        </div>
+        <div class="fuente"><b>De dónde sale.</b> Ficha construida sobre la <b>Guía Sanford</b> cargada en el proyecto.
+        Sus tablas tienen el reconocimiento de texto degradado, así que <b>las dosis deben confirmarse</b> contra la guía impresa o la aplicación vigente antes de usarlas en un paciente.</div>
+      </div>
     </div>
   </section>
 </main>
@@ -1155,7 +1171,7 @@ const DATA = [
 
 /* ---------------------------------------------------------- CARDIO */
 {
- id:`sca`, g:`Cardiología`, n:`Síndrome coronario agudo`,
+ id:`sca`, g:`Cardiología`, n:`Síndrome coronario · enfoque inicial`,
  lema:`El ECG en 10 minutos define el resto del día. Todo lo demás es acompañamiento de la reperfusión.`,
  reloj:[
   {t:`≤ 10 min`, a:`ECG de 12 derivaciones desde el primer contacto`, c:true},
@@ -1388,6 +1404,329 @@ const DATA = [
   `No pronosticar en las primeras horas.`
  ],
  fuente:`<b>Washington</b>, Apéndice C (algoritmos de soporte vital avanzado, adaptados de las guías AHA 2020) y cap. 6 (amiodarona vs lidocaína en FV refractaria). Los algoritmos del manual son figuras: <b>ten a mano el algoritmo ACLS de tu servicio.</b>`
+},
+
+
+{
+ id:`hta-crisis`, g:`Cardiología`, n:`Crisis hipertensiva`,
+ lema:`La cifra no define nada por sí sola. Lo que separa una emergencia de una urgencia es el daño de órgano en curso, y de esa distinción depende si bajas la presión en minutos o en días.`,
+ reloj:[
+  {t:`Inmediato`, a:`Buscar daño de órgano: es lo que decide todo`, c:true},
+  {t:`Primera hora`, a:`Emergencia: bajar la PAS no más de 25%. Las excepciones tienen meta propia`, c:true},
+  {t:`2–6 h`, a:`Si está estable, llevar a 160/100`, c:true},
+  {t:`24–48 h`, a:`Recién ahí, con cautela, a lo normal`},
+  {t:`Urgencia`, a:`Sin daño de órgano: vía oral, observación corta y control ambulatorio`, c:true}
+ ],
+ b:[
+  {t:`La distinción que ordena todo`, f:[
+   {i:`<b>Emergencia hipertensiva</b>: presión muy elevada CON daño agudo de órgano blanco — retina, cerebro, corazón, grandes arterias o riñón`, n:`Washington. Puede aparecer en un hipertenso conocido o debutar en alguien previamente normotenso.`, a:true},
+   {i:`<b>Urgencia hipertensiva</b>: presión severamente elevada SIN evidencia de daño agudo de órgano`, n:`El ESC 2023 usa ese término, y advierte que la ambigüedad entre "urgencia" y "crisis hipertensiva" ha distorsionado los datos epidemiológicos.`, a:true},
+   {i:`La hipertensión asintomática severa sin daño de órgano <b>no es una emergencia</b>`, n:`Washington: no hay beneficio probado de bajar la presión rápido en ese paciente.`, a:true},
+   {i:`No existe un número que defina la emergencia: el daño de órgano manda sobre la cifra`, a:true}
+  ]},
+  {t:`Buscar el daño de órgano`, f:[
+   {i:`Neurológico: cefalea, alteración visual, somnolencia, letargia, crisis tónico-clónicas, ceguera cortical, deterioro de conciencia`, n:`ESC 2023: en la encefalopatía hipertensiva esos síntomas pueden preceder a la pérdida de conciencia. Los déficits focales son raros y obligan a sospechar un ACV.`, a:true},
+   {i:`Fondo de ojo: hemorragias en llama y papiledema`, a:true},
+   {i:`Cardíaco: dolor torácico, disnea, edema pulmonar. ECG y troponinas`},
+   {i:`Renal: creatinina, sedimento urinario, diuresis`},
+   {i:`Microangiopatía: hemograma con frotis buscando esquistocitos, LDH, haptoglobina y plaquetas`, a:true},
+   {i:`Aórtico: asimetría de pulsos o de presión entre brazos, dolor desgarrador, soplo de insuficiencia aórtica`, a:true},
+   {i:`Test de embarazo en toda mujer en edad fértil, y proteinuria si está embarazada`, a:true}
+  ]},
+  {t:`Hipertensión maligna`, f:[
+   {i:`Presión muy elevada con cambios del fondo de ojo, microangiopatía y coagulación intravascular diseminada`, n:`Washington. Su marca patológica es la necrosis fibrinoide de las arterias pequeñas del riñón, la retina y el cerebro.`, a:true},
+   {i:`Se asocia a encefalopatía en cerca del 15% de los casos y a deterioro agudo de la función renal`, a:true},
+   {i:`El término "maligna" refleja el pronóstico muy malo si no se trata`, n:`ESC 2023: los registros europeos muestran que su frecuencia está aumentando.`},
+   {i:`Meta: bajar la presión arterial media 20–25% en varias horas, no de golpe`, n:`ESC 2023, Tabla 24. Primera línea labetalol o nicardipino; alternativas nitroprusiato o urapidilo.`, a:true}
+  ]},
+  {t:`Metas según el cuadro`, f:[
+   {i:`<b>Regla general</b>: bajar la PAS no más de 25% en la primera hora; luego a 160/100 en 2 a 6 h; y a lo normal en 24 a 48 h`, n:`Washington. Aplica en ACV isquémico, infarto, falla ventricular izquierda con edema pulmonar, angina inestable y falla renal aguda.`, a:true},
+   {i:`<b>Encefalopatía hipertensiva</b>: bajar la PAM 20–25% de inmediato`, n:`ESC 2023.`, a:true},
+   {i:`<b>Evento coronario agudo</b> y <b>edema pulmonar cardiogénico</b>: PAS bajo 140 de inmediato`, a:true},
+   {i:`<b>Disección aórtica</b>: PAS bajo 120 y frecuencia bajo 60, de inmediato`, a:true},
+   {i:`<b>Eclampsia y preeclampsia severa</b>: PAS bajo 160 y PAD bajo 105`, a:true},
+   {i:`En disección, preeclampsia severa o eclampsia y crisis por feocromocitoma, Washington baja la PAS a menos de 140 en la primera hora y luego bajo 120`, a:true}
+  ]},
+  {t:`El ACV es un caso aparte`, f:[
+   {i:`El ACV, y sobre todo la hemorragia intracerebral, se asocia a hipertensión severa, pero requiere una estrategia propia`, n:`ESC 2023: la magnitud, la velocidad y la relación con la presión previa tienen efectos complejos sobre el área isquémica que rodea la lesión. Debe manejarse en unidad especializada.`, a:true},
+   {i:`No apliques la regla general del 25% al ACV: usa las metas de la ficha de ACV isquémico o hemorrágico`, a:true}
+  ]},
+  {t:`La urgencia hipertensiva`, f:[
+   {i:`Tratamiento por <b>vía oral</b>, sin apuro`, n:`ESC 2023: se sugieren fármacos que no interfieran con el estudio de hipertensión secundaria en el paciente no tratado.`, a:true},
+   {i:`<b>Nunca nifedipino sublingual</b>: el descenso no se puede anticipar y suele ser demasiado rápido y demasiado grande`, n:`ESC 2023 lo desaconseja expresamente.`, a:true},
+   {i:`Observación en unidad de estadía corta antes del alta`, n:`ESC 2023.`, a:true},
+   {i:`La presión puede seguir elevada después del alta: hay que asegurar mediciones posteriores en consulta y fuera de ella`, a:true},
+   {i:`Bajar la presión de golpe expone a hipoperfusión cerebral e insuficiencia coronaria, sobre todo en el adulto mayor, el depletado de volumen o el que ya toma antihipertensivos`, n:`Washington.`, a:true},
+   {i:`Buscar la causa del alza: mala adherencia, dolor, retención urinaria, ansiedad, suspensión de clonidina o betabloqueo, AINE, simpaticomiméticos`, a:true}
+  ]}
+ ],
+ no:[
+  `No tratar un número: tratar el daño de órgano.`,
+  `No usar nifedipino sublingual.`,
+  `No bajar la presión más de 25% en la primera hora, salvo en los cuadros con meta propia.`,
+  `No aplicar la regla general al ACV: tiene estrategia propia y se maneja en unidad especializada.`,
+  `No hospitalizar ni infundir a un paciente con hipertensión asintomática severa sin daño de órgano.`,
+  `No dar de alta sin buscar la causa del alza ni asegurar el control.`
+ ],
+ fuente:`<b>Guía ESC/ESH 2023 de hipertensión arterial</b>, cargada en el proyecto: definición de emergencia y de urgencia hipertensiva, hipertensión maligna con su necrosis fibrinoide y su 15% de encefalopatía, síntomas neurológicos que preceden a la pérdida de conciencia, el ACV como situación que requiere estrategia propia en unidad especializada, Tabla 24 con las metas por presentación clínica, el rechazo expreso al nifedipino sublingual y la observación en unidad de estadía corta. <b>Washington</b>, cap. 3: definición de emergencia hipertensiva con daño de órgano, la regla de no bajar la PAS más de 25% en la primera hora, luego a 160/100 en 2–6 h y a lo normal en 24–48 h, las excepciones con meta bajo 140 y luego bajo 120, la hipertensión asintomática severa que no es emergencia, y el riesgo de hipoperfusión con el descenso brusco.`
+},
+
+{
+ id:`aorta`, g:`Cardiología`, n:`Síndrome aórtico agudo`,
+ lema:`El orden de los fármacos no es un detalle: primero el betabloqueo, después el vasodilatador. Al revés, el nitroprusiato solo aumenta la contractilidad y las fuerzas que siguen rompiendo la íntima.`,
+ reloj:[
+  {t:`Inmediato`, a:`Sospecha clínica: dolor desgarrador, asimetría de pulsos o de presión, soplo aórtico nuevo`, c:true},
+  {t:`Primeros minutos`, a:`Betabloqueo ANTES del vasodilatador`, c:true},
+  {t:`De inmediato`, a:`Meta: PAS bajo 120 y frecuencia bajo 60`, c:true},
+  {t:`Urgente`, a:`Angiotomografía y aviso a cirugía cardiovascular`, c:true},
+  {t:`Tipo A`, a:`Es quirúrgica de urgencia: el reloj corre en horas`, c:true}
+ ],
+ b:[
+  {t:`Sospecharlo`, f:[
+   {i:`Dolor torácico o dorsal de inicio brusco, máximo desde el comienzo, descrito como desgarrador o de rasgadura`, a:true},
+   {i:`Asimetría de pulsos o diferencia de presión entre ambos brazos`, a:true},
+   {i:`Soplo de insuficiencia aórtica nuevo, déficit neurológico, isquemia de una extremidad, dolor abdominal por compromiso de ramas`, a:true},
+   {i:`Factores de riesgo: hipertensión mal controlada, Marfan y otras conectivopatías, válvula aórtica bicúspide, embarazo, cocaína, antecedente de cirugía aórtica`},
+   {i:`Medir la presión en <b>ambos brazos</b> y palpar todos los pulsos: es lo que más se olvida y lo que más orienta`, a:true},
+   {i:`El ECG puede mostrar supradesnivel si la disección compromete una coronaria, habitualmente la derecha`, a:true}
+  ]},
+  {t:`Confirmarlo`, f:[
+   {i:`Angiotomografía de tórax, abdomen y pelvis con contraste: es el examen de elección en el paciente estable`, a:true},
+   {i:`Ecocardiograma transesofágico si el paciente está demasiado inestable para ir a la tomografía`},
+   {i:`Radiografía de tórax: puede mostrar mediastino ensanchado, pero <b>una radiografía normal no descarta nada</b>`, a:true},
+   {i:`Dímero D negativo baja la probabilidad, pero no reemplaza a la imagen si la sospecha es alta`, a:true},
+   {i:`Clasificación de Stanford: tipo A compromete la aorta ascendente, tipo B no la compromete`, a:true}
+  ]},
+  {t:`Primero el betabloqueo`, f:[
+   {i:`Los betabloqueantes son el fármaco inicial de elección y <b>deben preceder al vasodilatador</b>`, n:`Washington. Bajan la frecuencia y contrarrestan la taquicardia refleja y el aumento de inotropismo que produce el vasodilatador.`, a:true},
+   {i:`<b>Esmolol</b>: carga de 500 µg/kg/min por 1 min y luego 50–300 µg/kg/min`, n:`Washington: puede ser preferible por su duración muy corta, sobre todo si hay contraindicación relativa al betabloqueo. Si se tolera, se pasa después a uno de acción más larga.`, a:true},
+   {i:`<b>Labetalol</b> endovenoso puede usarse como agente único`, n:`Washington: produce descenso de presión dependiente de la dosis y baja la contractilidad, con la ventaja de permitir el paso a vía oral después.`, a:true},
+   {i:`Si el betabloqueo está contraindicado: diltiazem o verapamilo`, n:`Washington.`, a:true}
+  ]},
+  {t:`Después el vasodilatador`, f:[
+   {i:`<b>Nitroprusiato de sodio</b> es el vasodilatador inicial de elección, por lo predecible de la respuesta y la ausencia de taquifilaxia`, n:`Washington.`, a:true},
+   {i:`<b>El nitroprusiato solo aumenta la contractilidad ventricular y las fuerzas de cizallamiento arterial, que contribuyen a que la disección siga avanzando</b>: el betabloqueo simultáneo es imprescindible`, n:`Washington lo dice con esas palabras.`, a:true},
+   {i:`También se pueden usar nicardipino, clevidipino, nitroglicerina, enalaprilato y fenoldopam`, a:true},
+   {i:`Meta: <b>PAS bajo 120 mmHg y frecuencia bajo 60 lpm</b>, de inmediato`, n:`ESC 2023, Tabla 24, y Washington para el mantenimiento crónico.`, a:true}
+  ]},
+  {t:`Lo demás del manejo agudo`, f:[
+   {i:`Analgesia potente con opioides: el dolor mantiene la descarga adrenérgica`, a:true},
+   {i:`Dos vías gruesas, grupo y pruebas cruzadas, monitorización continua, línea arterial`},
+   {i:`Aviso inmediato a cirugía cardiovascular: <b>el tipo A es quirúrgico de urgencia</b>`, a:true},
+   {i:`El tipo B no complicado se maneja médicamente; se interviene si hay isquemia de órganos, propagación, dolor persistente o rotura inminente`, a:true},
+   {i:`Buscar complicaciones: taponamiento, insuficiencia aórtica aguda, infarto, ACV, isquemia mesentérica o de extremidades, falla renal`, a:true},
+   {i:`Todo paciente con disección, incluido el operado, requiere tratamiento antihipertensivo agudo y crónico`, n:`Washington: para la estabilización inicial y para prevenir rotura y progresión.`, a:true}
+  ]},
+  {t:`Al alta y a largo plazo`, f:[
+   {i:`Meta crónica: PAS igual o menor a 120 y frecuencia bajo 60, si se tolera`, n:`Washington.`, a:true},
+   {i:`Se prefieren los antihipertensivos con propiedades inotrópicas negativas: calcioantagonistas, betabloqueantes, metildopa, clonidina y reserpina`, n:`Washington, para el manejo de la fase post-aguda.`, a:true},
+   {i:`Imagen de control seriada según el tipo y la evolución`},
+   {i:`Estudio de conectivopatía y consejo familiar si el paciente es joven o tiene fenotipo sugerente`},
+   {i:`Cese de tabaco, evitar esfuerzos isométricos intensos y educación sobre los síntomas de recurrencia`}
+  ]}
+ ],
+ no:[
+  `No dar el vasodilatador antes del betabloqueo: propaga la disección.`,
+  `No usar nitroprusiato solo, sin betabloqueo simultáneo.`,
+  `No descartar la disección por una radiografía de tórax normal.`,
+  `No anticoagular ni trombolisar un supradesnivel sin haber pensado en la disección: es una de las causas clásicas de catástrofe.`,
+  `No demorar el aviso a cirugía esperando la imagen si la sospecha es alta y el paciente se deteriora.`
+ ],
+ fuente:`<b>Washington</b>, cap. 3 (disección aórtica): el betabloqueo como fármaco inicial que debe preceder al vasodilatador, esmolol y labetalol con sus ventajas, diltiazem y verapamilo en el intolerante, el nitroprusiato como vasodilatador inicial de elección y la advertencia de que solo aumenta la contractilidad y las fuerzas de cizallamiento que propagan la disección, los agentes alternativos, la meta crónica de PAS ≤ 120 y frecuencia < 60, la preferencia por antihipertensivos con efecto inotrópico negativo en la fase post-aguda, y la necesidad de tratamiento agudo y crónico en todos los pacientes, incluidos los operados. <b>ESC/ESH 2023</b>, Tabla 24: meta inmediata de PAS bajo 120 y frecuencia bajo 60, con esmolol más nitroprusiato, nitroglicerina o nicardipino como primera línea, y labetalol o metoprolol como alternativa. La clasificación de Stanford y los criterios de intervención del tipo B provienen de la práctica estándar, no del texto de los manuales cargados.`
+},
+
+{
+ id:`iamcest`, g:`Cardiología`, n:`IAM con supradesnivel del ST`,
+ lema:`Aquí no se estratifica riesgo: se reperfunde. Todo lo demás del manejo puede esperar diez minutos; la arteria no.`,
+ reloj:[
+  {t:`10 min`, a:`ECG de 12 derivaciones desde que el paciente entra`, c:true},
+  {t:`90 min`, a:`Angioplastia primaria: tiempo puerta-balón`, c:true},
+  {t:`30 min`, a:`Si no hay hemodinamia y no se puede trasladar a tiempo: fibrinólisis, tiempo puerta-aguja`, c:true},
+  {t:`120 min`, a:`Si el traslado a angioplastia supera este tiempo, se trombolisa donde está`, c:true},
+  {t:`24 h`, a:`Betabloqueo oral en las primeras 24 h, si no hay contraindicación`, c:true}
+ ],
+ b:[
+  {t:`Diagnóstico`, f:[
+   {i:`Supradesnivel del ST en dos derivaciones contiguas, o bloqueo de rama izquierda nuevo con clínica compatible`, a:true},
+   {i:`ECG de 12 derivaciones en los primeros 10 minutos, sin excepción`, a:true},
+   {i:`En el infarto inferior, pedir <b>derivaciones derechas</b>: V3R y V4R, buscando compromiso del ventrículo derecho`, a:true},
+   {i:`Si hay supradesnivel, la troponina NO se espera: se reperfunde`, a:true},
+   {i:`Pensar siempre en disección aórtica antes de anticoagular y trombolisar: presión en ambos brazos y pulsos`, a:true}
+  ]},
+  {t:`Reperfusión: la única decisión que importa`, f:[
+   {i:`<b>Angioplastia primaria</b> si está disponible dentro de los tiempos: es la estrategia preferida`, a:true},
+   {i:`<b>Fibrinólisis</b> si la angioplastia no es alcanzable a tiempo`, a:true},
+   {i:`Tenecteplasa 0,5 mg/kg EV en bolo, dosis total 30–50 mg {{0.5|mg|50}}`, n:`Washington, Tabla 4-18. Beneficio de mortalidad equivalente al alteplasa con menos sangrado.`, a:true},
+   {i:`Alteplasa: 15 mg en bolo, luego 0,75 mg/kg en 30 min (máximo 50 mg) y 0,5 mg/kg en 60 min (máximo 35 mg)`, n:`Washington, Tabla 4-18.`},
+   {i:`Estreptoquinasa 1,5 millones de unidades EV en 60 min`, n:`Washington: reacciones alérgicas en 1–2%, hipotensión aislada en 10% que responde a volumen. Quien ya la recibió debe usar otro trombolítico.`},
+   {i:`Signos de reperfusión exitosa: alivio del dolor, reducción del supradesnivel en 50% y ritmo idioventricular`, n:`Washington.`, a:true},
+   {i:`Angioplastia de rescate si no hay signos de reperfusión`, a:true}
+  ]},
+  {t:`Antiagregación`, f:[
+   {i:`Aspirina 162–325 mg masticada o triturada, oral o rectal`, n:`Washington, Tabla 4-17: las formulaciones sin cubierta entérica aceleran la absorción y la inhibición plaquetaria.`, a:true},
+   {i:`<b>Con angioplastia primaria</b>: ticagrelor 180 mg de carga y luego 90 mg c/12 h, o prasugrel 60 mg y luego 10 mg/día, o clopidogrel 600 mg y luego 75 mg`, a:true},
+   {i:`<b>Con fibrinólisis</b>: clopidogrel 300 mg de carga en las primeras 24 h; si se inicia después de 24 h, se prefiere 600 mg. Mantención 75 mg/día`, n:`Washington.`, a:true},
+   {i:`<b>Mayores de 75 años que reciben fibrinólisis no llevan dosis de carga</b> de clopidogrel`, n:`Washington.`, a:true},
+   {i:`Prasugrel: no en mayores de 75, ni bajo 60 kg, ni con ACV o crisis isquémica transitoria previa. Solo después de conocer la anatomía o dentro de una hora de la angioplastia`, a:true},
+   {i:`Con ticagrelor, la aspirina de mantención no debe superar 100 mg/día`, a:true},
+   {i:`Los inhibidores de glicoproteína IIb/IIIa no tienen rol de rutina en la presentación inicial ni como adyuvantes del trombolítico`, n:`Washington.`, a:true}
+  ]},
+  {t:`Anticoagulación`, f:[
+   {i:`Se inicia en todos, vayan a angioplastia o a fibrinólisis`, a:true},
+   {i:`<b>Heparina no fraccionada</b>: bolo de 60 U/kg (máximo 4000 U) y luego 12 U/kg/h. Se da a todos los que van a angioplastia y a los que reciben trombolítico, salvo estreptoquinasa`, n:`Washington, Tabla 4-17.`, a:true},
+   {i:`<b>Enoxaparina con fibrinólisis</b>, si la creatinina es menor de 2,5 en hombres o 2 en mujeres: bolo de 30 mg EV y, 15 minutos después, 1 mg/kg SC c/12 h. Durante toda la hospitalización, sin exceder 8 días`, n:`Washington.`, a:true},
+   {i:`<b>Mayores de 75 años: sin bolo, y 0,75 mg/kg SC c/12 h</b>`, n:`Washington.`, a:true},
+   {i:`Washington no recomienda la enoxaparina como anticoagulante para la angioplastia primaria`, a:true},
+   {i:`Bivalirudina: bolo de 0,75 mg/kg y luego 1,75 mg/kg/h. Es el agente de elección si hay trombocitopenia por heparina`, a:true},
+   {i:`Fondaparinux 2,5 mg: superior a la heparina durante la trombólisis, pero aumenta la trombosis del catéter en la angioplastia`, n:`Washington.`, a:true}
+  ]},
+  {t:`El resto del manejo agudo`, f:[
+   {i:`Nitroglicerina sublingual o en aerosol cada 5 min hasta tres dosis si no hay hipotensión; endovenosa 10–200 µg/min si el dolor no cede`, n:`Washington.`, a:true},
+   {i:`Nitroglicerina prohibida con PAS bajo 90, infarto del ventrículo derecho, frecuencia sobre 100 o bajo 50, o inhibidores de fosfodiesterasa en las últimas 48 h`, n:`Washington.`, a:true},
+   {i:`Morfina 2–4 mg EV solo para el dolor refractario a la nitroglicerina`, n:`Washington: la analgesia adecuada baja las catecolaminas y el consumo miocárdico de oxígeno.`},
+   {i:`<b>Betabloqueo oral</b> en las primeras 24 h en todos los que no tengan falla cardíaca nueva, shock (Killip II o más), edad sobre 70, PAS bajo 120, pulso sobre 110 o bajo 60, o bloqueo avanzado`, n:`Washington.`, a:true},
+   {i:`<b>El betabloqueo endovenoso puede aumentar la mortalidad</b> en el infarto con supradesnivel: se reserva para arritmias o hipertensión acelerada en pacientes sin esos elementos`, n:`Washington. La taquicardia sinusal puede ser una respuesta compensatoria para mantener el gasto y no debe llevar a usarlo.`, a:true},
+   {i:`Estatina de alta intensidad desde el ingreso`, a:true},
+   {i:`Monitorización continua, dos vías venosas, oxígeno solo si hay hipoxemia`, a:true}
+  ]},
+  {t:`Al alta`, f:[
+   {i:`Doble antiagregación, betabloqueo y estatina`, n:`Washington.`, a:true},
+   {i:`La mayoría debe irse con inhibidor de la enzima convertidora`, a:true},
+   {i:`Evaluar necesidad de antagonista de aldosterona`, a:true},
+   {i:`Rehabilitación cardíaca, cese de tabaco y control de factores de riesgo`},
+   {i:`Buscar estresores vitales y depresión`, n:`Washington lo incluye expresamente en el seguimiento.`}
+  ]}
+ ],
+ no:[
+  `No esperar la troponina para reperfundir: el supradesnivel basta.`,
+  `No usar betabloqueo endovenoso de rutina: puede aumentar la mortalidad.`,
+  `No dar nitroglicerina en el infarto del ventrículo derecho ni con PAS bajo 90.`,
+  `No dar carga de clopidogrel a mayores de 75 años que reciben fibrinólisis.`,
+  `No anticoagular ni trombolisar sin haber pensado en la disección aórtica.`,
+  `No dar prasugrel antes de conocer la anatomía coronaria.`
+ ],
+ fuente:`<b>Washington</b>, cap. 4 (infarto con supradesnivel del ST): Tabla 4-17 de terapia médica inicial con las dosis de aspirina, clopidogrel, prasugrel, ticagrelor, cangrelor, heparina no fraccionada, enoxaparina, bivalirudina, fondaparinux, nitroglicerina y metoprolol; Tabla 4-18 de agentes fibrinolíticos con las dosis de estreptoquinasa, alteplasa, reteplasa y tenecteplasa; los signos de reperfusión exitosa; la regla de no cargar clopidogrel sobre los 75 años con fibrinólisis; el esquema de enoxaparina con bolo de 30 mg y su ajuste sobre los 75 años; la advertencia de que el betabloqueo endovenoso puede aumentar la mortalidad; las contraindicaciones de la nitroglicerina; y el alta con doble antiagregación, betabloqueo, estatina, inhibidor de la enzima convertidora y evaluación de antagonista de aldosterona. Los tiempos de puerta-balón y puerta-aguja son estándar de guía y no texto extraíble de los manuales cargados.`
+},
+
+{
+ id:`iamsest`, g:`Cardiología`, n:`IAM sin supradesnivel del ST`,
+ lema:`Aquí no corre el reloj de la reperfusión: corre el de la estratificación. Hay troponina elevada, así que hay necrosis, y la pregunta es a qué velocidad va este paciente al cateterismo.`,
+ reloj:[
+  {t:`10 min`, a:`ECG de 12 derivaciones`, c:true},
+  {t:`0 y 1–3 h`, a:`Troponina de alta sensibilidad seriada: el delta es lo que define`, c:true},
+  {t:`Inmediato`, a:`Muy alto riesgo — inestabilidad, arritmia maligna, dolor refractario, insuficiencia cardíaca: coronariografía urgente`, c:true},
+  {t:`24 h`, a:`Alto riesgo: estrategia invasiva precoz`, c:true},
+  {t:`Seriado`, a:`ECG repetido si el dolor recurre: puede convertirse en supradesnivel`, c:true}
+ ],
+ b:[
+  {t:`Qué lo define`, f:[
+   {i:`Clínica compatible con <b>troponina elevada y curva dinámica</b>, sin supradesnivel persistente del ST`, a:true},
+   {i:`El ECG puede mostrar infradesnivel del ST, inversión de la onda T o ser normal`, a:true},
+   {i:`Es lo mismo que la angina inestable salvo por un punto: <b>aquí la troponina se elevó</b>, así que hubo necrosis`, a:true},
+   {i:`Troponina de alta sensibilidad seriada al ingreso y a la hora o a las 3 h, según el protocolo del laboratorio`, a:true},
+   {i:`Ojo con el infradesnivel extenso más supradesnivel en aVR: puede ser oclusión de tronco o enfermedad de tres vasos y se maneja como muy alto riesgo`, a:true},
+   {i:`Descartar causas de troponina elevada sin síndrome coronario: tromboembolismo, sepsis, miocarditis, falla renal, taquiarritmia, insuficiencia cardíaca`, a:true}
+  ]},
+  {t:`Estratificar el riesgo`, f:[
+   {i:`<b>Muy alto riesgo</b>: inestabilidad hemodinámica, shock cardiogénico, dolor recurrente o refractario, arritmia maligna o paro, complicación mecánica, insuficiencia cardíaca aguda o cambios dinámicos del ST. Coronariografía <b>inmediata</b>`, a:true},
+   {i:`<b>Alto riesgo</b>: troponina elevada con curva, cambios dinámicos del ST o de la T, puntaje GRACE alto. Estrategia invasiva <b>precoz</b>`, a:true},
+   {i:`Puntajes de riesgo: GRACE y TIMI ayudan a ordenar la decisión`},
+   {i:`Reevaluar con cada episodio de dolor: el ECG y la clínica pueden cambiar la categoría`, a:true}
+  ]},
+  {t:`Antiagregación`, f:[
+   {i:`Aspirina 162–325 mg de carga, luego 75–100 mg/día`, a:true},
+   {i:`<b>Ticagrelor</b> 180 mg de carga y 90 mg c/12 h: Washington lo señala como el inhibidor P2Y12 preferido en el síndrome coronario agudo por su ventaja en mortalidad`, n:`Con ticagrelor, la aspirina no debe superar 100 mg/día.`, a:true},
+   {i:`Clopidogrel 600 mg de carga y luego 75 mg/día por 12 meses`, n:`Washington.`},
+   {i:`Prasugrel 60 mg y luego 10 mg/día por un mínimo de 12 meses. <b>Solo después de la angiografía diagnóstica o dentro de una hora de la angioplastia</b>, por su mayor sangrado`, n:`Washington. Contraindicado con ACV o crisis isquémica transitoria previa y con sangrado patológico activo; se evita sobre 75 años y bajo 60 kg.`, a:true},
+   {i:`Eptifibatida: bolo de 180 µg/kg y luego 2 µg/kg/min, en el alto riesgo junto a aspirina y heparina`, n:`Washington: reducir la infusión a la mitad si la filtración es menor de 30, y evitarla en diálisis. El abciximab sí se puede usar en enfermedad renal terminal porque no se elimina por el riñón.`, a:true}
+  ]},
+  {t:`Anticoagulación`, f:[
+   {i:`<b>Heparina no fraccionada</b>: bolo de 60 U/kg (máximo 4000 U) y luego 12–14 U/kg/h, con TTPA de 1,5 a 2,0 veces el control`, n:`Washington, Tabla 4-13: junto a la aspirina reduce hasta 60% la muerte o el infarto precoz.`, a:true},
+   {i:`<b>Enoxaparina</b> 1 mg/kg SC c/12 h {{1|mg|}} por dosis`, n:`Washington: al menos tan eficaz como la heparina, no requiere monitorización, pero puede aumentar el sangrado y no se revierte bien.`, a:true},
+   {i:`Enoxaparina a la mitad de la dosis si la creatinina supera 2 mg/dL o la filtración es menor de 30`, n:`Washington.`, a:true},
+   {i:`Bivalirudina 0,75 mg/kg en bolo y 1,75 mg/kg/h: junto a aspirina y clopidogrel es al menos tan efectiva que el esquema con heparina y IIb/IIIa, con menos sangrado, aunque puede aumentar la trombosis del stent`, n:`Washington.`, a:true}
+  ]},
+  {t:`Antiisquémico y complementario`, f:[
+   {i:`Nitroglicerina para el dolor isquémico, con las mismas contraindicaciones de siempre`, a:true},
+   {i:`Betabloqueo oral, evitándolo si hay falla cardíaca, inestabilidad, bloqueo avanzado o broncoespasmo`, n:`Washington.`, a:true},
+   {i:`Estatina de alta intensidad desde el ingreso`, a:true},
+   {i:`Monitorización continua, ECG seriado, oxígeno solo si hay hipoxemia`},
+   {i:`Ecocardiograma para función ventricular y complicaciones`}
+  ]},
+  {t:`Revascularización y seguimiento`, f:[
+   {i:`Las indicaciones de angioplastia frente a cirugía son similares a las de la angina estable`, n:`Washington.`, a:true},
+   {i:`El shock cardiogénico puede beneficiarse de angioplastia con soporte mecánico antes que de cirugía de urgencia`, n:`Washington.`, a:true},
+   {i:`Enfermedad crítica de tronco izquierdo: revascularización quirúrgica urgente, y considerar balón de contrapulsación antes de la inducción anestésica`, n:`Washington.`, a:true},
+   {i:`<b>La mayor tasa de progresión a infarto o de reinfarto ocurre en los primeros 2 meses</b>; después el curso se parece al de la angina estable crónica`, n:`Washington.`, a:true},
+   {i:`Al alta: doble antiagregación, betabloqueo, estatina, y en la mayoría inhibidor de la enzima convertidora. Evaluar antagonista de aldosterona`, a:true},
+   {i:`Buscar estresores vitales y depresión`, n:`Washington.`}
+  ]}
+ ],
+ no:[
+  `No trombolisar: en el infarto sin supradesnivel la fibrinólisis no tiene indicación y solo agrega sangrado.`,
+  `No dar prasugrel antes de conocer la anatomía coronaria.`,
+  `No pasar por alto el infradesnivel extenso con supradesnivel en aVR: es enfermedad de tronco hasta demostrar lo contrario.`,
+  `No dejar de repetir el ECG cuando el dolor recurre.`,
+  `No atribuir toda troponina elevada a un síndrome coronario.`
+ ],
+ fuente:`<b>Washington</b>, cap. 4 (angina inestable e infarto sin supradesnivel): Tabla 4-13 de anticoagulantes con heparina no fraccionada 60 U/kg y 12–14 U/kg/h con TTPA de 1,5–2,0 veces el control, enoxaparina 1 mg/kg c/12 h con reducción del 50% si la creatinina supera 2 o la filtración es menor de 30, y bivalirudina; Tabla 4-12 de antiplaquetarios con ticagrelor como inhibidor P2Y12 preferido por su ventaja en mortalidad, las restricciones del prasugrel y el ajuste renal de la eptifibatida con la excepción del abciximab; las indicaciones de revascularización, el manejo del shock y de la enfermedad de tronco; y el dato de que la mayor progresión a infarto ocurre en los primeros 2 meses. La estratificación en muy alto y alto riesgo con sus tiempos corresponde a la práctica de guía y no es texto extraíble de los manuales cargados.`
+},
+
+{
+ id:`angina`, g:`Cardiología`, n:`Angina inestable`,
+ lema:`Mismo manejo inicial que el infarto sin supradesnivel, con una diferencia: la troponina no se elevó. Eso no la vuelve benigna, la vuelve la que más se manda a la casa por error.`,
+ reloj:[
+  {t:`10 min`, a:`ECG de 12 derivaciones`, c:true},
+  {t:`0 y 1–3 h`, a:`Troponina de alta sensibilidad seriada: si sube, ya no es angina inestable`, c:true},
+  {t:`Con cada dolor`, a:`ECG nuevo: el registro entre episodios puede ser normal`, c:true},
+  {t:`Antes del alta`, a:`Estratificación no invasiva o coronariografía según el riesgo`, c:true}
+ ],
+ b:[
+  {t:`Qué es y qué no es`, f:[
+   {i:`Síntomas isquémicos <b>sin elevación de troponina</b>: angina de reposo prolongada, de reciente comienzo, o en aumento (más frecuente, más intensa, con menos esfuerzo)`, a:true},
+   {i:`El ECG puede mostrar infradesnivel o inversión de la T, o ser completamente normal`, a:true},
+   {i:`Con las troponinas de alta sensibilidad, buena parte de lo que antes se llamaba angina inestable hoy se reclasifica como infarto sin supradesnivel`, a:true},
+   {i:`<b>Un ECG normal y una troponina normal no descartan enfermedad coronaria</b>: descartan necrosis en ese momento`, a:true},
+   {i:`El diagnóstico es clínico: si el relato es de angina en reposo prolongada o progresiva, se estudia aunque los exámenes estén normales`, a:true}
+  ]},
+  {t:`Descartar lo que mata`, f:[
+   {i:`Disección aórtica: dolor desgarrador, asimetría de pulsos o de presión entre brazos`, a:true},
+   {i:`Tromboembolismo pulmonar: dolor pleurítico, disnea súbita, factores de riesgo`, a:true},
+   {i:`Neumotórax, taponamiento, perforación esofágica`},
+   {i:`Y las causas no cardíacas frecuentes: reflujo, dolor musculoesquelético, ansiedad, herpes zóster`}
+  ]},
+  {t:`Manejo inicial`, f:[
+   {i:`Aspirina 162–325 mg de carga y luego 75–100 mg/día`, a:true},
+   {i:`Nitroglicerina sublingual y, si el dolor persiste, endovenosa`, a:true},
+   {i:`Betabloqueo oral si no hay contraindicación`, a:true},
+   {i:`Estatina de alta intensidad`, a:true},
+   {i:`Anticoagulación con heparina no fraccionada o enoxaparina en el paciente de riesgo intermedio o alto`, n:`Washington maneja la angina inestable y el infarto sin supradesnivel en el mismo capítulo y con el mismo esquema.`, a:true},
+   {i:`Inhibidor P2Y12 según la estrategia: si va a angioplastia, ticagrelor o clopidogrel; el prasugrel solo tras conocer la anatomía`, a:true},
+   {i:`Monitorización continua y ECG seriado`, a:true}
+  ]},
+  {t:`Estratificar antes de decidir el alta`, f:[
+   {i:`Alto riesgo: angina de reposo prolongada, cambios dinámicos del ECG, inestabilidad, insuficiencia cardíaca nueva, enfermedad coronaria conocida, puntaje GRACE o TIMI alto. Estrategia invasiva`, a:true},
+   {i:`Riesgo bajo con dos troponinas negativas y ECG seriado normal: se puede estudiar de forma no invasiva`, a:true},
+   {i:`Opciones no invasivas: prueba de esfuerzo, ecocardiograma de estrés, cintigrafía o angiotomografía coronaria según disponibilidad y probabilidad previa`},
+   {i:`El estudio no invasivo se hace <b>antes del alta o con fecha concreta y precoz</b>, no "cuando pueda"`, a:true}
+  ]},
+  {t:`El alta, que es donde se falla`, f:[
+   {i:`Riesgo bajo, dos troponinas negativas separadas, ECG seriado normal y paciente sin dolor: puede irse, pero con plan`, a:true},
+   {i:`Debe irse con aspirina, estatina, y el estudio funcional agendado con fecha`, a:true},
+   {i:`Indicaciones escritas de cuándo volver: dolor en reposo, dolor que dura más de 20 min, dolor con sudoración o disnea, o síncope`, a:true},
+   {i:`<b>La mayor tasa de progresión a infarto ocurre en los primeros 2 meses</b>: el control tiene que ser precoz`, n:`Washington.`, a:true},
+   {i:`Control de factores de riesgo, cese de tabaco, rehabilitación cardíaca`},
+   {i:`Buscar estresores vitales y depresión`, n:`Washington.`}
+  ]}
+ ],
+ no:[
+  `No mandar a casa un dolor de reposo prolongado por tener una sola troponina normal.`,
+  `No trombolisar: no hay indicación.`,
+  `No dar de alta sin estudio funcional agendado con fecha.`,
+  `No olvidar la disección aórtica y el tromboembolismo antes de quedarse con el diagnóstico coronario.`,
+  `No dar prasugrel antes de conocer la anatomía.`
+ ],
+ fuente:`<b>Washington</b>, cap. 4, que maneja la angina inestable y el infarto sin supradesnivel en el mismo capítulo y con el mismo esquema: Tabla 4-12 de antiplaquetarios, Tabla 4-13 de anticoagulantes, las indicaciones de revascularización y el dato de que la mayor progresión a infarto ocurre en los primeros 2 meses, con alta en doble antiagregación, betabloqueo, estatina e inhibidor de la enzima convertidora. La estratificación de riesgo con GRACE y TIMI y los algoritmos de troponina de alta sensibilidad corresponden a la práctica de guía y no son texto extraíble de los manuales cargados.`
 },
 
 /* ---------------------------------------------------------- INFECCIOSO */
@@ -7444,6 +7783,792 @@ const MAS_21 = {
 };
 Object.entries(MAS_21).forEach(([k, v]) => { RUBRICAS[k] = (RUBRICAS[k] || []).concat(v); });
 
+const MAS_22 = {
+
+"hta-crisis":[
+{esc:`Hombre de 54 años sin controles médicos hace años, traído por cefalea intensa de dos días, visión borrosa y hoy confusión. PA 232/136 en ambos brazos. Al fondo de ojo hay hemorragias en llama y papiledema. Creatinina 2,8 (sin previas), plaquetas 96.000, LDH alta, esquistocitos en el frotis. Sin déficit focal.`,
+ vit:[["PA","232/136"],["FC","96"],["FR","18"],["SatO₂","97%"],["Glasgow","14"],["Creatinina","2,8"]],
+ claves:[
+  {n:`Reconocer la emergencia hipertensiva`, re:`emergencia|dano de organo|organo blanco|hmod`, c:true, tip:`Cerebro, retina y riñón comprometidos: es emergencia, no urgencia.`},
+  {n:`Identificar la hipertensión maligna`, re:`maligna|fibrinoide|papiledema|hemorragia en llama|microangiopat`, c:true, tip:`Cambios de fondo de ojo, microangiopatía y falla renal: es el cuadro completo. Se asocia a encefalopatía en cerca del 15%.`},
+  {n:`Meta: bajar la PAM 20–25%`, re:`20-25|20 a 25|25%|pam|presion arterial media`, c:true, tip:`ESC 2023, Tabla 24: en varias horas, no de golpe.`},
+  {n:`Labetalol o nicardipino endovenoso`, re:`labetalol|nicardipino`, c:true, tip:`Primera línea del ESC. Alternativas nitroprusiato o urapidilo.`},
+  {n:`Vía endovenosa titulable, no oral`, re:`endovenos|ev|infusion|titul|bomba`, c:true, tip:`En la emergencia se necesita poder ajustar minuto a minuto.`},
+  {n:`Estudio de microangiopatía`, re:`esquistocito|frotis|ldh|haptoglobina|plaqueta|coombs`, c:true, tip:`Para separarla de una microangiopatía trombótica primaria.`},
+  {n:`Monitorización y línea arterial`, re:`monitoriz|linea arterial|uci|unidad critica|invasiva`, c:true, tip:`Con esas cifras, la presión se mide latido a latido.`},
+  {n:`Buscar causa secundaria`, re:`secundaria|feocromocitoma|renal|aldosterona|apnea|tsh|estudio`, c:true, tip:`Debut a los 54 con cifras así: hay que estudiarlo.`},
+  {n:`Exámenes de daño de órgano`, re:`ecg|troponina|creatinina|sedimento|funcion renal|rx de torax`, c:true, tip:`Corazón y riñón, además de lo neurológico.`},
+  {n:`Nada de descensos bruscos`, re:`no bajar rapido|gradual|lento|no brusco|hipoperfusion`, c:true, tip:`El descenso brusco produce hipoperfusión cerebral e insuficiencia coronaria.`},
+  {n:`Transición a vía oral y control`, re:`via oral|transicion|traslape|control|seguimiento`, tip:`Una vez estable.`}
+ ],
+ err:[
+  {re:`nifedipino sublingual|sublingual`, m:`El ESC 2023 lo desaconseja expresamente: el descenso no se puede anticipar y suele ser demasiado rápido y demasiado grande.`},
+  {re:`normalizar la presion|bajar a 120/80|llevar a lo normal (hoy|ahora)|corregir rapido`, m:`Bajarla a lo normal de inmediato produce hipoperfusión cerebral e isquemia coronaria. La meta es 20–25% de la PAM en varias horas.`},
+  {re:`manejo ambulatorio|dar de alta|control en policlinico`, m:`Hipertensión maligna con falla renal, microangiopatía y confusión: es una emergencia que se hospitaliza.`},
+  {re:`captopril sublingual|solo via oral|antihipertensivo oral unicamente`, m:`En la emergencia se necesita un fármaco endovenoso titulable, no una dosis oral cuyo efecto no puedes controlar.`}
+ ],
+ pauta:[
+  `1. Hospitalizar en UCI. Monitorización continua y control neurológico.`,
+  `2. Régimen cero mientras esté confuso.`,
+  `3. Emergencia hipertensiva con hipertensión maligna: cambios de fondo de ojo, microangiopatía, falla renal aguda y compromiso de conciencia.`,
+  `4. Instalar línea arterial para medición continua.`,
+  `5. Labetalol EV en bolos de 20–80 mg c/5–10 min hasta 300 mg, o infusión de 0,5–2 mg/min; alternativa nicardipino 5 mg/h subiendo 1–2,5 mg/h cada 15 min.`,
+  `6. Meta: bajar la presión arterial media 20–25% en varias horas. NO normalizarla.`,
+  `7. Tratar al paciente en decúbito supino por la hipotensión postural del labetalol.`,
+  `8. Exámenes: hemograma con frotis y plaquetas, LDH, haptoglobina, bilirrubina, función renal, ELP, sedimento urinario, proteinuria, ECG, troponinas, radiografía de tórax.`,
+  `9. Fondo de ojo documentado.`,
+  `10. Estudio de hipertensión secundaria una vez estabilizado: renal, renovascular, aldosterona, catecolaminas, TSH, apnea del sueño.`,
+  `11. Traslape a antihipertensivos orales cuando esté estable, con descenso gradual a lo normal en 24 a 48 h.`,
+  `12. NO usar nifedipino sublingual.`,
+  `13. Avisar si: deterioro de conciencia, convulsión, déficit focal, oliguria, caída brusca de la presión.`
+ ]},
+
+{esc:`Mujer de 61 años que consulta por un control de presión tomado en la farmacia: 198/112. Está completamente asintomática. Sin cefalea, sin dolor torácico, sin disnea. Examen neurológico y cardiopulmonar normales. Fondo de ojo sin alteraciones agudas. Creatinina 0,9, ECG sin cambios, troponina negativa. Dejó su losartán hace tres semanas porque se le acabó.`,
+ vit:[["PA","198/112"],["FC","82"],["FR","16"],["SatO₂","98%"],["T°","36,6 °C"],["Creatinina","0,9"]],
+ claves:[
+  {n:`Reconocer que NO es una emergencia`, re:`no es emergencia|urgencia|sin dano de organo|asintomatica|no hay dano`, c:true, tip:`Sin daño agudo de órgano, la hipertensión asintomática severa no es una emergencia hipertensiva.`},
+  {n:`No hay beneficio de bajarla rápido`, re:`no bajar rapido|gradual|lento|dias|sin apuro|no hay beneficio`, c:true, tip:`Washington es explícito: no hay beneficio probado del descenso rápido en la hipertensión asintomática severa.`},
+  {n:`Tratamiento por vía oral`, re:`via oral|vo|oral|comprimido`, c:true, tip:`Nada endovenoso.`},
+  {n:`Reinstalar el antihipertensivo que dejó`, re:`reiniciar|losartan|reinstalar|retomar|su tratamiento`, c:true, tip:`Es la causa del alza y funcionaba.`},
+  {n:`Resolver el acceso al fármaco`, re:`receta|acceso|farmacia|entregar|asegurar|se le acabo`, c:true, tip:`Sin resolver eso, vuelve en tres semanas.`},
+  {n:`Descartar daño de órgano antes de rotularla`, re:`ecg|troponina|creatinina|fondo de ojo|sedimento|examen`, c:true, tip:`Ya se hizo, y es lo que permite llamarla urgencia y no emergencia.`},
+  {n:`Observación corta antes del alta`, re:`observacion|estadia corta|vigilancia|unas horas|reevaluar`, c:true, tip:`ESC 2023: la vigilancia en unidad de estadía corta suele ser apropiada.`},
+  {n:`Control de presión posterior asegurado`, re:`control|seguimiento|medicion|cita|domiciliaria|ambulatoria`, c:true, tip:`ESC: la presión puede seguir elevada tras el alta, así que hay que asegurar mediciones en consulta y fuera de ella.`},
+  {n:`Educación sobre adherencia`, re:`educacion|adherencia|explicar|no suspender|importancia`, c:true, tip:`Es lo que evita el próximo episodio.`},
+  {n:`Evitar el descenso brusco por el riesgo de hipoperfusión`, re:`hipoperfusion|brusco|cerebral|coronaria|precipitad`, tip:`Sobre todo en el adulto mayor y el depletado.`}
+ ],
+ err:[
+  {re:`nifedipino sublingual|captopril sublingual|sublingual`, m:`El ESC 2023 lo desaconseja expresamente. Es una causa clásica de ACV e infarto yatrogénicos.`},
+  {re:`endovenos|labetalol ev|nicardipino|nitroprusiato|infusion`, m:`No hay daño de órgano: no corresponde ningún antihipertensivo endovenoso.`},
+  {re:`hospitaliz|ingres|uci|unidad critica`, m:`Hipertensión asintomática severa sin daño de órgano: se maneja con vía oral, observación corta y control ambulatorio.`},
+  {re:`normalizar la presion hoy|bajar a 120|corregir rapido|meta de hoy`, m:`No hay beneficio probado del descenso rápido, y sí riesgo de hipoperfusión cerebral y coronaria.`}
+ ],
+ pauta:[
+  `1. Observación en unidad de estadía corta. No requiere hospitalización.`,
+  `2. Régimen común hiposódico.`,
+  `3. Hipertensión asintomática severa SIN daño agudo de órgano: es una urgencia hipertensiva, no una emergencia.`,
+  `4. Confirmado por el examen y por ECG sin cambios, troponina negativa, creatinina normal y fondo de ojo sin alteraciones agudas.`,
+  `5. Reinstalar losartán en su dosis habitual, por vía oral.`,
+  `6. NO usar antihipertensivos endovenosos ni nifedipino sublingual.`,
+  `7. El descenso se hace de forma gradual, en días: no hay beneficio probado del descenso rápido y sí riesgo de hipoperfusión cerebral y coronaria.`,
+  `8. Reevaluar la presión tras unas horas de observación y reposo, antes de decidir el alta.`,
+  `9. Entregar receta suficiente y verificar que pueda retirar el fármaco: esa fue la causa del alza.`,
+  `10. Educación sobre adherencia y sobre por qué el tratamiento no se suspende aunque no haya síntomas.`,
+  `11. Indicar mediciones de presión domiciliarias y control con su médico con fecha concreta: la presión puede seguir elevada después del alta.`,
+  `12. Consultar de inmediato si aparece: cefalea intensa, dolor torácico, disnea, alteración visual, déficit neurológico o confusión.`
+ ]},
+
+{esc:`Hombre de 44 años traído por dolor torácico y agitación tras consumir cocaína hace dos horas. PA 210/124, FC 138. Está sudoroso, midriático y ansioso. El ECG muestra taquicardia sinusal con infradesnivel de 1 mm en cara lateral. Troponina inicial negativa. Sin déficit focal ni asimetría de pulsos.`,
+ vit:[["PA","210/124"],["FC","138"],["FR","24"],["SatO₂","98%"],["T°","37,8 °C"],["Glasgow","15"]],
+ claves:[
+  {n:`Benzodiacepinas como primera línea`, re:`benzodiace|lorazepam|diazepam|midazolam|sedacion`, c:true, tip:`Washington: el pilar del tratamiento son las benzodiacepinas tituladas al control de la agitación y de los signos vitales.`},
+  {n:`Evitar los betabloqueantes`, re:`no betabloqueo|evitar betabloque|sin propranolol|alfa sin oposicion|contraindicad`, c:true, tip:`Washington: por la preocupación teórica de que el alfa sin oposición produzca vasoespasmo periférico severo.`},
+  {n:`Fármacos rápidamente titulables si hace falta`, re:`nicardipino|clevidipino|nitroglicerina|titulable`, c:true, tip:`Washington los nombra cuando se requiere control estricto de presión.`},
+  {n:`Nitroglicerina para el dolor coronario`, re:`nitroglicerina|ntg`, c:true, tip:`La cocaína produce vasoespasmo coronario.`},
+  {n:`Tratar el vasoespasmo con benzodiacepinas`, re:`vasoespasmo|benzodiace|espasmo coronario`, c:true, tip:`Washington: el dolor por vasoespasmo se trata con benzodiacepinas.`},
+  {n:`Descartar infarto tipo I`, re:`troponina seriad|ecg seriad|infarto|cateterismo|cardiolog`, c:true, tip:`Washington: quienes usan cocaína también tienen riesgo de infarto tipo I por aterogénesis acelerada y adhesión plaquetaria.`},
+  {n:`Vigilar el QRS y el patrón de Brugada`, re:`qrs|brugada|bicarbonato|ensancha`, c:true, tip:`La cocaína bloquea canales de sodio; con QRS ancho se usa bicarbonato 1–2 mEq/kg.`},
+  {n:`Buscar rabdomiólisis`, re:`ck|creatina quinasa|rabdomiolisis|volumen|hidratacion`, c:true, tip:`Washington: la reanimación con volumen es necesaria si hay rabdomiólisis.`},
+  {n:`Manejo de la hipertermia`, re:`hipertermia|enfriar|temperatura|externo`, c:true, tip:`Enfriamiento externo agresivo además de la sedación; en casos severos, parálisis con bloqueantes no despolarizantes.`},
+  {n:`Descartar disección aórtica`, re:`diseccion|aortic|pulsos|ambos brazos|desgarrador`, c:true, tip:`La cocaína es un factor de riesgo y el dolor torácico obliga a pensarla.`},
+  {n:`Observación y evaluación del consumo`, re:`observacion|salud mental|adicci|consejeria|derivar`, tip:`La intoxicación suele resolverse en unas 8 horas.`}
+ ],
+ err:[
+  {re:`betabloqueo|propranolol|labetalol|metoprolol|esmolol|atenolol`, m:`Washington recomienda considerar evitar los betabloqueantes en la intoxicación por cocaína: el estímulo alfa sin oposición puede producir vasoespasmo periférico severo.`},
+  {re:`haloperidol|antipsicotico`, m:`Baja el umbral convulsivo e interfiere con la termorregulación en un paciente que ya está hipertérmico.`},
+  {re:`nifedipino sublingual|sublingual`, m:`Descenso impredecible y demasiado rápido: desaconsejado por el ESC.`},
+  {re:`alta inmediata|dar de alta ahora|manejo ambulatorio`, m:`Dolor torácico con infradesnivel e hipertensión severa por simpaticomiméticos: requiere observación, troponinas seriadas y ECG seriado.`}
+ ],
+ pauta:[
+  `1. Observación en unidad monitorizada. Ambiente tranquilo y de bajo estímulo.`,
+  `2. Régimen cero mientras persista la agitación.`,
+  `3. Benzodiacepinas endovenosas tituladas al control de la agitación y de los signos vitales: son el pilar del tratamiento y bajan presión, frecuencia y vasoespasmo.`,
+  `4. NO usar betabloqueantes: el estímulo alfa sin oposición puede producir vasoespasmo periférico severo.`,
+  `5. Nitroglicerina para el dolor torácico por vasoespasmo coronario.`,
+  `6. Si se requiere control estricto de la presión, usar agentes rápidamente titulables: nicardipino, clevidipino o nitroglicerina.`,
+  `7. ECG seriado y troponinas seriadas: descartar infarto tipo I, al que también están expuestos por aterogénesis acelerada.`,
+  `8. Vigilar el QRS: si se ensancha, bicarbonato de sodio 1–2 mEq/kg en bolo seguido de infusión, con la meta de normalizarlo.`,
+  `9. Enfriamiento externo agresivo por la hipertermia, sumado a la sedación.`,
+  `10. Creatina quinasa y función renal; reanimación con volumen si hay rabdomiólisis.`,
+  `11. Descartar disección aórtica: presión en ambos brazos, pulsos, y angiotomografía si la sospecha persiste.`,
+  `12. Discusión con cardiología si hay evidencia objetiva de isquemia.`,
+  `13. Evaluación de consumo y derivación antes del alta.`,
+  `14. Avisar si: dolor persistente, arritmia, ensanchamiento del QRS, temperatura sobre 39, convulsión, deterioro de conciencia.`
+ ]},
+
+{esc:`Mujer de 33 años, embarazada de 34 semanas, derivada del control prenatal por PA 172/114 repetida, cefalea y epigastralgia. Reflejos vivos. Proteinuria +++. Plaquetas 88.000, transaminasas GOT 210 y GPT 190, LDH 720. El registro fetal muestra desaceleraciones variables.`,
+ vit:[["PA","172/114"],["FC","96"],["FR","20"],["SatO₂","98%"],["Plaquetas","88.000"],["Embarazo","34 semanas"]],
+ claves:[
+  {n:`Reconocer la preeclampsia severa con HELLP`, re:`preeclampsia|hellp|severa|hemolisis|plaqueta|transaminasa`, c:true, tip:`Hipertensión sobre 20 semanas con proteinuria, plaquetas bajas, transaminasas altas y LDH elevada.`},
+  {n:`Meta: PAS bajo 160 y PAD bajo 105`, re:`160|105|meta`, c:true, tip:`ESC 2023, Tabla 24, para eclampsia y preeclampsia severa con HELLP.`},
+  {n:`Labetalol o nicardipino`, re:`labetalol|nicardipino`, c:true, tip:`ESC: primera línea junto al sulfato de magnesio. Washington señala al labetalol como el de elección en el embarazo.`},
+  {n:`Sulfato de magnesio`, re:`sulfato de magnesio|magnesio`, c:true, tip:`Para prevenir la eclampsia, no como antihipertensivo.`},
+  {n:`Vigilar toxicidad por magnesio`, re:`reflejo|osteotendin|diuresis|frecuencia respiratoria|gluconato de calcio|toxicidad`, c:true, tip:`Reflejos, diuresis y frecuencia respiratoria; el antídoto es el gluconato de calcio.`},
+  {n:`Aviso inmediato a obstetricia`, re:`obstetric|ginecolog|matron|alto riesgo|interconsulta`, c:true, tip:`La interrupción del embarazo es el tratamiento definitivo.`},
+  {n:`Planificar la interrupción`, re:`interrupcion|parto|cesarea|resolver el embarazo|definitivo`, c:true, tip:`ESC 2023: "considerar el parto" forma parte de la fila de la tabla.`},
+  {n:`Hidralazina como alternativa`, re:`hidralazina`, c:true, tip:`Washington: es útil en la emergencia hipertensiva del embarazo por su perfil de seguridad establecido. Si no hay efecto tras 20 mg, cambiar de fármaco.`},
+  {n:`Monitorización fetal continua`, re:`monitoriz fetal|registro|fetal|latidos`, c:true, tip:`Ya hay desaceleraciones variables.`},
+  {n:`Corticoides para maduración pulmonar`, re:`corticoide|betametasona|maduracion|pulmonar fetal`, c:true, tip:`A las 34 semanas, según indicación obstétrica y sin retrasar la interrupción si la madre se inestabiliza.`},
+  {n:`Balance hídrico y vigilancia de edema pulmonar`, re:`balance|diuresis|foley|edema pulmonar|sobrecarga`, tip:`Riesgo alto en la preeclampsia severa.`}
+ ],
+ err:[
+  {re:`ieca|enalapril|captopril|losartan|ara ii`, m:`Contraindicados en el embarazo.`},
+  {re:`nitroprusiato`, m:`Riesgo de toxicidad por cianuro para el feto: no es la opción en la embarazada.`},
+  {re:`aine|ketoprofeno|ibuprofeno`, m:`Contraindicados desde las 20 semanas.`},
+  {re:`manejo ambulatorio|alta|control en policlinico`, m:`Preeclampsia severa con HELLP y alteración del registro fetal: es una emergencia obstétrica.`},
+  {re:`bajar la presion a lo normal|normalizar la presion|meta de 120`, m:`Bajarla de más compromete la perfusión placentaria. La meta es PAS bajo 160 y PAD bajo 105.`}
+ ],
+ pauta:[
+  `1. Emergencia obstétrica. Aviso INMEDIATO a obstetricia y traslado a unidad de alto riesgo obstétrico.`,
+  `2. Régimen cero.`,
+  `3. Preeclampsia severa con síndrome HELLP: hipertensión, proteinuria, plaquetas de 88.000, transaminasas elevadas y LDH de 720.`,
+  `4. Posición en decúbito lateral izquierdo. Monitorización materna y fetal continua.`,
+  `5. Labetalol EV, o nicardipino, con meta de PAS bajo 160 y PAD bajo 105. Alternativa: hidralazina 10–20 mg EV c/20 min, cambiando de fármaco si no hay efecto tras 20 mg.`,
+  `6. Sulfato de magnesio EV según protocolo obstétrico para prevenir la eclampsia.`,
+  `7. Vigilar toxicidad por magnesio: reflejos osteotendíneos, frecuencia respiratoria y diuresis horaria. Gluconato de calcio disponible como antídoto.`,
+  `8. NO usar IECA, ARA II, nitroprusiato ni AINE.`,
+  `9. Sonda Foley con diuresis horaria y balance estricto: riesgo de edema pulmonar.`,
+  `10. Exámenes seriados: hemograma con plaquetas y frotis, pruebas hepáticas, LDH, función renal, ácido úrico, coagulación con fibrinógeno.`,
+  `11. Corticoides para maduración pulmonar fetal según indicación obstétrica, sin retrasar la interrupción si la madre se inestabiliza.`,
+  `12. Planificar la interrupción del embarazo con obstetricia: es el tratamiento definitivo.`,
+  `13. Avisar si: convulsión, deterioro de conciencia, dolor en hipocondrio derecho, disnea, caída de plaquetas, alteración del registro fetal.`
+ ]}
+],
+
+"aorta":[
+{esc:`Hombre de 63 años hipertenso mal controlado, con dolor torácico brusco e intensísimo irradiado a la espalda, de máxima intensidad desde el inicio, hace 40 minutos. PA 186/104 en el brazo derecho y 142/82 en el izquierdo. Soplo diastólico aórtico nuevo. Pulso radial izquierdo disminuido. ECG sin supradesnivel. Pesa 88 kg.`,
+ vit:[["PA","186/104 der · 142/82 izq"],["FC","104"],["FR","22"],["SatO₂","96%"],["Glasgow","15"],["Peso","88 kg"]],
+ claves:[
+  {n:`Sospechar disección aórtica`, re:`diseccion|aortic|sindrome aortico`, c:true, tip:`Dolor desgarrador máximo desde el inicio, asimetría de presión y de pulsos, y soplo aórtico nuevo.`},
+  {n:`Medir presión en ambos brazos`, re:`ambos brazos|asimetr|diferencia de presion|pulsos`, c:true, tip:`Es lo que más se olvida y lo que más orienta.`},
+  {n:`Betabloqueo ANTES del vasodilatador`, re:`betabloqueo antes|primero el betabloqueo|antes del vasodilatador|preceder`, c:true, tip:`Washington: los betabloqueantes son el fármaco inicial de elección y deben preceder al vasodilatador.`},
+  {n:`Esmolol o labetalol`, re:`esmolol|labetalol`, c:true, tip:`Esmolol por su duración muy corta; el labetalol puede usarse como agente único.`},
+  {n:`Meta PAS bajo 120 y frecuencia bajo 60`, re:`120|60|meta`, c:true, tip:`ESC 2023, Tabla 24: de inmediato, las dos metas juntas.`},
+  {n:`Vasodilatador solo después`, re:`nitroprusiato|nicardipino|nitroglicerina|vasodilatador`, c:true, tip:`El nitroprusiato es el de elección, pero nunca solo.`},
+  {n:`Angiotomografía urgente`, re:`angiotomograf|angiotac|tac con contraste|imagen`, c:true, tip:`De tórax, abdomen y pelvis, en el paciente estable.`},
+  {n:`Aviso a cirugía cardiovascular`, re:`cirugia|cardiovascular|torax|equipo quirurgic|aviso`, c:true, tip:`Si compromete la aorta ascendente, es quirúrgica de urgencia.`},
+  {n:`Analgesia con opioides`, re:`opioide|morfina|fentanilo|analgesia`, c:true, tip:`El dolor mantiene la descarga adrenérgica y sube la presión.`},
+  {n:`Dos vías y grupo con pruebas cruzadas`, re:`dos vias|grupo|pruebas cruzadas|acceso|transfusion`, c:true, tip:`Puede requerir cirugía de urgencia.`},
+  {n:`Buscar complicaciones`, re:`taponamiento|insuficiencia aortica|acv|isquemia|ecocardio|complicacion`, tip:`Taponamiento, insuficiencia aórtica aguda, infarto, ACV, isquemia de ramas.`}
+ ],
+ err:[
+  {re:`nitroprusiato solo|vasodilatador primero|nitroprusiato antes|solo nitroprusiato`, m:`El nitroprusiato solo aumenta la contractilidad ventricular y las fuerzas de cizallamiento arterial, que hacen avanzar la disección. El betabloqueo simultáneo es imprescindible y va primero.`},
+  {re:`anticoagul|heparina|aspirina|trombolisis|alteplasa|tnk`, m:`Anticoagular o trombolisar una disección aórtica es catastrófico. Por eso se piensa en ella ANTES de tratar todo dolor torácico como coronario.`},
+  {re:`radiografia normal descarta|descartar por la radiografia`, m:`Una radiografía de tórax normal no descarta una disección.`},
+  {re:`dar de alta|alta a domicilio|manejo ambulatorio`, m:`Es una emergencia quirúrgica potencial: se hospitaliza en unidad crítica.`}
+ ],
+ pauta:[
+  `1. Reanimación. Aviso INMEDIATO a cirugía cardiovascular y traslado a UCI.`,
+  `2. Régimen cero.`,
+  `3. Sospecha alta de disección aórtica: dolor desgarrador máximo desde el inicio, asimetría de presión de 44 mmHg entre brazos, pulso radial izquierdo disminuido y soplo diastólico aórtico nuevo.`,
+  `4. Dos vías venosas gruesas, monitorización continua, línea arterial, grupo y pruebas cruzadas.`,
+  `5. PRIMERO el betabloqueo: esmolol EV, carga de 500 µg/kg/min por 1 min y luego 50–300 µg/kg/min; alternativa labetalol EV en bolos de 20–80 mg.`,
+  `6. DESPUÉS el vasodilatador: nitroprusiato de sodio 0,5–10 µg/kg/min, protegido de la luz. Nunca sin betabloqueo simultáneo.`,
+  `7. Meta inmediata: PAS bajo 120 mmHg Y frecuencia cardíaca bajo 60 lpm.`,
+  `8. Analgesia con opioides titulada: el dolor mantiene la descarga adrenérgica.`,
+  `9. Angiotomografía de tórax, abdomen y pelvis con contraste, URGENTE.`,
+  `10. Ecocardiograma buscando taponamiento e insuficiencia aórtica aguda; transesofágico si está demasiado inestable para la tomografía.`,
+  `11. NO anticoagular, NO antiagregar y NO trombolisar mientras la disección esté en el diferencial.`,
+  `12. Exámenes: hemograma, función renal, ELP, coagulación, troponinas, lactato, gases.`,
+  `13. Si compromete la aorta ascendente, es quirúrgica de urgencia; si no, manejo médico con vigilancia estrecha.`,
+  `14. Avisar si: hipotensión, síncope, déficit neurológico, isquemia de una extremidad, dolor que reaparece o se extiende.`
+ ]},
+
+{esc:`Hombre de 58 años con antecedente de hipertensión, que consulta por dolor torácico brusco hace 3 horas. El ECG muestra supradesnivel del ST de 2 mm en DII, DIII y aVF. Se activa el código de infarto. Antes de dar la carga de antiagregantes, alguien nota que el pulso radial izquierdo está disminuido y que la presión difiere 30 mmHg entre brazos. El dolor irradia a la espalda.`,
+ vit:[["PA","168/96 der · 138/84 izq"],["FC","62"],["FR","20"],["SatO₂","95%"],["Glasgow","15"],["ECG","SDST inferior"]],
+ claves:[
+  {n:`Detener la vía coronaria antes de anticoagular`, re:`detener|no anticoagul|no antiagreg|no trombolisis|frenar|antes de|suspender el codigo`, c:true, tip:`La asimetría de pulsos y el dolor a la espalda cambian todo: hay que descartar disección primero.`},
+  {n:`Reconocer la disección con compromiso coronario`, re:`diseccion|aortic|coronaria derecha|compromete|retrograd`, c:true, tip:`La disección puede comprometer una coronaria, habitualmente la derecha, y producir supradesnivel inferior.`},
+  {n:`Angiotomografía urgente`, re:`angiotomograf|angiotac|tac con contraste|imagen`, c:true, tip:`Antes de cualquier antitrombótico.`},
+  {n:`Betabloqueo primero`, re:`betabloqueo|esmolol|labetalol|primero`, c:true, tip:`Y con la frecuencia ya en 62, con cuidado y titulando.`},
+  {n:`Meta PAS bajo 120 y frecuencia bajo 60`, re:`120|60|meta`, c:true, tip:`Si se confirma la disección.`},
+  {n:`Aviso a cirugía cardiovascular`, re:`cirugia|cardiovascular|equipo quirurgic|aviso|torax`, c:true, tip:`El compromiso de la ascendente es quirúrgico de urgencia.`},
+  {n:`Ecocardiograma`, re:`ecocardio|transesofagic|ecografia`, c:true, tip:`Buscando taponamiento, insuficiencia aórtica y flap intimal.`},
+  {n:`Analgesia`, re:`analgesia|opioide|morfina|fentanilo|dolor`, c:true, tip:`Sin AINE.`},
+  {n:`No dar nitroglicerina a ciegas en el inferior`, re:`no nitroglicerina|derivaciones derechas|v4r|ventriculo derecho|precaucion`, c:true, tip:`Infarto inferior: hay que pedir derivaciones derechas antes.`},
+  {n:`Coordinar con hemodinamia sin activar el antitrombótico`, re:`hemodinamia|cardiolog|coordinar|avisar`, tip:`Para que estén al tanto mientras se define.`},
+  {n:`Documentar la asimetría en la ficha`, re:`documentar|consignar|registrar|ficha`, tip:`Es el hallazgo que cambió la conducta.`}
+ ],
+ err:[
+  {re:`cargar aspirina|clopidogrel|ticagrelor|prasugrel|doble antiagregacion|heparina|enoxaparina`, m:`Con asimetría de pulsos y dolor irradiado a la espalda, antiagregar y anticoagular antes de descartar disección es exactamente el error que mata en este caso.`},
+  {re:`trombolisis|alteplasa|tnk|fibrinolisis`, m:`Trombolisar una disección aórtica es catastrófico.`},
+  {re:`angioplastia primaria de inmediato|llevar a hemodinamia ahora`, m:`Antes de la sala de hemodinamia hay que saber si esto es una disección: la angiotomografía va primero.`},
+  {re:`nitroglicerina`, m:`Infarto inferior sin derivaciones derechas: puede haber compromiso del ventrículo derecho, que depende de la precarga.`}
+ ],
+ pauta:[
+  `1. DETENER la carga de antiagregantes y la anticoagulación. Aviso a cirugía cardiovascular y a cardiología.`,
+  `2. Régimen cero. Reanimación con monitorización continua, dos vías gruesas, línea arterial, grupo y pruebas cruzadas.`,
+  `3. Supradesnivel inferior CON asimetría de presión de 30 mmHg entre brazos, pulso radial izquierdo disminuido y dolor irradiado a la espalda: hay que descartar disección aórtica con compromiso de la coronaria derecha.`,
+  `4. Angiotomografía de tórax, abdomen y pelvis con contraste, URGENTE, antes de cualquier antitrombótico.`,
+  `5. Ecocardiograma en paralelo: taponamiento, insuficiencia aórtica aguda, flap intimal.`,
+  `6. Control de presión: PRIMERO betabloqueo con esmolol titulado, cuidando que la frecuencia ya está en 62; DESPUÉS vasodilatador si hace falta.`,
+  `7. Meta, si se confirma la disección: PAS bajo 120 y frecuencia bajo 60.`,
+  `8. Analgesia con opioides. NO usar AINE.`,
+  `9. NO administrar nitroglicerina: es un infarto inferior y no se han pedido derivaciones derechas.`,
+  `10. Solicitar V3R y V4R para evaluar compromiso del ventrículo derecho, si finalmente se descarta la disección.`,
+  `11. Consignar en la ficha la asimetría de pulsos y de presión: es el hallazgo que cambió la conducta.`,
+  `12. Si la angiotomografía descarta disección, retomar el protocolo de infarto con supradesnivel sin más demora.`,
+  `13. Avisar si: hipotensión, síncope, deterioro de conciencia, ingurgitación yugular, dolor que se extiende.`
+ ]},
+
+{esc:`Mujer de 41 años con síndrome de Marfan conocido, operada de reemplazo de raíz aórtica hace 6 años. Consulta por dolor dorsal intenso de inicio brusco hace 5 horas, sin irradiación torácica. PA 148/86 simétrica, pulsos presentes y simétricos. Sin soplo nuevo. ECG normal, troponina negativa. La angiotomografía muestra disección limitada a la aorta descendente, sin signos de malperfusión.`,
+ vit:[["PA","148/86"],["FC","88"],["FR","18"],["SatO₂","98%"],["Glasgow","15"],["Dímero D","elevado"]],
+ claves:[
+  {n:`Reconocer la disección tipo B`, re:`tipo b|stanford|descendente|no compromete la ascendente`, c:true, tip:`No compromete la aorta ascendente.`},
+  {n:`Manejo médico, no quirúrgico de entrada`, re:`medico|no quirurgic|conservador|sin cirugia|no complicad`, c:true, tip:`El tipo B no complicado se maneja médicamente.`},
+  {n:`Betabloqueo primero`, re:`betabloqueo|esmolol|labetalol|primero`, c:true, tip:`Igual que en el tipo A: precede al vasodilatador.`},
+  {n:`Meta PAS bajo 120 y frecuencia bajo 60`, re:`120|60|meta`, c:true, tip:`De inmediato y luego como meta crónica.`},
+  {n:`Vasodilatador solo si hace falta y siempre después`, re:`nitroprusiato|nicardipino|vasodilatador|despues`, c:true, tip:`Con betabloqueo simultáneo.`},
+  {n:`Vigilar signos de complicación`, re:`malperfusion|isquemia|propagacion|dolor persistente|rotura|complicacion`, c:true, tip:`Isquemia de órganos, propagación, dolor persistente o rotura inminente son las indicaciones de intervenir.`},
+  {n:`Unidad crítica con monitorización`, re:`uci|unidad critica|monitoriz|linea arterial`, c:true, tip:`El tipo B no complicado igual se vigila estrechamente.`},
+  {n:`Analgesia`, re:`analgesia|opioide|morfina|dolor`, c:true, tip:`El dolor mantiene la presión alta.`},
+  {n:`Aviso a cirugía cardiovascular igual`, re:`cirugia|cardiovascular|equipo|aviso|interconsulta`, c:true, tip:`Para que estén al tanto si evoluciona.`},
+  {n:`Tratamiento antihipertensivo crónico de por vida`, re:`cronic|de por vida|largo plazo|mantener|al alta`, c:true, tip:`Washington: todos los pacientes con disección, incluidos los operados, requieren tratamiento agudo y crónico.`},
+  {n:`Preferir antihipertensivos con efecto inotrópico negativo`, re:`inotropic|calcioantagonista|betabloqueante|metildopa|clonidina|negativo`, tip:`Washington los prefiere en la fase post-aguda.`},
+  {n:`Estudio y consejo familiar del Marfan`, re:`marfan|familiar|genetic|conectivopat|consejo`, tip:`Y control con imágenes seriadas.`}
+ ],
+ err:[
+  {re:`cirugia de urgencia|operar ahora|quirurgic de inmediato`, m:`El tipo B no complicado, sin malperfusión ni propagación, se maneja médicamente.`},
+  {re:`nitroprusiato solo|vasodilatador primero|sin betabloqueo`, m:`El nitroprusiato solo aumenta la contractilidad y las fuerzas de cizallamiento, que propagan la disección.`},
+  {re:`anticoagul|heparina|aspirina`, m:`No corresponde en una disección aórtica.`},
+  {re:`dar de alta|alta a domicilio|control en policlinico`, m:`Toda disección aguda, incluido el tipo B no complicado, se hospitaliza en unidad crítica para control estricto de presión.`}
+ ],
+ pauta:[
+  `1. Hospitalizar en UCI con monitorización continua y línea arterial. Aviso a cirugía cardiovascular.`,
+  `2. Régimen cero inicialmente; progresar según evolución.`,
+  `3. Disección aórtica tipo B de Stanford, limitada a la aorta descendente, sin signos de malperfusión: manejo médico.`,
+  `4. PRIMERO el betabloqueo: esmolol EV titulado, o labetalol; después vasodilatador si la presión no baja.`,
+  `5. Meta: PAS bajo 120 mmHg y frecuencia cardíaca bajo 60 lpm.`,
+  `6. Analgesia con opioides titulada al dolor.`,
+  `7. NO anticoagular ni antiagregar.`,
+  `8. Vigilancia estrecha de las indicaciones de intervención: isquemia de órganos, propagación de la disección, dolor persistente o refractario, y rotura inminente.`,
+  `9. Control de diuresis, función renal, lactato y pulsos periféricos: son los marcadores de malperfusión.`,
+  `10. Imagen de control seriada según la evolución y el protocolo del centro.`,
+  `11. Al alta: tratamiento antihipertensivo crónico de por vida, con meta de PAS ≤ 120 y frecuencia < 60 si se tolera, prefiriendo agentes con efecto inotrópico negativo.`,
+  `12. Estudio y consejo genético familiar por el síndrome de Marfan; seguimiento con imágenes seriadas.`,
+  `13. Educación: evitar esfuerzos isométricos intensos, cese de tabaco y señales de alarma para reconsultar.`,
+  `14. Avisar si: dolor que reaparece, hipotensión, asimetría de pulsos nueva, oliguria, déficit neurológico, isquemia de una extremidad.`
+ ]},
+
+{esc:`Hombre de 72 años que consulta por dolor torácico brusco hace 1 hora, ahora con hipotensión progresiva. PA 82/54, ingurgitación yugular marcada, ruidos cardíacos apagados y pulso paradójico. La ecografía a la cabecera muestra derrame pericárdico con colapso de cavidades derechas y un flap en la aorta ascendente.`,
+ vit:[["PA","82/54"],["FC","124"],["FR","28"],["SatO₂","93%"],["Glasgow","13"],["Yugulares","ingurgitadas"]],
+ claves:[
+  {n:`Reconocer el taponamiento por disección tipo A`, re:`taponamiento|tipo a|ascendente|derrame pericardic|colapso`, c:true, tip:`Es la complicación que mata a estos pacientes en minutos.`},
+  {n:`Cirugía de urgencia, ahora`, re:`cirugia|pabellon|quirofano|urgencia|cardiovascular`, c:true, tip:`El tipo A con taponamiento es quirúrgico inmediato: la sala de operaciones es el destino.`},
+  {n:`Reconocer la tríada de Beck`, re:`beck|yugular|ruidos apagados|pulso paradojico|triada`, c:true, tip:`Ingurgitación yugular, ruidos apagados e hipotensión.`},
+  {n:`Volumen con cautela mientras se traslada`, re:`volumen|cristaloide|suero|fisiologico|precarga`, c:true, tip:`Sostiene la precarga como puente, pero no resuelve nada.`},
+  {n:`No bajar la presión en el paciente hipotenso`, re:`no bajar|ningun antihipertensiv|no antihipertensiv|esta en shock|no betabloqueo|no vasodilatador`, c:true, tip:`Las metas de PAS bajo 120 son para el paciente hipertenso: aquí ya está en 82.`},
+  {n:`Cuidado con la pericardiocentesis`, re:`pericardiocentesis|drenaje|puncion|precaucion|puede empeorar`, c:true, tip:`En la disección tipo A puede acelerar el sangrado; la conducta es la cirugía.`},
+  {n:`Grupo, pruebas cruzadas y transfusión disponible`, re:`grupo|pruebas cruzadas|transfusion|globulos|banco de sangre`, c:true, tip:`Va a pabellón sangrando.`},
+  {n:`Dos vías gruesas y monitorización`, re:`dos vias|acceso|monitoriz|linea arterial`, c:true, tip:`Sin perder tiempo.`},
+  {n:`Oxígeno y soporte`, re:`oxigeno|via aerea|soporte|intubacion|sato2`, c:true, tip:`Con cuidado: la inducción anestésica puede colapsarlo.`},
+  {n:`No anticoagular`, re:`no anticoagul|sin heparina|no aspirina|no trombolisis`, c:true, tip:`Sigue valiendo, y más aún con sangrado activo.`},
+  {n:`Avisar a la familia`, re:`familia|informar|comunicar|consentimiento`, tip:`Es una cirugía de altísimo riesgo y hay que conversarlo.`}
+ ],
+ err:[
+  {re:`betabloqueo|esmolol|labetalol|nitroprusiato|bajar la presion|antihipertensiv`, m:`Está en shock con PA 82/54. Las metas de PAS bajo 120 aplican al paciente hipertenso; aquí bajar la presión lo mata.`},
+  {re:`anticoagul|heparina|aspirina|trombolisis`, m:`Disección con taponamiento y sangrado activo: cualquier antitrombótico es catastrófico.`},
+  {re:`angiotomografia primero|esperar la imagen|completar el estudio`, m:`Ya tienes el diagnóstico con la ecografía a la cabecera y el paciente se está muriendo: el destino es el pabellón, no el scanner.`},
+  {re:`observar|estabilizar y esperar|manejo medico`, m:`Disección tipo A con taponamiento: es quirúrgica de urgencia inmediata.`}
+ ],
+ pauta:[
+  `1. EMERGENCIA QUIRÚRGICA. Activar pabellón y equipo de cirugía cardiovascular AHORA. El destino es la sala de operaciones.`,
+  `2. Régimen cero.`,
+  `3. Disección aórtica tipo A con taponamiento cardíaco: derrame pericárdico con colapso de cavidades derechas, tríada de Beck y flap en la aorta ascendente.`,
+  `4. Dos vías venosas gruesas. Monitorización continua. Grupo, pruebas cruzadas y transfusión disponible.`,
+  `5. Volumen con cristaloide para sostener la precarga como puente al pabellón, sin pretender que resuelva el cuadro.`,
+  `6. NO administrar betabloqueo, vasodilatadores ni ningún antihipertensivo: está en shock con PA 82/54.`,
+  `7. NO anticoagular, NO antiagregar y NO trombolisar.`,
+  `8. NO hacer pericardiocentesis de rutina: en la disección tipo A puede acelerar el sangrado. La conducta es la cirugía.`,
+  `9. Oxígeno para SatO₂ ≥ 94%. Si requiere intubación, hacerla con el equipo quirúrgico presente: la inducción puede colapsarlo.`,
+  `10. NO retrasar el traslado para completar la angiotomografía: el diagnóstico ya está hecho con la ecografía a la cabecera.`,
+  `11. Analgesia con opioides en dosis reducidas por el shock.`,
+  `12. Informar a la familia el diagnóstico, el riesgo quirúrgico y el pronóstico.`,
+  `13. Avisar si: paro, deterioro brusco, pérdida de pulsos.`
+ ]}
+]
+
+};
+Object.entries(MAS_22).forEach(([k, v]) => { RUBRICAS[k] = (RUBRICAS[k] || []).concat(v); });
+
+const MAS_23 = {
+
+"iamcest":[
+{esc:`Hombre de 58 años, fumador y diabético, con dolor opresivo retroesternal hace 90 minutos, sudoroso. El ECG muestra supradesnivel de 3 mm en V2 a V5. Estás en un hospital sin hemodinamia; el centro con angioplastia está a 2 horas y media de traslado. Sin déficit neurológico, sin cirugía ni sangrado reciente, sin anticoagulantes. Pesa 78 kg.`,
+ vit:[["PA","142/86"],["FC","92"],["FR","20"],["SatO₂","96%"],["Glasgow","15"],["Peso","78 kg"]],
+ claves:[
+  {n:`Decidir fibrinólisis por el tiempo de traslado`, re:`fibrinolisis|trombolisis|tnk|tenecteplasa|alteplasa|no alcanza|120`, c:true, tip:`Si el traslado a angioplastia supera los 120 minutos, se trombolisa donde está el paciente.`},
+  {n:`Tenecteplasa 0,5 mg/kg`, re:`tenecteplasa|tnk|0,5 mg/kg`, c:true, tip:`Washington, Tabla 4-18: bolo endovenoso, dosis total 30–50 mg.`},
+  {n:`Revisar contraindicaciones antes`, re:`contraindicacion|sangrado|acv previo|cirugia reciente|revisar`, c:true, tip:`Es el paso que no se salta nunca.`},
+  {n:`Aspirina 162–325 mg masticada`, re:`aspirina|aas|mastic`, c:true, tip:`Sin cubierta entérica, para absorción rápida.`},
+  {n:`Clopidogrel 300 mg de carga con fibrinólisis`, re:`clopidogrel|300 mg`, c:true, tip:`Washington: 300 mg si se da en las primeras 24 h del trombolítico. Sobre 75 años, sin carga.`},
+  {n:`Anticoagulación con la fibrinólisis`, re:`heparina|enoxaparina|anticoagul|30 mg ev`, c:true, tip:`Enoxaparina bolo de 30 mg EV y 15 min después 1 mg/kg SC c/12 h, o heparina no fraccionada.`},
+  {n:`Buscar signos de reperfusión`, re:`reperfusion|50%|alivio del dolor|idioventricular|reduccion del st`, c:true, tip:`Alivio del dolor, reducción del supradesnivel en 50% y ritmo idioventricular.`},
+  {n:`Angioplastia de rescate si no reperfunde`, re:`rescate|traslado|hemodinamia|angioplastia`, c:true, tip:`Y coordinar el traslado desde ya.`},
+  {n:`Betabloqueo oral en 24 h`, re:`betabloqueo|metoprolol|carvedilol|oral`, c:true, tip:`Si no hay falla cardíaca, shock, PAS bajo 120, pulso sobre 110 o bajo 60, ni bloqueo avanzado.`},
+  {n:`Estatina de alta intensidad`, re:`estatina|atorvastatina|rosuvastatina`, c:true, tip:`Desde el ingreso.`},
+  {n:`Descartar disección antes de anticoagular`, re:`diseccion|ambos brazos|pulsos|aortic`, c:true, tip:`Presión en ambos brazos, siempre.`},
+  {n:`Monitorización continua`, re:`monitor|telemetria|monitoriz|desfibrilador`, tip:`El riesgo de fibrilación ventricular es máximo en las primeras horas.`}
+ ],
+ err:[
+  {re:`esperar la troponina|esperar el resultado|troponina antes de`, m:`Con supradesnivel no se espera la troponina: se reperfunde.`},
+  {re:`trasladar sin trombolisar|solo traslado|esperar el traslado`, m:`Dos horas y media de traslado superan con creces el límite: se trombolisa donde está y después se traslada.`},
+  {re:`betabloqueo endovenoso|metoprolol ev|betabloqueo ev`, m:`Washington: el betabloqueo endovenoso puede aumentar la mortalidad en el infarto con supradesnivel. Se reserva para arritmias o hipertensión acelerada.`},
+  {re:`prasugrel`, m:`No se usa con fibrinólisis ni antes de conocer la anatomía coronaria.`},
+  {re:`oxigeno de rutina|oxigeno a todos`, m:`El oxígeno solo se indica si hay hipoxemia: satura 96%.`}
+ ],
+ pauta:[
+  `1. Reanimación con monitorización continua y desfibrilador a mano. Dos vías venosas.`,
+  `2. Régimen cero.`,
+  `3. Infarto anterior extenso con supradesnivel. Traslado a angioplastia estimado en 2,5 h: supera el límite, se indica FIBRINÓLISIS aquí.`,
+  `4. Revisar contraindicaciones de trombólisis antes de administrarla. Medir presión en ambos brazos y palpar pulsos para descartar disección aórtica.`,
+  `5. Aspirina 162–325 mg masticada, sin cubierta entérica.`,
+  `6. Clopidogrel 300 mg VO de carga, luego 75 mg/día.`,
+  `7. Tenecteplasa 0,5 mg/kg EV en bolo (dosis total 30–50 mg).`,
+  `8. Enoxaparina: bolo de 30 mg EV y, 15 min después, 1 mg/kg SC c/12 h. Alternativa: heparina no fraccionada 60 U/kg en bolo (máx 4000 U) y luego 12 U/kg/h.`,
+  `9. Coordinar traslado a centro con hemodinamia desde ahora, para angiografía posterior o angioplastia de rescate.`,
+  `10. Buscar signos de reperfusión a los 60–90 min: alivio del dolor, reducción del supradesnivel en 50% y ritmo idioventricular. Si no aparecen, angioplastia de rescate.`,
+  `11. Atorvastatina 80 mg VO al día desde el ingreso.`,
+  `12. Betabloqueo ORAL dentro de las primeras 24 h si no hay falla cardíaca, shock, PAS < 120, pulso > 110 o < 60, ni bloqueo avanzado. NO endovenoso.`,
+  `13. Oxígeno solo si la saturación baja de 90%. ECG seriado.`,
+  `14. Avisar si: arritmia, hipotensión, dolor que reaparece, signos de sangrado, deterioro neurológico.`
+ ]},
+
+{esc:`Mujer de 66 años con dolor torácico hace 2 horas y supradesnivel en DII, DIII y aVF. PA 88/56, FC 54, yugulares ingurgitadas y pulmones limpios. Le acaban de administrar nitroglicerina sublingual y la presión cayó a 74/48. Está en un centro con hemodinamia disponible.`,
+ vit:[["PA","74/48 (tras NTG)"],["FC","54"],["FR","20"],["SatO₂","95%"],["Glasgow","15"],["Pulmones","limpios"]],
+ claves:[
+  {n:`Reconocer el infarto de ventrículo derecho`, re:`ventriculo derecho|vd|derivaciones derechas|v4r|v3r`, c:true, tip:`Infarto inferior con hipotensión, yugulares ingurgitadas y pulmones limpios: es la tríada.`},
+  {n:`Pedir derivaciones derechas`, re:`v4r|v3r|derivaciones derechas`, c:true, tip:`Es lo que confirma el diagnóstico y debió pedirse antes de la nitroglicerina.`},
+  {n:`Suspender la nitroglicerina`, re:`suspender|no nitroglicerina|retirar|sin ntg`, c:true, tip:`Washington: baja más la precarga que la poscarga y el ventrículo derecho depende de la precarga.`},
+  {n:`Volumen para restaurar la precarga`, re:`volumen|suero fisiologico|cristaloide|bolo|precarga`, c:true, tip:`Es el tratamiento de la hipotensión aquí, no el vasopresor de entrada.`},
+  {n:`Angioplastia primaria urgente`, re:`angioplastia|hemodinamia|coronariograf|primaria|reperfusion`, c:true, tip:`Hay hemodinamia disponible: es la estrategia preferida.`},
+  {n:`Aspirina de carga`, re:`aspirina|aas`, c:true, tip:`162–325 mg masticada.`},
+  {n:`Inhibidor P2Y12 según la estrategia`, re:`ticagrelor|clopidogrel|prasugrel|p2y12`, c:true, tip:`Ticagrelor o clopidogrel; el prasugrel solo tras conocer la anatomía.`},
+  {n:`Anticoagulación`, re:`heparina|anticoagul|bivalirudina|60 u/kg`, c:true, tip:`Heparina no fraccionada 60 U/kg en bolo.`},
+  {n:`Evitar el betabloqueo por ahora`, re:`no betabloqueo|evitar betabloque|sin betabloqueo|bradicardia`, c:true, tip:`PAS 74 y FC 54: hay falla del ventrículo derecho y bradicardia.`},
+  {n:`Vasopresor si no responde al volumen`, re:`noradrenalina|vasopresor|dobutamina|inotropo`, c:true, tip:`Después del volumen, no antes.`},
+  {n:`Monitorización y marcapasos transitorio disponible`, re:`monitor|marcapasos|bloqueo|telemetria|bradicardia`, tip:`El infarto inferior se asocia a bloqueo auriculoventricular.`}
+ ],
+ err:[
+  {re:`mas nitroglicerina|repetir la nitroglicerina|ntg ev|nitroglicerina en infusion`, m:`El ventrículo derecho depende de la precarga y la nitroglicerina la baja: fue la causa de que la presión cayera a 74/48.`},
+  {re:`furosemida|diuretico`, m:`Baja la precarga, que es justo lo que este paciente necesita mantener.`},
+  {re:`betabloqueo|metoprolol|esmolol`, m:`PAS 74 con FC 54 y falla del ventrículo derecho: el betabloqueo lo empeora.`},
+  {re:`morfina en dosis alta|morfina de entrada`, m:`También baja la precarga y agrava la hipotensión en el infarto del ventrículo derecho.`},
+  {re:`trombolisis|fibrinolisis`, m:`Hay hemodinamia disponible: la angioplastia primaria es la estrategia preferida.`}
+ ],
+ pauta:[
+  `1. Reanimación con monitorización continua. Aviso INMEDIATO a hemodinamia: angioplastia primaria.`,
+  `2. Régimen cero. Dos vías venosas gruesas.`,
+  `3. Infarto inferior con compromiso del ventrículo derecho: hipotensión, ingurgitación yugular y pulmones limpios.`,
+  `4. SUSPENDER la nitroglicerina: el ventrículo derecho depende de la precarga y la nitroglicerina la baja.`,
+  `5. Solicitar derivaciones derechas V3R y V4R para confirmar.`,
+  `6. Suero fisiológico en bolos de 250–500 cc para restaurar la precarga, reevaluando tras cada bolo.`,
+  `7. Si no responde al volumen: noradrenalina o dobutamina, después del volumen y no antes.`,
+  `8. Aspirina 162–325 mg masticada.`,
+  `9. Ticagrelor 180 mg de carga (o clopidogrel 600 mg). NO prasugrel antes de conocer la anatomía.`,
+  `10. Heparina no fraccionada 60 U/kg en bolo (máximo 4000 U) y luego 12 U/kg/h.`,
+  `11. NO usar betabloqueo, diuréticos ni morfina en dosis altas: todos empeoran este cuadro.`,
+  `12. Marcapasos transitorio disponible: el infarto inferior se asocia a bloqueo auriculoventricular.`,
+  `13. Atorvastatina 80 mg al día. Oxígeno solo si hay hipoxemia.`,
+  `14. Avisar si: PAS < 80 pese al volumen, bradicardia sintomática, bloqueo completo, arritmia ventricular.`
+ ]},
+
+{esc:`Hombre de 79 años que llega con supradesnivel anterior de 6 horas de evolución. Está en Killip III, con crepitaciones en dos tercios de ambos campos y saturando 88%. PA 96/62, FC 118. Vive solo, con deterioro cognitivo leve. El centro tiene hemodinamia disponible en 30 minutos. Anticoagulado con acenocumarol por fibrilación auricular, con INR de 3,2.`,
+ vit:[["PA","96/62"],["FC","118"],["FR","30"],["SatO₂","88%"],["Killip","III"],["INR","3,2"]],
+ claves:[
+  {n:`Angioplastia primaria, no fibrinólisis`, re:`angioplastia|hemodinamia|primaria|coronariograf|no trombolisis`, c:true, tip:`Hemodinamia en 30 min y además INR de 3,2, que contraindica la trombólisis.`},
+  {n:`Reconocer el INR como contraindicación de trombólisis`, re:`inr|3,2|anticoagulado|contraindic|acenocumarol`, c:true, tip:`Refuerza que la vía es la angioplastia.`},
+  {n:`Tratar el edema pulmonar en paralelo`, re:`vni|bipap|oxigeno|furosemida|edema pulmonar|ventilacion`, c:true, tip:`Killip III con saturación 88%: ventilación no invasiva y diurético.`},
+  {n:`Cuidado con la hipotensión al tratar la congestión`, re:`96|hipotension|cautela|precaucion|presion|no bajar`, c:true, tip:`PAS 96: la nitroglicerina y el diurético agresivo pueden desplomarlo.`},
+  {n:`Aspirina de carga`, re:`aspirina|aas`, c:true, tip:`162–325 mg masticada.`},
+  {n:`Inhibidor P2Y12 con cuidado por la edad`, re:`clopidogrel|ticagrelor|p2y12|prasugrel no|edad`, c:true, tip:`Prasugrel contraindicado sobre 75 años. Washington también advierte precaución con el clopidogrel en el anciano.`},
+  {n:`Anticoagulación periprocedimiento`, re:`heparina|anticoagul|bivalirudina`, c:true, tip:`Coordinada con hemodinamia por el INR elevado.`},
+  {n:`Evaluar la triple terapia y el riesgo de sangrado`, re:`triple terapia|sangrado|fibrilacion|anticoagulacion|riesgo`, c:true, tip:`Fibrilación auricular más stent: hay que planificar el esquema y su duración.`},
+  {n:`NO betabloqueo endovenoso`, re:`no betabloqueo ev|sin betabloqueo|killip|contraindicad`, c:true, tip:`Killip III con PAS 96: contraindicado. El oral tampoco corresponde ahora.`},
+  {n:`Conversar objetivos de cuidado`, re:`objetivos|conversar|paciente|familia|preferencias|deterioro cognitivo`, c:true, tip:`79 años, vive solo, con deterioro cognitivo: vale la pena conversarlo temprano, sin que eso retrase la reperfusión.`},
+  {n:`Planificar el alta con red de apoyo`, re:`apoyo|red|vive solo|social|domicilio|cuidador`, tip:`Es lo que va a decidir si el tratamiento funciona en casa.`}
+ ],
+ err:[
+  {re:`trombolisis|fibrinolisis|tnk|alteplasa`, m:`INR de 3,2 y hemodinamia disponible en 30 minutos: la trombólisis está contraindicada y además no corresponde.`},
+  {re:`betabloqueo|metoprolol|esmolol|carvedilol`, m:`Killip III con PAS 96 y FC 118: el betabloqueo está contraindicado. Washington lo excluye con falla cardíaca nueva, shock, PAS < 120 y pulso > 110.`},
+  {re:`prasugrel`, m:`Contraindicado sobre 75 años.`},
+  {re:`retrasar la angioplastia|esperar|estabilizar primero y despues`, m:`En el infarto con supradesnivel y Killip III, la reperfusión es parte de la estabilización, no algo que venga después.`},
+  {re:`no conversar|decidir sin el paciente|omitir objetivos`, m:`79 años, solo y con deterioro cognitivo: la conversación se abre temprano, en paralelo con el tratamiento.`}
+ ],
+ pauta:[
+  `1. Reanimación. Aviso INMEDIATO a hemodinamia: angioplastia primaria en 30 min.`,
+  `2. Régimen cero. Cabecera elevada. Dos vías venosas.`,
+  `3. Infarto anterior con supradesnivel en Killip III. INR de 3,2 por acenocumarol: la fibrinólisis está contraindicada y además hay hemodinamia disponible.`,
+  `4. Ventilación no invasiva (BiPAP) por el edema pulmonar con saturación de 88%.`,
+  `5. Furosemida EV con cautela: la PAS es 96 y el diurético agresivo puede desplomarlo.`,
+  `6. Evitar la nitroglicerina mientras la PAS esté cerca de 90; si se usa, en infusión titulable y con vigilancia estrecha.`,
+  `7. Aspirina 162–325 mg masticada.`,
+  `8. Inhibidor P2Y12 coordinado con hemodinamia: clopidogrel o ticagrelor. NO prasugrel: está contraindicado sobre 75 años.`,
+  `9. Anticoagulación periprocedimiento definida con hemodinamia, considerando el INR de 3,2.`,
+  `10. NO usar betabloqueo: Killip III con PAS 96 y FC 118.`,
+  `11. Atorvastatina 80 mg al día. Monitorización continua.`,
+  `12. Planificar con cardiología el esquema antitrombótico posterior: tiene fibrilación auricular y va a quedar con stent.`,
+  `13. Conversar objetivos de cuidado con el paciente y su familia, en paralelo con el tratamiento y sin retrasarlo.`,
+  `14. Antes del alta, resolver la red de apoyo: vive solo y tiene deterioro cognitivo.`
+ ]},
+
+{esc:`Mujer de 47 años con dolor torácico opresivo hace 4 horas y supradesnivel de 2 mm en V2 a V4. Fue llevada a angioplastia primaria y las coronarias resultaron sin lesiones obstructivas. El ventriculograma muestra dilatación apical con hipercontractilidad basal. Refiere que su marido falleció hace tres días. Troponina moderadamente elevada.`,
+ vit:[["PA","118/72"],["FC","96"],["FR","20"],["SatO₂","97%"],["FEVI","36%"],["Glasgow","15"]],
+ claves:[
+  {n:`Reconocer el síndrome de Takotsubo`, re:`takotsubo|estres|apical|balonamiento|miocardiopatia por estres`, c:true, tip:`Dilatación apical con hipercontractilidad basal, coronarias sin lesiones y un desencadenante emocional intenso.`},
+  {n:`Reconocer que la conducta inicial fue correcta`, re:`correcta|correcto|se hizo bien|angioplastia|coronariograf|no se sabia`, c:true, tip:`Con supradesnivel se va a hemodinamia: el diagnóstico se hace ahí, no antes.`},
+  {n:`Suspender la doble antiagregación`, re:`suspender|antiagreg|clopidogrel|ticagrelor|desescalar|no requiere`, c:true, tip:`Sin lesiones obstructivas ni stent, no hay indicación de mantenerla.`},
+  {n:`Tratamiento de soporte de la insuficiencia cardíaca`, re:`ieca|betabloqueo|insuficiencia cardiaca|soporte|enalapril|carvedilol`, c:true, tip:`Con fracción de eyección de 36%.`},
+  {n:`Ecocardiograma seriado`, re:`ecocardio|control|seriado|recuperacion|funcion`, c:true, tip:`La función suele recuperarse en semanas.`},
+  {n:`Buscar el trombo apical`, re:`trombo|apical|anticoagul|ecocardio`, c:true, tip:`La aquinesia apical puede formar trombo.`},
+  {n:`Monitorización por arritmias`, re:`monitor|arritmia|qt|telemetria|ecg`, c:true, tip:`Puede haber prolongación del QT y arritmias ventriculares.`},
+  {n:`Vigilar la obstrucción del tracto de salida`, re:`tracto de salida|obstruccion|soplo|hipotension|inotropo`, c:true, tip:`Si aparece, los inotropos empeoran el cuadro.`},
+  {n:`Explicar el diagnóstico y el pronóstico`, re:`explicar|informar|pronostico|recuper|educacion`, c:true, tip:`Es reversible en la mayoría, y saberlo cambia la experiencia de la paciente.`},
+  {n:`Apoyo por el duelo`, re:`duelo|salud mental|psicolog|apoyo|acompanamiento`, c:true, tip:`El desencadenante es real y sigue ahí.`},
+  {n:`Control cardiológico con fecha`, re:`control|cardiolog|seguimiento|cita`, tip:`Para documentar la recuperación de la función.`}
+ ],
+ err:[
+  {re:`mantener la doble antiagregacion indefinid|continuar clopidogrel por 12 meses|dapt por un ano`, m:`No hay lesión obstructiva ni stent: la doble antiagregación prolongada solo agrega riesgo de sangrado.`},
+  {re:`trombolisis|fibrinolisis`, m:`Ya fue a angioplastia y las coronarias están sin lesiones.`},
+  {re:`inotropo|dobutamina|adrenalina`, m:`Si hay obstrucción del tracto de salida, los inotropos empeoran el cuadro. Y las catecolaminas son parte del mecanismo del Takotsubo.`},
+  {re:`alta sin ecocardiograma|sin control|alta inmediata`, m:`Fracción de eyección de 36% con riesgo de trombo apical y arritmias: requiere seguimiento.`}
+ ],
+ pauta:[
+  `1. Hospitalizar en unidad monitorizada.`,
+  `2. Régimen común hiposódico.`,
+  `3. Síndrome de Takotsubo: supradesnivel con coronarias sin lesiones obstructivas, dilatación apical con hipercontractilidad basal y desencadenante emocional intenso.`,
+  `4. Consignar que la conducta inicial fue correcta: con supradesnivel corresponde ir a hemodinamia, y el diagnóstico se hace ahí.`,
+  `5. Suspender la doble antiagregación: no hay lesión obstructiva ni stent.`,
+  `6. Tratamiento de soporte de la insuficiencia cardíaca con fracción de eyección de 36%: inhibidor de la enzima convertidora y betabloqueo, titulados según tolerancia.`,
+  `7. Ecocardiograma buscando trombo apical; anticoagular si aparece.`,
+  `8. Vigilar obstrucción del tracto de salida del ventrículo izquierdo: si existe, NO usar inotropos.`,
+  `9. Monitorización continua: puede haber prolongación del QT y arritmias ventriculares. Corregir potasio y magnesio.`,
+  `10. Explicar el diagnóstico y el pronóstico: la función ventricular se recupera en la mayoría de los casos en semanas.`,
+  `11. Apoyo por el duelo reciente; ofrecer acompañamiento de salud mental.`,
+  `12. Ecocardiograma de control y cita con cardiología con fecha concreta, para documentar la recuperación.`,
+  `13. Avisar si: dolor que reaparece, disnea, síncope, arritmia, hipotensión.`
+ ]}
+]
+
+};
+Object.entries(MAS_23).forEach(([k, v]) => { RUBRICAS[k] = (RUBRICAS[k] || []).concat(v); });
+
+const MAS_24 = {
+
+"iamsest":[
+{esc:`Hombre de 64 años diabético, con dolor opresivo retroesternal de 3 horas que ya cedió. ECG con infradesnivel de 1,5 mm en V4 a V6. Troponina de alta sensibilidad al ingreso 68 ng/L (corte 14) y a las 3 horas 240 ng/L. PA 148/88, sin signos de falla cardíaca. Pesa 84 kg. Creatinina 1,1.`,
+ vit:[["PA","148/88"],["FC","84"],["FR","18"],["SatO₂","97%"],["Troponina","68 → 240"],["Peso","84 kg"]],
+ claves:[
+  {n:`Reconocer el infarto sin supradesnivel`, re:`sin supradesnivel|iamsest|nstemi|troponina elevada|curva|delta`, c:true, tip:`Curva dinámica de troponina con infradesnivel: hubo necrosis.`},
+  {n:`NO trombolisar`, re:`no trombolisis|no indicar fibrinolisis|sin fibrinolisis|no corresponde trombolisis|no fibrinolitic`, c:true, tip:`En el infarto sin supradesnivel la fibrinólisis no tiene indicación y solo agrega sangrado.`},
+  {n:`Estratificar el riesgo`, re:`grace|timi|riesgo|estratific|alto riesgo`, c:true, tip:`Troponina elevada con cambios del ST: es alto riesgo, estrategia invasiva precoz.`},
+  {n:`Aspirina de carga y mantención`, re:`aspirina|aas`, c:true, tip:`162–325 mg de carga, luego 75–100 mg/día.`},
+  {n:`Ticagrelor como P2Y12 preferido`, re:`ticagrelor|clopidogrel|p2y12`, c:true, tip:`Washington lo señala como preferido en el síndrome coronario agudo por su ventaja en mortalidad. Con ticagrelor, la aspirina no supera 100 mg/día.`},
+  {n:`Anticoagulación`, re:`heparina|enoxaparina|anticoagul|bivalirudina|1 mg/kg`, c:true, tip:`Enoxaparina 1 mg/kg SC c/12 h, o heparina no fraccionada con TTPA 1,5–2,0 veces el control.`},
+  {n:`Coronariografía dentro de 24 h`, re:`coronariograf|cateterismo|hemodinamia|invasiva|24 h`, c:true, tip:`Estrategia invasiva precoz en el alto riesgo.`},
+  {n:`Betabloqueo oral`, re:`betabloqueo|metoprolol|carvedilol|bisoprolol`, c:true, tip:`No hay falla cardíaca ni inestabilidad.`},
+  {n:`Estatina de alta intensidad`, re:`estatina|atorvastatina|rosuvastatina`, c:true, tip:`Desde el ingreso.`},
+  {n:`No dar prasugrel antes de la anatomía`, re:`no prasugrel|prasugrel|despues de la angiografia|anatomia`, c:true, tip:`Washington: solo tras la angiografía diagnóstica o dentro de una hora de la angioplastia.`},
+  {n:`Monitorización y ECG seriado`, re:`monitor|telemetria|ecg seriad|monitoriz`, c:true, tip:`El dolor puede recurrir y el ECG cambiar.`},
+  {n:`Ecocardiograma`, re:`ecocardio`, tip:`Función ventricular y complicaciones.`}
+ ],
+ err:[
+  {re:`trombolisis|fibrinolisis|alteplasa|tenecteplasa|tnk`, m:`En el infarto sin supradesnivel la fibrinólisis no está indicada: no mejora los resultados y aumenta el sangrado.`},
+  {re:`prasugrel de carga ahora|prasugrel antes de|cargar prasugrel`, m:`Washington: solo después de conocer la anatomía coronaria o dentro de una hora de la angioplastia.`},
+  {re:`alta|manejo ambulatorio|control en policlinico`, m:`Troponina con curva dinámica y cambios del ST: es alto riesgo y va a coronariografía precoz.`},
+  {re:`aspirina 325 mg de mantencion|aspirina 250 al dia`, m:`Con ticagrelor, la aspirina de mantención no debe superar 100 mg al día.`}
+ ],
+ pauta:[
+  `1. Hospitalizar en unidad coronaria con monitorización continua. Aviso a cardiología.`,
+  `2. Régimen cero hasta definir el procedimiento; luego hiposódico para diabético.`,
+  `3. Infarto sin supradesnivel del ST: curva de troponina de 68 a 240 ng/L con infradesnivel lateral.`,
+  `4. Estratificación de alto riesgo: troponina elevada con curva y cambios dinámicos del ST. Coronariografía dentro de 24 h.`,
+  `5. NO indicar fibrinólisis.`,
+  `6. Aspirina 162–325 mg de carga, luego 100 mg/día.`,
+  `7. Ticagrelor 180 mg de carga y luego 90 mg c/12 h. NO prasugrel antes de conocer la anatomía coronaria.`,
+  `8. Enoxaparina 1 mg/kg SC c/12 h (creatinina 1,1, sin necesidad de ajuste).`,
+  `9. Atorvastatina 80 mg VO al día.`,
+  `10. Betabloqueo oral: no hay falla cardíaca ni inestabilidad.`,
+  `11. ECG seriado y con cada episodio de dolor. Troponinas de control.`,
+  `12. Ecocardiograma para función ventricular y complicaciones.`,
+  `13. Exámenes: hemograma, función renal, ELP, perfil lipídico, HbA1c, glicemia.`,
+  `14. Avisar si: dolor que reaparece, cambios nuevos del ECG, arritmia, hipotensión, signos de falla cardíaca.`
+ ]},
+
+{esc:`Mujer de 71 años con enfermedad renal crónica (creatinina 2,6, clearance 21) que consulta por dolor torácico y disnea. ECG con infradesnivel difuso y supradesnivel de 1 mm en aVR. Troponina de alta sensibilidad 890 ng/L, en ascenso. PA 104/66, FC 108, crepitaciones bibasales. Pesa 62 kg.`,
+ vit:[["PA","104/66"],["FC","108"],["FR","26"],["SatO₂","91%"],["Troponina","890"],["Clearance","21"]],
+ claves:[
+  {n:`Reconocer el patrón de tronco o tres vasos`, re:`avr|tronco|tres vasos|infradesnivel difuso|multivaso`, c:true, tip:`Infradesnivel extenso con supradesnivel en aVR: se maneja como muy alto riesgo.`},
+  {n:`Coronariografía inmediata`, re:`coronariograf|inmediata|urgente|hemodinamia|muy alto riesgo`, c:true, tip:`Insuficiencia cardíaca aguda y patrón de tronco: no espera 24 horas.`},
+  {n:`Ajustar la enoxaparina por función renal`, re:`ajuste|mitad|50%|clearance|renal|0,5 mg/kg`, c:true, tip:`Washington: la mitad de la dosis si la creatinina supera 2 mg/dL o la filtración es menor de 30.`},
+  {n:`Considerar heparina no fraccionada`, re:`heparina no fraccionada|hnf|heparina`, c:true, tip:`Es más manejable en falla renal avanzada, y se monitoriza.`},
+  {n:`Evitar o ajustar la eptifibatida`, re:`eptifibatida|glicoproteina|iib|no en dialisis|reducir la infusion`, c:true, tip:`Washington: reducir la infusión a la mitad con filtración menor de 30 y evitarla en diálisis. El abciximab sí se puede usar.`},
+  {n:`Tratar la insuficiencia cardíaca`, re:`oxigeno|furosemida|vni|diuretico|congestion`, c:true, tip:`Crepitaciones con saturación 91%.`},
+  {n:`Cuidado con el contraste`, re:`contraste|nefropat|hidratacion|nefroproteccion|volumen minimo`, c:true, tip:`Con clearance de 21, hay que minimizar el volumen de contraste y planificar la protección renal.`},
+  {n:`Aspirina y P2Y12`, re:`aspirina|ticagrelor|clopidogrel|p2y12`, c:true, tip:`Carga según la estrategia.`},
+  {n:`Estatina de alta intensidad`, re:`estatina|atorvastatina|rosuvastatina`, c:true, tip:`Desde el ingreso.`},
+  {n:`Betabloqueo con cautela`, re:`betabloqueo|cautela|precaucion|no betabloqueo|congestion`, c:true, tip:`Con crepitaciones y FC 108, hay que esperar a compensarla.`},
+  {n:`Considerar la cirugía si es enfermedad de tronco`, re:`cirugia|revascularizacion quirurgica|bypass|balon de contrapulsacion`, c:true, tip:`Washington: enfermedad crítica de tronco es revascularización quirúrgica urgente, y considerar balón antes de la inducción anestésica.`},
+  {n:`Vigilar la función renal`, re:`funcion renal|creatinina|diuresis|nefrolog`, tip:`Antes y después del contraste.`}
+ ],
+ err:[
+  {re:`enoxaparina 1 mg/kg|dosis completa de enoxaparina|1 mg/kg c/12`, m:`Clearance de 21: Washington indica la mitad de la dosis si la creatinina supera 2 o la filtración es menor de 30.`},
+  {re:`trombolisis|fibrinolisis`, m:`No hay supradesnivel persistente: la fibrinólisis no está indicada.`},
+  {re:`esperar 24 horas|coronariografia diferida|estudio no invasivo`, m:`Patrón de tronco con insuficiencia cardíaca aguda: es muy alto riesgo y la coronariografía es inmediata.`},
+  {re:`betabloqueo ev|metoprolol ev|esmolol`, m:`Con crepitaciones bibasales y taquicardia compensatoria, el betabloqueo endovenoso puede precipitar el shock.`}
+ ],
+ pauta:[
+  `1. Hospitalizar en unidad coronaria. Aviso INMEDIATO a hemodinamia y a cardiología.`,
+  `2. Régimen cero. Monitorización continua, dos vías, cabecera elevada.`,
+  `3. Infarto sin supradesnivel de MUY ALTO RIESGO: infradesnivel difuso con supradesnivel en aVR, troponina de 890 en ascenso e insuficiencia cardíaca aguda. Patrón sugerente de enfermedad de tronco o de tres vasos.`,
+  `4. Coronariografía INMEDIATA, no diferida a 24 h.`,
+  `5. Oxígeno para SatO₂ ≥ 92%; ventilación no invasiva si aumenta el trabajo respiratorio. Furosemida EV con cautela por la PAS de 104.`,
+  `6. Aspirina 162–325 mg de carga. Inhibidor P2Y12 coordinado con hemodinamia.`,
+  `7. Anticoagulación ajustada a la función renal: heparina no fraccionada, más manejable con clearance de 21; si se usa enoxaparina, la MITAD de la dosis.`,
+  `8. Si se plantea inhibidor de glicoproteína IIb/IIIa: reducir la eptifibatida a la mitad, o preferir abciximab, que no se elimina por el riñón.`,
+  `9. Minimizar el volumen de contraste y planificar la protección renal con el equipo de hemodinamia y nefrología.`,
+  `10. Atorvastatina 80 mg al día.`,
+  `11. Diferir el betabloqueo hasta compensar la congestión.`,
+  `12. Si se confirma enfermedad crítica de tronco: revascularización quirúrgica urgente, considerando balón de contrapulsación antes de la inducción anestésica.`,
+  `13. Control de función renal y diuresis antes y después del contraste.`,
+  `14. Avisar si: hipotensión, desaturación, arritmia, oliguria, dolor que reaparece.`
+ ]},
+
+{esc:`Mujer de 38 años sin factores de riesgo, que consulta por dolor torácico y disnea de dos días tras un cuadro viral. ECG con supradesnivel cóncavo difuso en múltiples derivaciones y sin imagen especular. Troponina 1.200 ng/L, PCR 90. La coronariografía muestra coronarias normales. Ecocardiograma con hipoquinesia global y fracción de eyección de 42%.`,
+ vit:[["PA","112/68"],["FC","102"],["FR","20"],["SatO₂","97%"],["Troponina","1.200"],["FEVI","42%"]],
+ claves:[
+  {n:`Reconocer la miocarditis`, re:`miocarditis|viral|coronarias normales|inflamator`, c:true, tip:`Troponina alta con coronarias normales tras cuadro viral, con hipoquinesia global.`},
+  {n:`Distinguir del infarto y de la pericarditis`, re:`pericarditis|diferencial|concavo|especular|no infarto|descartar`, c:true, tip:`Supradesnivel cóncavo difuso sin imagen especular apunta a inflamación, no a oclusión.`},
+  {n:`Resonancia cardíaca`, re:`resonancia|rm cardiaca|realce tardio|cardiorresonancia`, c:true, tip:`Es el examen que confirma sin biopsia.`},
+  {n:`Suspender la antiagregación y la anticoagulación`, re:`suspender|no antiagreg|no anticoagul|desescalar|retirar`, c:true, tip:`No hay enfermedad coronaria que tratar.`},
+  {n:`Tratamiento de la insuficiencia cardíaca`, re:`ieca|betabloqueo|insuficiencia cardiaca|enalapril|carvedilol`, c:true, tip:`Con fracción de eyección de 42%.`},
+  {n:`Monitorización por arritmias`, re:`monitor|arritmia|telemetria|bloqueo|ventricular`, c:true, tip:`La miocarditis puede dar arritmias ventriculares y bloqueo.`},
+  {n:`Reposo y restricción de ejercicio`, re:`reposo|ejercicio|restriccion|deporte|actividad`, c:true, tip:`Se restringe el ejercicio competitivo por meses.`},
+  {n:`Evitar los AINE`, re:`no usar aine|no aine|evitar aine|sin antiinflamatorio`, c:true, tip:`En la miocarditis se evitan; en la pericarditis aislada sí se usan.`},
+  {n:`Estudio etiológico`, re:`serolog|viral|pcr viral|autoinmune|estudio|vih`, c:true, tip:`Virus, causas autoinmunes y tóxicas.`},
+  {n:`Ecocardiograma seriado`, re:`ecocardio|control|seriado|funcion`, c:true, tip:`Para seguir la recuperación de la función.`},
+  {n:`Vigilar la forma fulminante`, re:`fulminante|shock|deterioro|soporte|inotropo|ecmo`, tip:`Puede evolucionar a shock cardiogénico y requerir soporte.`}
+ ],
+ err:[
+  {re:`trombolisis|fibrinolisis|alteplasa`, m:`Coronarias normales: trombolisar una miocarditis no tiene ningún sentido y agrega sangrado.`},
+  {re:`doble antiagregacion|mantener clopidogrel|ticagrelor por 12 meses`, m:`No hay enfermedad coronaria ni stent: no corresponde antiagregación prolongada.`},
+  {re:`aine|ibuprofeno|ketoprofeno|colchicina como unica`, m:`En la miocarditis se evitan los AINE. Su uso es de la pericarditis aislada.`},
+  {re:`alta precoz|deporte|volver a entrenar|actividad normal`, m:`La restricción del ejercicio es parte del tratamiento y dura meses.`}
+ ],
+ pauta:[
+  `1. Hospitalizar en unidad monitorizada.`,
+  `2. Régimen común hiposódico. Reposo relativo.`,
+  `3. Miocarditis aguda: troponina elevada con coronarias normales, supradesnivel cóncavo difuso sin imagen especular, tras un cuadro viral, con hipoquinesia global y fracción de eyección de 42%.`,
+  `4. Suspender antiagregación y anticoagulación: no hay enfermedad coronaria.`,
+  `5. Resonancia cardíaca con realce tardío para confirmar el diagnóstico.`,
+  `6. Tratamiento de insuficiencia cardíaca con inhibidor de la enzima convertidora y betabloqueo, titulados según tolerancia.`,
+  `7. Monitorización continua: riesgo de arritmias ventriculares y de bloqueo auriculoventricular.`,
+  `8. NO usar AINE.`,
+  `9. Estudio etiológico: serologías virales, VIH, marcadores autoinmunes, función tiroidea, revisión de tóxicos y fármacos.`,
+  `10. Ecocardiograma seriado para seguir la recuperación de la función ventricular.`,
+  `11. Restricción de ejercicio competitivo por meses, según evolución y control con cardiología.`,
+  `12. Vigilar la evolución a forma fulminante: si aparece shock, evaluar soporte inotrópico y mecánico.`,
+  `13. Avisar si: hipotensión, síncope, arritmia, disnea progresiva, deterioro de la fracción de eyección.`
+ ]},
+
+{esc:`Hombre de 55 años en el tercer día postoperatorio de una cirugía de cadera, que presenta disnea súbita y dolor torácico. ECG con taquicardia sinusal e inversión de la T en V1 a V3. Troponina 95 ng/L, dímero D muy elevado. PA 108/70, FC 118, satura 90%. Sin dolor anginoso típico ni cambios del ST.`,
+ vit:[["PA","108/70"],["FC","118"],["FR","28"],["SatO₂","90%"],["Troponina","95"],["Dímero D","muy alto"]],
+ claves:[
+  {n:`No asumir síndrome coronario`, re:`no corresponde a sindrome coronario|no coronario|otra causa|diferencial|no asumir|replantear`, c:true, tip:`Washington enumera tromboembolismo, sepsis, miocarditis, falla renal y taquiarritmia como causas de troponina elevada sin síndrome coronario.`},
+  {n:`Sospechar tromboembolismo pulmonar`, re:`tep|tromboembolismo|embolia|pulmonar`, c:true, tip:`Postoperatorio de cadera, disnea súbita, hipoxemia y dímero D alto.`},
+  {n:`Reconocer el patrón de sobrecarga derecha`, re:`v1|v3|inversion de la t|sobrecarga|ventriculo derecho|s1q3t3`, c:true, tip:`La inversión de T en V1 a V3 es un patrón de sobrecarga del ventrículo derecho, no de isquemia anterior.`},
+  {n:`Angiotomografía de tórax`, re:`angiotomograf|angiotac|tac de torax|imagen`, c:true, tip:`El dímero D no sirve para descartar en un postoperatorio: hay que ir a la imagen.`},
+  {n:`Anticoagular`, re:`anticoagul|heparina|enoxaparina`, c:true, tip:`Con probabilidad alta, antes incluso de la confirmación si la imagen se demora.`},
+  {n:`Estratificar el riesgo del tromboembolismo`, re:`riesgo|estratific|ecocardio|ventriculo derecho|troponina|pesi`, c:true, tip:`La troponina elevada indica sobrecarga del ventrículo derecho y sube la categoría de riesgo.`},
+  {n:`Oxígeno`, re:`oxigeno|sato2|meta|naricera`, c:true, tip:`Saturando 90%.`},
+  {n:`No antiagregar de rutina`, re:`no indicar antiagregacion|no antiagreg|sin aspirina|no doble|no clopidogrel`, c:true, tip:`No es un síndrome coronario, y el postoperatorio agrega riesgo de sangrado.`},
+  {n:`Evaluar el riesgo de sangrado del postoperatorio`, re:`sangrado|postoperator|cirugia|riesgo hemorragico|hematoma`, c:true, tip:`Tercer día de una cirugía de cadera: hay que conversarlo con el equipo quirúrgico.`},
+  {n:`Ecocardiograma`, re:`ecocardio`, c:true, tip:`Buscando dilatación y disfunción del ventrículo derecho.`},
+  {n:`Revisar la tromboprofilaxis que recibía`, re:`profilaxis|tromboprofilaxis|revisar|adherencia|dosis`, tip:`Si falló, hay que saber por qué.`}
+ ],
+ err:[
+  {re:`doble antiagregacion|cargar aspirina|clopidogrel|ticagrelor|coronariograf`, m:`El cuadro no es coronario: postoperatorio de cadera con disnea súbita, hipoxemia, dímero D alto y patrón de sobrecarga derecha. Tratarlo como síndrome coronario retrasa el diagnóstico y agrega sangrado.`},
+  {re:`trombolisis sistemica de entrada|fibrinolisis de rutina`, m:`Está normotenso: la trombólisis se reserva para el tromboembolismo de alto riesgo con inestabilidad, y aquí el postoperatorio reciente agrega riesgo de sangrado.`},
+  {re:`dimero d negativo|descartar por el dimero`, m:`En un postoperatorio el dímero D está elevado casi siempre: no sirve para descartar. Hay que ir a la imagen.`},
+  {re:`dar de alta|alta a domicilio|solo observar`, m:`Hipoxemia con sospecha alta de tromboembolismo y troponina elevada: se hospitaliza.`}
+ ],
+ pauta:[
+  `1. Hospitalizar en unidad monitorizada. Aviso al equipo quirúrgico.`,
+  `2. Régimen cero mientras se define la conducta.`,
+  `3. El cuadro NO corresponde a síndrome coronario: postoperatorio de cadera con disnea súbita, hipoxemia, dímero D muy elevado y patrón de sobrecarga del ventrículo derecho en V1 a V3.`,
+  `4. Oxígeno para SatO₂ ≥ 92%.`,
+  `5. Angiotomografía de tórax URGENTE: el dímero D no sirve para descartar en un postoperatorio.`,
+  `6. Iniciar anticoagulación si la probabilidad clínica es alta y la imagen se demora, conversando el riesgo de sangrado con el equipo quirúrgico.`,
+  `7. NO indicar antiagregación ni coronariografía de rutina.`,
+  `8. Ecocardiograma buscando dilatación y disfunción del ventrículo derecho.`,
+  `9. Estratificar el riesgo del tromboembolismo: la troponina de 95 indica sobrecarga del ventrículo derecho y sube la categoría.`,
+  `10. Exámenes: hemograma, función renal, coagulación, gases, ELP, troponinas seriadas.`,
+  `11. Revisar la tromboprofilaxis que estaba recibiendo y por qué falló.`,
+  `12. Doppler de extremidades inferiores si aporta a la decisión.`,
+  `13. Avisar si: hipotensión, desaturación progresiva, síncope, signos de sangrado del sitio quirúrgico.`
+ ]}
+],
+
+"angina":[
+{esc:`Hombre de 62 años, hipertenso y dislipidémico, que consulta por tres episodios de dolor opresivo retroesternal en reposo en las últimas 48 horas, de 15 a 20 minutos cada uno, el último hace 3 horas. Antes solo le dolía al subir escaleras. Está sin dolor ahora. ECG en ritmo sinusal sin alteraciones. Dos troponinas de alta sensibilidad negativas separadas por 3 horas.`,
+ vit:[["PA","152/88"],["FC","76"],["FR","16"],["SatO₂","98%"],["Troponina","negativa x2"],["ECG","normal"]],
+ claves:[
+  {n:`Reconocer la angina inestable`, re:`angina inestable|reposo|progresiva|inestable|reciente comienzo`, c:true, tip:`Angina de reposo prolongada y en aumento respecto de su patrón previo, con troponina negativa.`},
+  {n:`ECG y troponina normales no descartan`, re:`no descarta|descartan necrosis|normal no|puede ser normal|entre episodios|igual se estudia`, c:true, tip:`Descartan necrosis en ese momento, no enfermedad coronaria.`},
+  {n:`Aspirina`, re:`aspirina|aas`, c:true, tip:`162–325 mg de carga y luego 75–100 mg/día.`},
+  {n:`Estatina de alta intensidad`, re:`estatina|atorvastatina|rosuvastatina`, c:true, tip:`Desde el ingreso.`},
+  {n:`Betabloqueo oral`, re:`betabloqueo|metoprolol|bisoprolol|carvedilol`, c:true, tip:`Si no hay contraindicación.`},
+  {n:`Anticoagulación en el riesgo intermedio o alto`, re:`heparina|enoxaparina|anticoagul`, c:true, tip:`Washington maneja la angina inestable con el mismo esquema del infarto sin supradesnivel.`},
+  {n:`Estratificar el riesgo`, re:`grace|timi|riesgo|estratific|puntaje`, c:true, tip:`Angina de reposo prolongada y progresiva ya lo pone en riesgo alto.`},
+  {n:`Estudio funcional o coronariografía según el riesgo`, re:`prueba de esfuerzo|ecocardiograma de estres|cintigraf|angiotac|coronariograf|estudio funcional`, c:true, tip:`Con este patrón, lo razonable es la estrategia invasiva.`},
+  {n:`ECG con cada dolor`, re:`ecg seriad|con cada dolor|repetir el ecg|nuevo ecg`, c:true, tip:`Entre episodios puede ser normal.`},
+  {n:`Nitroglicerina para el dolor`, re:`nitroglicerina|ntg|sublingual`, c:true, tip:`Si el dolor recurre.`},
+  {n:`Observación monitorizada`, re:`observacion|monitoriz|telemetria|hospitaliz`, c:true, tip:`No es un paciente para irse a la casa esta noche.`},
+  {n:`Descartar disección y tromboembolismo`, re:`diseccion|tep|ambos brazos|pulsos|diferencial`, tip:`Antes de quedarse con el diagnóstico coronario.`}
+ ],
+ err:[
+  {re:`dar de alta|alta a domicilio|se va a la casa`, m:`Tres episodios de dolor en reposo en 48 h, el último hace 3 h, con cambio del patrón previo: dos troponinas negativas no autorizan el alta sin estudio.`},
+  {re:`trombolisis|fibrinolisis`, m:`No hay supradesnivel ni necrosis: la fibrinólisis no tiene indicación.`},
+  {re:`prasugrel`, m:`No antes de conocer la anatomía coronaria.`},
+  {re:`solo control con su medico|estudio cuando pueda|derivar sin fecha`, m:`El estudio se hace antes del alta o con fecha concreta y precoz, no "cuando pueda".`}
+ ],
+ pauta:[
+  `1. Hospitalizar en unidad monitorizada. Aviso a cardiología.`,
+  `2. Régimen común hiposódico.`,
+  `3. Angina inestable: angina de reposo prolongada y progresiva respecto del patrón previo, con ECG normal y dos troponinas negativas separadas.`,
+  `4. Un ECG y una troponina normales descartan necrosis en ese momento, no enfermedad coronaria.`,
+  `5. Medir presión en ambos brazos y palpar pulsos: descartar disección aórtica. Evaluar probabilidad de tromboembolismo.`,
+  `6. Aspirina 162–325 mg de carga, luego 100 mg/día.`,
+  `7. Atorvastatina 80 mg VO al día.`,
+  `8. Betabloqueo oral si no hay contraindicación.`,
+  `9. Anticoagulación con enoxaparina o heparina no fraccionada, por tratarse de riesgo alto.`,
+  `10. Nitroglicerina sublingual si el dolor recurre; endovenosa si persiste.`,
+  `11. ECG seriado y con cada episodio de dolor. Troponinas de control.`,
+  `12. Estratificar con GRACE o TIMI y proceder a coronariografía por el patrón de alto riesgo.`,
+  `13. Al alta: doble antiagregación según lo que se encuentre, betabloqueo, estatina, control de factores de riesgo y rehabilitación cardíaca.`,
+  `14. Avisar si: dolor que reaparece, cambios nuevos del ECG, arritmia, hipotensión, disnea.`
+ ]},
+
+{esc:`Mujer de 34 años que consulta por dolor torácico punzante de dos semanas, que dura segundos, cambia con la posición y se reproduce al presionar la pared torácica. Sin factores de riesgo cardiovascular. ECG normal, troponina negativa. Está muy angustiada porque su padre murió de infarto a los 50 años. Es la segunda consulta este mes.`,
+ vit:[["PA","124/76"],["FC","88"],["FR","18"],["SatO₂","99%"],["Troponina","negativa"],["ECG","normal"]],
+ claves:[
+  {n:`Reconocer el dolor no coronario`, re:`no coronario|musculoesquelet|pared toracica|reproduc|atipico|costocondr`, c:true, tip:`Punzante, de segundos, cambia con la posición y se reproduce a la palpación: no es angina.`},
+  {n:`Descartar lo grave igualmente`, re:`descartar|diferencial|tep|diseccion|neumotorax|pericarditis`, c:true, tip:`Aunque el patrón sea claro, la primera pasada se hace igual.`},
+  {n:`ECG y troponina ya hechos`, re:`ecg|troponina`, c:true, tip:`Y ambos normales.`},
+  {n:`No repetir el estudio completo cada vez`, re:`no repetir|ni repetir|ya estudiado|no mas examenes|segunda consulta`, c:true, tip:`Repetir exámenes en un patrón claramente no coronario refuerza la ansiedad y no aporta.`},
+  {n:`Explicar el diagnóstico en positivo`, re:`explicar|informar|educacion|comunicar|nombre|tranquiliz`, c:true, tip:`No es "no tiene nada": es dolor de pared torácica, real y tratable.`},
+  {n:`Analgesia y medidas locales`, re:`analgesia|paracetamol|aine|calor|antiinflamator`, c:true, tip:`Y explicar que puede tardar semanas.`},
+  {n:`Abordar la ansiedad y el antecedente familiar`, re:`ansiedad|angustia|antecedente familiar|padre|miedo|salud mental`, c:true, tip:`Es lo que la trae de vuelta, y no se resuelve con otro electrocardiograma.`},
+  {n:`Evaluar el riesgo cardiovascular real`, re:`riesgo cardiovascular|perfil lipidico|glicemia|presion|prevencion|estratific`, c:true, tip:`El antecedente familiar sí importa para la prevención primaria, aunque no explique este dolor.`},
+  {n:`Alta con indicaciones escritas`, re:`alta|indicaciones escritas|domicilio|ambulatorio`, c:true, tip:`Con signos de alarma claros.`},
+  {n:`Signos de alarma para reconsultar`, re:`signos de alarma|consultar de inmediato|reconsultar|volver si|consultar si`, c:true, tip:`Dolor opresivo, con esfuerzo, prolongado, con sudoración o disnea.`},
+  {n:`Control con su médico`, re:`control|seguimiento|cita|policlinico`, tip:`Para el riesgo cardiovascular y el seguimiento de la ansiedad.`}
+ ],
+ err:[
+  {re:`hospitaliz|ingres|observacion prolongada|unidad coronaria`, m:`Dolor claramente no coronario, con ECG y troponina normales y sin factores de riesgo: no corresponde hospitalizar.`},
+  {re:`coronariograf|cateterismo|angiotac coronaria`, m:`Probabilidad previa muy baja: el estudio invasivo solo agrega riesgo y hallazgos incidentales.`},
+  {re:`doble antiagregacion|clopidogrel|ticagrelor|heparina|anticoagul`, m:`No hay síndrome coronario: solo agrega riesgo de sangrado.`},
+  {re:`no tiene nada|es puro nervio|es psicologico nomas|esta bien, vayase`, m:`Decirle que no tiene nada garantiza la tercera consulta. El dolor de pared torácica es real y se nombra.`},
+  {re:`repetir troponina|nueva troponina|repetir el ecg en un mes|mas examenes`, m:`Con un patrón claramente no coronario, repetir el estudio refuerza la ansiedad sin aportar información.`}
+ ],
+ pauta:[
+  `1. Manejo ambulatorio. No requiere hospitalización.`,
+  `2. Régimen común.`,
+  `3. Dolor torácico de características NO coronarias: punzante, de segundos, que cambia con la posición y se reproduce a la palpación de la pared torácica.`,
+  `4. ECG y troponina normales, sin factores de riesgo cardiovascular: probabilidad previa muy baja.`,
+  `5. Aun así, descartar en la primera pasada lo que mata: tromboembolismo pulmonar, disección aórtica, neumotórax y pericarditis.`,
+  `6. NO solicitar coronariografía ni angiotomografía coronaria, ni repetir troponinas.`,
+  `7. NO indicar antiagregación ni anticoagulación.`,
+  `8. Explicar el diagnóstico con nombre propio y en positivo: dolor de pared torácica, frecuente, real y tratable, que puede durar algunas semanas.`,
+  `9. Analgesia con paracetamol o AINE según tolerancia, y medidas locales.`,
+  `10. Abordar explícitamente la ansiedad y el antecedente de muerte del padre: es lo que la trae de vuelta.`,
+  `11. Evaluar el riesgo cardiovascular real con perfil lipídico, glicemia y presión: el antecedente familiar importa para la prevención primaria, aunque no explique este dolor.`,
+  `12. Ofrecer apoyo de salud mental si la angustia persiste.`,
+  `13. Alta con indicaciones escritas y control con su médico con fecha.`,
+  `14. Consultar de inmediato si el dolor cambia de carácter: opresivo, con el esfuerzo, de más de 20 minutos, o con sudoración, disnea o síncope.`
+ ]},
+
+{esc:`Hombre de 58 años con angina estable conocida hace tres años, en tratamiento con aspirina, atenolol y atorvastatina. Consulta porque desde hace una semana el dolor aparece con esfuerzos cada vez menores y anoche lo despertó en reposo. Cede con nitroglicerina sublingual en pocos minutos. ECG sin cambios respecto de uno previo. Troponinas negativas seriadas.`,
+ vit:[["PA","138/82"],["FC","64"],["FR","16"],["SatO₂","98%"],["Troponina","negativa"],["ECG","sin cambios"]],
+ claves:[
+  {n:`Reconocer la progresión de angina estable a inestable`, re:`progresion|inestable|crescendo|esfuerzos menores|cambio de patron|reposo`, c:true, tip:`Angina que aparece con menos esfuerzo y ahora en reposo: cambió de categoría.`},
+  {n:`Hospitalizar u observar`, re:`hospitaliz|observacion|ingres|monitoriz`, c:true, tip:`El cambio de patrón es el criterio, no la troponina.`},
+  {n:`Mantener y optimizar la aspirina`, re:`aspirina|aas|mantener`, c:true, tip:`Ya la toma; se verifica la adherencia y la dosis.`},
+  {n:`Agregar anticoagulación`, re:`heparina|enoxaparina|anticoagul`, c:true, tip:`Washington usa el mismo esquema del infarto sin supradesnivel.`},
+  {n:`Agregar inhibidor P2Y12 según la estrategia`, re:`clopidogrel|ticagrelor|p2y12`, c:true, tip:`Si va a angioplastia. Prasugrel solo tras conocer la anatomía.`},
+  {n:`Optimizar el antianginoso`, re:`betabloqueo|atenolol|nitrato|calcioantagonista|optimizar|subir la dosis`, c:true, tip:`FC 64 con PA 138/82: hay margen para titular.`},
+  {n:`Revisar adherencia y gatillantes`, re:`adherencia|toma|gatillante|anemia|tiroides|infeccion|arritmia`, c:true, tip:`Anemia, hipertiroidismo, taquiarritmia, infección o mala adherencia pueden desestabilizar una angina estable.`},
+  {n:`Estratificar el riesgo`, re:`grace|timi|riesgo|estratific`, c:true, tip:`Angina de reposo en un coronario conocido es riesgo alto.`},
+  {n:`Coronariografía`, re:`coronariograf|cateterismo|hemodinamia|invasiva`, c:true, tip:`Enfermedad coronaria conocida con cambio de patrón: estrategia invasiva.`},
+  {n:`ECG seriado y comparar con el previo`, re:`ecg seriad|comparar|previo|con cada dolor`, c:true, tip:`Tener el ECG antiguo cambia la interpretación.`},
+  {n:`Verificar la estatina y las metas`, re:`estatina|atorvastatina|ldl|perfil lipidico|meta`, tip:`Alta intensidad y meta de LDL.`},
+  {n:`Educación y rehabilitación`, re:`educacion|rehabilitacion|tabaco|factores de riesgo|control`, tip:`Y qué hacer si el dolor reaparece.`}
+ ],
+ err:[
+  {re:`dar de alta|alta a domicilio|mandar a casa`, m:`Angina que progresa a reposo en un coronario conocido es angina inestable: se hospitaliza aunque la troponina sea negativa.`},
+  {re:`trombolisis|fibrinolisis`, m:`No hay supradesnivel ni necrosis.`},
+  {re:`solo subir la dosis|solo ajustar el tratamiento|manejo medico unicamente`, m:`Con cambio de patrón en un coronario conocido, corresponde estratificar y estudiar la anatomía, no solo titular fármacos.`},
+  {re:`prasugrel de carga|cargar prasugrel`, m:`No antes de conocer la anatomía coronaria.`}
+ ],
+ pauta:[
+  `1. Hospitalizar en unidad monitorizada. Aviso a cardiología.`,
+  `2. Régimen común hiposódico.`,
+  `3. Angina inestable por progresión: dolor con esfuerzos decrecientes y ahora en reposo, en un paciente con enfermedad coronaria conocida. Es un cambio de categoría aunque la troponina sea negativa.`,
+  `4. Mantener aspirina y verificar adherencia y dosis.`,
+  `5. Anticoagulación con enoxaparina 1 mg/kg SC c/12 h o heparina no fraccionada.`,
+  `6. Inhibidor P2Y12 coordinado con la estrategia: clopidogrel o ticagrelor. NO prasugrel antes de conocer la anatomía.`,
+  `7. Optimizar el tratamiento antianginoso: titular el betabloqueo, con margen dado por FC de 64 y PA de 138/82; agregar nitrato de acción prolongada o calcioantagonista si hace falta.`,
+  `8. Verificar la estatina y las metas de LDL.`,
+  `9. ECG seriado y con cada episodio de dolor, comparándolo siempre con el registro previo.`,
+  `10. Buscar gatillantes que desestabilicen una angina estable: anemia, hipertiroidismo, taquiarritmia, infección, mala adherencia.`,
+  `11. Estratificar con GRACE o TIMI y proceder a coronariografía por el cambio de patrón en un coronario conocido.`,
+  `12. Al alta: esquema antitrombótico según lo encontrado, betabloqueo, estatina, rehabilitación cardíaca y control de factores de riesgo.`,
+  `13. Avisar si: dolor en reposo que no cede con nitroglicerina, cambios nuevos del ECG, arritmia, hipotensión, disnea.`
+ ]},
+
+{esc:`Mujer de 68 años con anemia crónica conocida (hemoglobina 7,2, ferropénica en estudio) que consulta por dolor torácico opresivo con el esfuerzo desde hace cinco días, y hoy en reposo. ECG con infradesnivel de 1 mm en cara lateral que se normaliza al ceder el dolor. Troponinas negativas seriadas. Sin antecedente coronario conocido. Está pálida y taquicárdica.`,
+ vit:[["PA","118/70"],["FC","106"],["FR","18"],["SatO₂","97%"],["Hb","7,2"],["Troponina","negativa"]],
+ claves:[
+  {n:`Reconocer la angina inestable secundaria`, re:`secundaria|anemia|desequilibrio|demanda|aporte|precipitante`, c:true, tip:`La anemia severa aumenta la demanda y reduce el aporte: puede desenmascarar enfermedad coronaria.`},
+  {n:`Transfundir por la isquemia`, re:`transfun|globulos rojos|hemoglobina|umbral de 8`, c:true, tip:`Con cardiopatía isquémica el umbral de transfusión sube a 8 g/dL.`},
+  {n:`Tomar muestras del estudio antes de transfundir`, re:`antes de transfundir|muestras|ferritina|estudio previo`, c:true, tip:`La transfusión altera todo el estudio de la anemia.`},
+  {n:`Tratar la angina en paralelo`, re:`aspirina|betabloqueo|nitroglicerina|estatina|antianginoso`, c:true, tip:`Corregir la anemia no reemplaza el manejo coronario.`},
+  {n:`Cuidado con la anticoagulación`, re:`anticoagul|heparina|sangrado|cautela|riesgo hemorragico|ferropenia`, c:true, tip:`Ferropenia en estudio: puede haber una fuente de sangrado digestivo activa.`},
+  {n:`Estudiar la causa de la ferropenia`, re:`endoscopia|colonoscopia|digestiv|neoplasia|causa|estudio`, c:true, tip:`A los 68 años con ferropenia, hay que estudiar el tubo digestivo.`},
+  {n:`ECG dinámico como dato de alto riesgo`, re:`dinamico|cambia con el dolor|se normaliza|infradesnivel|alto riesgo`, c:true, tip:`Un infradesnivel que aparece y desaparece con el dolor es cambio dinámico y sube la categoría de riesgo.`},
+  {n:`Estratificar y decidir coronariografía`, re:`grace|timi|estratific|coronariograf|riesgo`, c:true, tip:`Sopesando el riesgo de sangrado.`},
+  {n:`Monitorización continua`, re:`monitor|telemetria|monitoriz|ecg seriad`, c:true, tip:`Con ECG seriado.`},
+  {n:`Reponer hierro`, re:`hierro|fierro|parenteral|ferroso`, c:true, tip:`Además de la transfusión.`},
+  {n:`Coordinar entre cardiología y gastroenterología`, re:`cardiolog|gastroenterolog|interconsulta|coordinar|equipo`, tip:`Las dos decisiones se toman juntas.`}
+ ],
+ err:[
+  {re:`solo transfundir|solo corregir la anemia|manejar solo la anemia`, m:`Corregir la anemia es indispensable, pero el ECG dinámico con dolor de reposo obliga a manejar también la angina inestable.`},
+  {re:`anticoagular sin evaluar|heparina de rutina|doble antiagregacion sin considerar`, m:`Ferropenia en estudio a los 68 años: puede haber sangrado digestivo activo. La anticoagulación se sopesa, no se indica de forma automática.`},
+  {re:`transfundir sin tomar muestras|transfundir primero`, m:`La transfusión altera ferritina, reticulocitos y morfología: las muestras se toman antes.`},
+  {re:`dar de alta|alta a domicilio|manejo ambulatorio`, m:`Dolor de reposo con cambios dinámicos del ECG y hemoglobina de 7,2: se hospitaliza.`},
+  {re:`umbral de 7 en esta paciente|transfundir bajo 7`, m:`Con isquemia miocárdica el umbral sube a 8 g/dL.`}
+ ],
+ pauta:[
+  `1. Hospitalizar en unidad monitorizada. Aviso a cardiología y a gastroenterología.`,
+  `2. Régimen común; cero si se programa endoscopia.`,
+  `3. Angina inestable secundaria a anemia severa: la anemia aumenta la demanda y reduce el aporte de oxígeno, desenmascarando enfermedad coronaria.`,
+  `4. El infradesnivel lateral que aparece y desaparece con el dolor es un cambio dinámico: eleva la categoría de riesgo pese a las troponinas negativas.`,
+  `5. TOMAR LAS MUESTRAS del estudio de anemia ANTES de transfundir: hemograma con frotis, reticulocitos, ferritina, saturación de transferrina, B12 y folato.`,
+  `6. Transfundir glóbulos rojos con meta de hemoglobina 8 g/dL: el umbral sube por la isquemia miocárdica. Pasar lento y vigilar sobrecarga.`,
+  `7. Aspirina, betabloqueo si lo tolera, nitroglicerina para el dolor y estatina de alta intensidad.`,
+  `8. Sopesar la anticoagulación con el equipo: hay ferropenia en estudio y posible sangrado digestivo activo.`,
+  `9. Hierro parenteral además de la transfusión.`,
+  `10. Estudio del tubo digestivo durante esta hospitalización: endoscopia alta y colonoscopia, por ferropenia a los 68 años.`,
+  `11. ECG seriado y con cada episodio de dolor. Troponinas de control.`,
+  `12. Estratificar el riesgo y decidir la coronariografía sopesando el riesgo hemorrágico, en decisión conjunta de cardiología y gastroenterología.`,
+  `13. Avisar si: dolor que reaparece, nueva melena o hematemesis, hipotensión, disnea, caída de la hemoglobina.`
+ ]}
+]
+
+};
+Object.entries(MAS_24).forEach(([k, v]) => { RUBRICAS[k] = (RUBRICAS[k] || []).concat(v); });
+
+
 
 
 
@@ -8908,6 +10033,95 @@ DOSIS.push(
 );
 
 DOSIS.push(
+{t:`Antihipertensivos endovenosos · según la patología`, id:`hta-ev`,
+ n:`La pregunta no es qué antihipertensivo prefieres, sino qué órgano estás protegiendo. La meta y el fármaco los define el cuadro, y en la disección aórtica el orden importa: primero el betabloqueo, después el vasodilatador.`,
+ fu:`<b>Guía ESC/ESH 2023 de hipertensión arterial</b>, cargada en el proyecto: Tabla 24 con las metas y los fármacos de primera línea por presentación clínica, y su tabla de fármacos endovenosos con inicio, duración y dosis. <b>Washington</b>, cap. 3, Tabla 3-5 (preparaciones parenterales) y la sección de disección aórtica y de hipertensión asintomática severa.`,
+ r:[
+ {f:`METAS POR CUADRO`, p:`—`, d:`—`,
+  i:`Lo primero es definir el objetivo, porque cambia por completo entre cuadros.`,
+  m:`—`, e:`—`,
+  c:`ESC 2023, Tabla 24. <b>Hipertensión maligna</b>: bajar la PAM 20–25% en varias horas. <b>Encefalopatía hipertensiva</b>: bajar la PAM 20–25% de inmediato. <b>Evento coronario agudo</b> y <b>edema pulmonar cardiogénico</b>: PAS bajo 140 de inmediato. <b>Disección aórtica</b>: PAS bajo 120 Y frecuencia bajo 60 de inmediato. <b>Eclampsia y preeclampsia severa</b>: PAS bajo 160 y PAD bajo 105.`, ojo:true},
+ {f:`REGLA GENERAL`, p:`—`, d:`—`,
+  i:`Cuando el cuadro no está en la tabla anterior.`,
+  m:`—`, e:`—`,
+  c:`Washington: bajar la PAS <b>no más de 25% en la primera hora</b>; luego, si está estable, a 160/100 en las siguientes 2 a 6 h; y después con cautela a lo normal en 24 a 48 h. La excepción son disección aórtica, preeclampsia severa o eclampsia y crisis por feocromocitoma, donde la PAS baja a menos de 140 en la primera hora y luego bajo 120.`, ojo:true},
+ {f:`Labetalol`, p:`Ampolla de 100 mg/20 mL`,
+  d:`Bolo 20–80 mg c/5–10 min hasta 300 mg · infusión 0,5–2 mg/min · inicio 5–10 min, dura 3–6 h`,
+  i:`Primera línea en hipertensión maligna, encefalopatía hipertensiva, evento coronario, eclampsia y disección. Es el de elección en el embarazo.`,
+  m:`Bloqueo alfa-1 y beta no selectivo; por vía endovenosa el efecto beta supera al alfa.`,
+  e:`Hipotensión, bloqueo, insuficiencia cardíaca, broncoespasmo, náuseas, hormigueo del cuero cabelludo, respuesta presora paradójica.`,
+  c:`Washington: como la vida media es de 5–8 h, los bolos intermitentes pueden ser preferibles a la infusión. Tratar al paciente <b>en decúbito supino</b> por la hipotensión postural. Útil en exceso adrenérgico: suspensión de clonidina, feocromocitoma, postoperatorio de bypass. Al pasar a vía oral: 200 mg y luego 200–400 mg en 6–12 h.`, ojo:true},
+ {f:`Nicardipino`, p:`Ampolla`,
+  d:`5 mg/h, subiendo 1–2,5 mg/h cada 15 min hasta 15 mg/h · inicio 1–5 min, dura 3–6 h`,
+  i:`Primera línea en hipertensión maligna, encefalopatía hipertensiva y eclampsia. Muy usado en emergencia neurológica.`,
+  m:`Calcioantagonista dihidropiridínico endovenoso.`,
+  e:`Hipotensión, cefalea, taquicardia, náuseas, irritación venosa.`,
+  c:`Washington: se administra por <b>vía central</b>; si va por periférica, cambiar el sitio cada 12 h. El 50% del efecto máximo aparece en los primeros 30 min, pero el efecto pleno recién a las 48 h.`, ojo:true},
+ {f:`Nitroprusiato de sodio`, p:`Frasco de 50 mg`,
+  d:`0,5–10 µg/kg/min (partir en 0,25 µg/kg/min en eclampsia y falla renal) · inicio inmediato, dura 2–3 min`,
+  i:`Alternativa en hipertensión maligna y encefalopatía; junto al betabloqueo en la disección aórtica.`,
+  m:`Dador de óxido nítrico: vasodilatación arterial y venosa inmediata.`,
+  e:`Hipotensión, náuseas, aprensión. Riesgo de toxicidad por tiocianato en falla renal y por cianuro en falla hepática: hay que monitorizar niveles.`,
+  c:`Debe protegerse de la luz. <b>En la disección aórtica nunca se usa solo</b>: aumenta la contractilidad y las fuerzas de cizallamiento, que propagan la disección. El betabloqueo simultáneo es imprescindible.`, ojo:true},
+ {f:`Nitroglicerina`, p:`Ampolla de 50 mg`,
+  d:`5–250 µg/min · inicio 1–2 min, dura 3–5 min`,
+  i:`Primera línea en el evento coronario agudo y en el edema pulmonar cardiogénico, en este último junto a un diurético de asa.`,
+  m:`Dador de óxido nítrico: venodilata y baja precarga; a dosis altas también dilata arterias.`,
+  e:`Cefalea, náuseas, vómitos. Aparece taquifilaxia con el uso prolongado.`,
+  c:`Washington: baja más la precarga que la poscarga, así que se usa con precaución o se evita en el <b>infarto inferior con compromiso del ventrículo derecho</b>, que depende de la precarga. Prohibida con inhibidores de fosfodiesterasa 5 en las últimas 24–48 h.`, ojo:true},
+ {f:`Esmolol`, p:`Ampolla`,
+  d:`Carga 500 µg/kg/min por 1 min, luego 50–300 µg/kg/min · inicio 1–5 min, dura 10 min`,
+  i:`Disección aórtica, tormenta tiroidea, y cuando se necesita betabloqueo retirable en minutos.`,
+  m:`Betabloqueo beta-1 selectivo de vida media ultracorta.`,
+  e:`Hipotensión, bloqueo, insuficiencia cardíaca, broncoespasmo.`,
+  c:`Washington: es útil cuando preocupa la intolerancia al betabloqueo, justamente porque el efecto desaparece en unos 10 minutos. Si se tolera, se pasa después a un betabloqueante de acción más larga.`},
+ {f:`Clevidipino`, p:`Emulsión lipídica`,
+  d:`1–2 mg/h, doblando la dosis cada 90 s hasta 16 mg/h · inicio 2–4 min, dura 5–15 min`,
+  i:`Alternativa al nicardipino cuando se necesita titulación más rápida.`,
+  m:`Calcioantagonista dihidropiridínico endovenoso de acción ultracorta.`,
+  e:`Hipotensión, taquicardia refleja.`,
+  c:`Washington: inicio más rápido y vida media más corta que el nicardipino.`},
+ {f:`Enalaprilato`, p:`Ampolla`,
+  d:`0,625–1,25 mg EV en 5 min c/6 h · inicio 5–15 min, dura 4–6 h`,
+  i:`Hipertensión severa y maligna cuando conviene un inhibidor de la enzima convertidora.`,
+  m:`Forma activa del enalapril.`,
+  e:`Hipotensión impredecible, falla renal, hiperkalemia, angioedema.`,
+  c:`Washington advierte que la reducción de presión es <b>variable e impredecible</b>. Contraindicado con antecedente de angioedema, en el embarazo y en la estenosis bilateral de arteria renal.`, ojo:true},
+ {f:`Hidralazina`, p:`Ampolla de 20 mg`,
+  d:`10–20 mg EV c/20 min · inicio 10–20 min, dura 3–6 h`,
+  i:`Emergencia hipertensiva del embarazo, por su perfil de seguridad establecido.`,
+  m:`Vasodilatador arterial directo.`,
+  e:`Hipotensión, sufrimiento fetal, taquicardia, cefalea, náuseas, tromboflebitis local.`,
+  c:`Washington: rara vez se usa en crisis hipertensivas fuera del embarazo y no ofrece ventajas sobre los demás. <b>Si no hay efecto tras 20 mg, cambiar de fármaco</b> en vez de insistir. Cambiar el sitio de infusión a las 12 h.`, ojo:true},
+ {f:`Urapidilo`, p:`Ampolla`,
+  d:`Bolo 12,5–25 mg · infusión 5–40 mg/h · inicio 3–5 min, dura 4–6 h`,
+  i:`Alternativa del ESC en hipertensión maligna, encefalopatía, evento coronario y edema pulmonar.`,
+  m:`Bloqueo alfa-1 periférico con acción serotoninérgica central.`,
+  e:`Hipotensión, mareo.`,
+  c:`ESC 2023. No está disponible en varios países, incluido el nuestro en muchos centros.`},
+ {f:`Fentolamina`, p:`Ampolla`,
+  d:`Bolo 5–10 mg c/5–15 min · inicio 1–2 min, dura 3–10 min`,
+  i:`Crisis por exceso de catecolaminas: feocromocitoma, suspensión de clonidina, intoxicación por simpaticomiméticos.`,
+  m:`Bloqueo alfa no selectivo.`,
+  e:`Hipotensión, taquicardia, cefalea, angina, respuesta presora paradójica.`,
+  c:`También se usa para infiltrar la zona cuando se extravasa noradrenalina.`},
+ {f:`Fenoldopam`, p:`Infusión`,
+  d:`0,1–0,3 µg/kg/min · inicio menos de 5 min, dura 30 min`,
+  i:`Emergencia hipertensiva, con la ventaja teórica de preservar el flujo renal.`,
+  m:`Agonista selectivo del receptor dopaminérgico D1.`,
+  e:`Taquicardia, náuseas, vómitos.`, c:`—`},
+ {f:`Nifedipino sublingual`, p:`—`, d:`NO USAR`,
+  i:`—`, m:`—`,
+  e:`El descenso de presión no se puede anticipar y suele ser demasiado rápido y mayor de lo deseable.`,
+  c:`El ESC 2023 lo desaconseja expresamente. Es una de las causas clásicas de ACV isquémico y de infarto yatrogénicos en la urgencia.`, ojo:true},
+ {f:`En intoxicación por cocaína o simpaticomiméticos`, p:`—`,
+  d:`Benzodiacepinas primero; si se requiere control estricto, nicardipino, clevidipino o nitroglicerina`,
+  i:`Control de presión y frecuencia en la intoxicación por simpaticomiméticos.`,
+  m:`La sedación corta el estímulo adrenérgico en el origen.`,
+  e:`—`,
+  c:`Washington, cap. 28: considerar <b>evitar los betabloqueantes</b> por la preocupación teórica de que el alfa sin oposición produzca vasoespasmo periférico severo. Se prefieren agentes rápidamente titulables.`, ojo:true}
+]},
+
 {t:`Vasoactivos y antihipertensivos endovenosos`, id:`vasoactivos`,
  n:`Antes de subir el vasopresor, pregúntate si el problema es volumen, bomba o resistencia. Y todo lo de esta tabla se titula: la dosis correcta es la que logra la meta, no la del papel.`,
  fu:`<b>Washington</b>, cap. 8 (shock): farmacología de noradrenalina, adrenalina, vasopresina, fenilefrina, dopamina, dobutamina, milrinona y angiotensina II, corticoides en shock séptico y azul de metileno. Tabla 3-5 para los antihipertensivos parenterales. Los rangos de infusión en µg/kg/min de noradrenalina y adrenalina corresponden al uso estándar.`,
@@ -9512,7 +10726,7 @@ DOSIS.push(
 ]}
 );
 
-const ORDEN_DOSIS = ['analgesia','combinaciones','antiemeticos','intestino','gastro','atb','antivirales','anticoag','antiagreg','lipidos','tiroides','corticoides','convulsiones','diureticos','vasoactivos','sir','toxicologia','diarios'];
+const ORDEN_DOSIS = ['analgesia','combinaciones','antiemeticos','intestino','gastro','atb','antivirales','anticoag','antiagreg','lipidos','tiroides','corticoides','convulsiones','diureticos','hta-ev','vasoactivos','sir','toxicologia','diarios'];
 DOSIS.sort((a, b) => ORDEN_DOSIS.indexOf(a.id) - ORDEN_DOSIS.indexOf(b.id));
 
 /* ---------- render del vademécum ---------- */
@@ -10171,7 +11385,12 @@ function renderNebu(){
    ============================================================ */
 
 const PISTAS = [
- {id:'sca', t:['dolor toracico','dolor precordial','opresion toracica','angina','sdst','supradesnivel','irradiado al brazo','infarto','troponina'], p:3},
+ {id:'sca', t:['dolor toracico','dolor precordial','opresion toracica','irradiado al brazo','troponina'], p:2},
+ {id:'iamcest', t:['supradesnivel','sdst','elevacion del st','codigo infarto','st elevado'], p:4},
+ {id:'iamsest', t:['infradesnivel','descenso del st','troponina elevada','inversion de la t','sin supradesnivel'], p:3},
+ {id:'angina', t:['angina','dolor en reposo','angina inestable','troponina negativa','esfuerzos menores'], p:3},
+ {id:'hta-crisis', t:['presion elevada','crisis hipertensiva','emergencia hipertensiva','urgencia hipertensiva','hipertension severa','papiledema','200/','190/','180/'], p:3},
+ {id:'aorta', t:['desgarrador','diseccion','asimetria de pulsos','diferencia de presion entre brazos','irradiado a la espalda','marfan','sindrome aortico'], p:4},
  {id:'tep', t:['dolor pleuritico','disnea subita','viaje largo','vuelo','inmoviliz','trombosis','dimero','edema unilateral','postoperator'], p:3},
  {id:'epa', t:['ortopnea','disnea paroxistica','crepitos bibasales','ingurgitacion','edema de extremidades','insuficiencia cardiaca','edema pulmonar'], p:3},
  {id:'shock-cardio', t:['frio y sudoroso','oliguria','shock cardiogenico','fraccion de eyeccion','hipoperfusion','lactato alto'], p:2},
@@ -10390,6 +11609,15 @@ function renderCaso(){
 
 const TRIAGE_MOTIVOS = [
  {id:'general', n:'Sin motivo específico / otro'},
+
+ {id:'hta', n:'Presión arterial muy elevada',
+  c1:['Encefalopatía hipertensiva: confusión, crisis, ceguera cortical o deterioro de conciencia','Disección aórtica: dolor desgarrador con asimetría de pulsos o de presión','Edema pulmonar agudo con hipertensión severa'],
+  c2:['Cefalea intensa, alteración visual o déficit neurológico','Dolor torácico o disnea con la presión elevada','Embarazo de más de 20 semanas con presión sobre 160/110','Creatinina en alza, hematuria o proteinuria nueva'],
+  hacer:['Buscar daño agudo de órgano: es lo que separa la emergencia de la urgencia, no la cifra','Presión en AMBOS brazos y pulsos: la disección se pasa por alto justo aquí','Sin daño de órgano, tratamiento oral y observación corta. Nunca nifedipino sublingual'],
+  upc:['Emergencia hipertensiva que requiere infusión titulable y línea arterial','Disección aórtica, edema pulmonar o encefalopatía'],
+  hosp:['Toda emergencia hipertensiva','Urgencia hipertensiva que no baja o sin red de apoyo para el control'],
+  alta:['Hipertensión asintomática severa sin daño de órgano, tras observación corta, con tratamiento oral reinstalado y control asegurado'],
+  nota:'Sin daño agudo de órgano no es una emergencia: no hay beneficio probado de bajar la presión rápido, y sí riesgo de hipoperfusión cerebral y coronaria.'},
 
  {id:'torax', n:'Dolor torácico',
   c1:['Dolor torácico con supradesnivel del ST en el ECG de triage','Sospecha de disección aórtica: dolor desgarrador, asimetría de pulsos o de presión'],
@@ -10855,7 +12083,7 @@ function calcularTriage(){
   });
   const bf = $('#tr-ficha');
   if(bf) bf.addEventListener('click', () => {
-    const mapa = {torax:'sca', disnea:'epa', neuro:'acv-isq', convulsion:'status', sepsis:'sepsis', metabolico:'cad',
+    const mapa = {torax:'sca', hta:'hta-crisis', disnea:'epa', neuro:'acv-isq', convulsion:'status', sepsis:'sepsis', metabolico:'cad',
                   urinario:'pielo', digestivo:'hda', intox:'toxicologia'};
     const destino = mapa[m.id];
     if(destino && DATA.some(x => x.id === destino)){ setModo('fichas'); seleccionar(destino); }
@@ -11170,7 +12398,6 @@ function setModo(m){
   });
   $('#lateral').classList.toggle('oculto', m === 'base' || m === 'atb');
   $('main').classList.toggle('solo', m === 'base' || m === 'atb');
-  if(m === 'atb') cargarATB();
   $('#aviso-fichas').innerHTML =
     m === 'fichas' ? 'Material de estudio. No reemplaza el protocolo de tu hospital ni la revisión con tu residente. Cada ficha dice de qué manual sale; donde Washington y Sanford difieren, está señalado.'
   : m === 'desafio' ? 'Escribe la hoja completa como la dejarías en la ficha. El corrector busca las claves del caso y los errores graves; lo que no reconoce no está necesariamente mal, y lo que reconoce no garantiza que la dosis esté bien escrita. Eso lo revisas tú y tu residente.'
@@ -11183,19 +12410,12 @@ function setModo(m){
   else if(m === 'base') setSub(sub);
 }
 
-/* --- ficha de antibióticos: se monta en un marco aislado, la primera vez que se abre --- */
-let atbCargado = false;
+/* --- ficha de antibióticos: se abre en una ventana propia, aislada de la app --- */
 function fuenteATB(){
   const n = document.getElementById('atb-src');
   return n ? n.textContent.replace(/<\\\/script>/g, '<\/script>') : '';
 }
-function cargarATB(){
-  if(atbCargado) return;
-  const m = $('#atb-marco');
-  if(!m) return;
-  m.setAttribute('srcdoc', fuenteATB());
-  atbCargado = true;
-}
+
 
 /* --- arranque --- */
 /* ============================================================

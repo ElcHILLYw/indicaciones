@@ -5,15 +5,18 @@ completa con su propio ícono y **funciona sin conexión** una vez instalada.
 
 ## Qué trae
 
-- **32 fichas de urgencia** con el reloj de tiempos, las indicaciones en orden y el bloque de lo que no se hace.
+- **37 fichas de urgencia** con el reloj de tiempos, las indicaciones en orden y el bloque de lo que no se hace.
 - **Hojas modelo dentro de cada ficha**: las 4 hojas escritas completas de esa urgencia, con su escenario y signos vitales, para estudiar el orden y la redacción sin pasar por el desafío.
 - **Crisis convulsiva, epilepsia y estado epiléptico** como temas propios, con el umbral de los 5 minutos, la regla de cuándo sí y cuándo no iniciar antiepilépticos, y el estado no convulsivo.
-- **Modo desafío con 128 casos** (4 por urgencia), corrector con 1400 claves y 570 errores graves catalogados.
+- **Modo desafío con 148 casos** (4 por urgencia), corrector con 1623 claves y 667 errores graves catalogados.
 - **Triage automatizado**: categoriza de C1 a C5, dice dónde ubicar al paciente ahora (REA, box con monitor, observación, fast track) y qué destino anticipar (alta, sala, UTI o UCI). Adaptable a 15 motivos de consulta.
 - **Hoja base en blanco** con las 16 secciones del orden de indicaciones.
 - **Vademécum de 224 fármacos** en 18 grupos, con presentación, dosis, indicaciones, mecanismo, efectos adversos y contraindicaciones.
 - **Bombas de infusión y nebulizaciones**: cómo se calculan, 23 preparaciones habituales, calculadora de mL/h, y las nebulizaciones con sus dosis, flujos y la regla del retenedor de CO₂.
-- **Ficha de antibióticos** en pestaña propia: microbiología, arsenal por familia, matriz fármaco por fármaco, esquemas empíricos por síndrome y tarjetas de repaso, con buscador y modo examen propios.
+- **Crisis hipertensiva y síndrome aórtico agudo**, con las metas de presión por cuadro y la regla del betabloqueo antes del vasodilatador.
+- **Síndrome coronario separado** en IAM con supradesnivel, IAM sin supradesnivel y angina inestable, más una ficha de enfoque inicial común.
+- **Antihipertensivos endovenosos según la patología**: metas por cuadro y 13 fármacos con inicio, duración, dosis y precauciones.
+- **Ficha de antibióticos** que se abre en pestaña propia con un botón: microbiología, arsenal por familia, matriz fármaco por fármaco, esquemas empíricos por síndrome y tarjetas de repaso, con buscador y modo examen propios.
 - **Del caso a la hoja**: escribes un caso breve y la app sugiere las fichas que encajan, marca lo que cambia la conducta y deja el esqueleto de indicaciones. Con segunda opinión opcional de un modelo de lenguaje.
 - **Insulina**: metas, tipos, reglas de cálculo y tres calculadoras.
 - **Electrolitos**: potasio, sodio, magnesio, calcio y fósforo, con tres calculadoras.
@@ -72,7 +75,7 @@ en la pantalla de inicio ni el guardado offline automático del service worker.
 Si cambias `index.html`, sube el número de versión en `sw.js`:
 
 ```js
-const VERSION = 'indicaciones-v7';   // era v6
+const VERSION = 'indicaciones-v8';   // era v7
 ```
 
 Sin eso, los teléfonos que ya la instalaron van a seguir mostrando la versión vieja.
@@ -108,6 +111,7 @@ de triage, NEWS2 y la segunda opinión del asistente).
 
 ## Historial
 
+- **v7** — crisis hipertensiva, síndrome aórtico agudo y el síndrome coronario separado en tres fichas (20 casos nuevos); tabla de antihipertensivos endovenosos por patología; la ficha de antibióticos pasa a abrirse solo con botón.
 - **v6** — auditoría de contenidos contra las fuentes: 6 correcciones y varias precisiones (ver tabla arriba).
 - **v5** — pancreatitis, diarrea y gastroenteritis, meningitis, anemia, crisis asmática y exacerbación de EPOC (24 casos nuevos); nebulizaciones; ficha de antibióticos incorporada; asistente "del caso a la hoja".
 - **v4** — crisis convulsiva, epilepsia y estado epiléptico como fichas nuevas, con 12 casos y motivo propio en el triage.
@@ -138,6 +142,7 @@ ni la revisión con tu residente.**
   **Manual Washington** y la **Guía Sanford** difieren entre sí.
 - Las tablas del Sanford en la copia usada tienen el reconocimiento de texto degradado:
   **las dosis antibióticas deben confirmarse** contra la guía impresa o la aplicación vigente.
+- Los **tiempos de puerta-balón y puerta-aguja**, la estratificación de riesgo con GRACE y TIMI, los algoritmos de troponina de alta sensibilidad y la clasificación de Stanford corresponden a la práctica de guía y **no son texto extraíble** de los manuales cargados. Sí lo son las dosis, las metas de presión por cuadro y las reglas de manejo, que provienen de <b>Washington</b> caps. 3 y 4 y de la <b>Guía ESC/ESH 2023</b>, Tabla 24.
 - Las **dosis de primera y segunda línea del estado epiléptico** no son texto extraíble del Manual Washington,
   que remite a su Figura 27-1 y al protocolo del MGH: corresponden al uso estándar y deben contrastarse con
   el protocolo de tu servicio.
