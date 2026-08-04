@@ -11,7 +11,7 @@ completa con su propio ícono y **funciona sin conexión** una vez instalada.
 - **Modo desafío con 148 casos** (4 por urgencia), corrector con 1623 claves y 667 errores graves catalogados.
 - **Triage automatizado**: categoriza de C1 a C5, dice dónde ubicar al paciente ahora (REA, box con monitor, observación, fast track) y qué destino anticipar (alta, sala, UTI o UCI). Adaptable a 15 motivos de consulta.
 - **Hoja base en blanco** con las 16 secciones del orden de indicaciones.
-- **Vademécum de 224 fármacos** en 18 grupos, con presentación, dosis, indicaciones, mecanismo, efectos adversos y contraindicaciones.
+- **Vademécum de 308 entradas** en 24 grupos, con presentación, dosis, indicaciones, mecanismo, efectos adversos y contraindicaciones.
 - **Bombas de infusión y nebulizaciones**: cómo se calculan, 23 preparaciones habituales, calculadora de mL/h, y las nebulizaciones con sus dosis, flujos y la regla del retenedor de CO₂.
 - **Crisis hipertensiva y síndrome aórtico agudo**, con las metas de presión por cuadro y la regla del betabloqueo antes del vasodilatador.
 - **Síndrome coronario separado** en IAM con supradesnivel, IAM sin supradesnivel y angina inestable, más una ficha de enfoque inicial común.
@@ -75,7 +75,7 @@ en la pantalla de inicio ni el guardado offline automático del service worker.
 Si cambias `index.html`, sube el número de versión en `sw.js`:
 
 ```js
-const VERSION = 'indicaciones-v8';   // era v7
+const VERSION = 'indicaciones-v9';   // era v8
 ```
 
 Sin eso, los teléfonos que ya la instalaron van a seguir mostrando la versión vieja.
@@ -111,6 +111,7 @@ de triage, NEWS2 y la segunda opinión del asistente).
 
 ## Historial
 
+- **v8** — cinco grupos nuevos en el vademécum: antihipertensivos orales, hipoglicemiantes no insulínicos, antipsicóticos y antidepresivos, broncodilatadores inhalados y broncodilatadores en nebulización.
 - **v7** — crisis hipertensiva, síndrome aórtico agudo y el síndrome coronario separado en tres fichas (20 casos nuevos); tabla de antihipertensivos endovenosos por patología; la ficha de antibióticos pasa a abrirse solo con botón.
 - **v6** — auditoría de contenidos contra las fuentes: 6 correcciones y varias precisiones (ver tabla arriba).
 - **v5** — pancreatitis, diarrea y gastroenteritis, meningitis, anemia, crisis asmática y exacerbación de EPOC (24 casos nuevos); nebulizaciones; ficha de antibióticos incorporada; asistente "del caso a la hoja".
